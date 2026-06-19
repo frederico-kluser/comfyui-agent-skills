@@ -20,6 +20,7 @@
 | [knowledge-image-masking](knowledge-image-masking/SKILL.md) | seleção/segmentação: MaskEditor, SAM2/3, Florence-2, Grounding DINO, Impact Pack | `docs/image-editing.md` |
 | [knowledge-comfyui-api](knowledge-comfyui-api/SKILL.md) | API HTTP (/prompt,/upload,/history,/view) + composição Python (Pillow/NumPy/OpenCV) | `docs/image-editing.md` |
 | [knowledge-image-enhance](knowledge-image-enhance/SKILL.md) | upscale, outpaint, relight (IC-Light), ControlNet, IPAdapter, remoção de fundo | `docs/image-editing.md` |
+| [knowledge-scail2-native](knowledge-scail2-native/SKILL.md) | grafo NATIVO do SCAIL-2 (WanSCAILToVideo, SCAIL2ColoredMask, SAM3 por texto, toggle Replace, shift 5) | `workflows/scail2-native-3rdparty/` |
 
 ## Tarefa (memória procedural)
 | Skill | O que faz |

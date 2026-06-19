@@ -53,7 +53,8 @@ exemplo known-good e gera o trio `<nome>.json` + `README.md` + `setup.sh`. Cada 
 ## Projetos de workflow
 | Projeto | O que faz | Técnica |
 |---|---|---|
-| [`person-swap-scail2`](workflows/person-swap-scail2/) | Substitui uma pessoa num vídeo por outra a partir de uma foto | SCAIL-2 Replacement |
+| [`person-swap-scail2`](workflows/person-swap-scail2/) | Substitui uma pessoa num vídeo por outra a partir de uma foto | SCAIL-2 Replacement (wrapper kijai) |
+| [`scail2-native-3rdparty`](workflows/scail2-native-3rdparty/) | SCAIL-2 **nativo** (workflow de terceiros): troca/anima pessoa, máscara por texto SAM3, toggle Replace | SCAIL-2 nativo (core) |
 | [`inpaint-region-cropstitch`](workflows/inpaint-region-cropstitch/) | Edita só uma região da imagem e recola (inpaint + Crop&Stitch) + scripts Python | Flux Fill / SDXL-inpaint |
 | [`instruction-edit-kontext`](workflows/instruction-edit-kontext/) | Edita a imagem por instrução de texto, sem máscara | Flux Kontext |
 | [`qwen-image-edit`](workflows/qwen-image-edit/) | Edição por instrução (objeto/fundo/texto na imagem), bilíngue | Qwen-Image-Edit 2511 |
