@@ -24,6 +24,7 @@
 | [task-launch-runpod-pod](task-launch-runpod-pod/SKILL.md) | subir um pod ComfyUI pronto para gerar |
 | [task-build-workflow](task-build-workflow/SKILL.md) | montar/adaptar um workflow de vídeo |
 | [task-debug-generation](task-debug-generation/SKILL.md) | diagnosticar falhas (OOM, vídeo preto, nós vermelhos) |
+| [task-package-workflow-project](task-package-workflow-project/SKILL.md) | empacotar um workflow entregável em `workflows/<nome>/` (json + README + setup.sh) |
 
 ## Meta (auto-evolução)
 | Skill | O que faz |
@@ -40,4 +41,5 @@
 | "montar/adaptar um workflow" | `task-build-workflow` → `knowledge-comfyui-workflows` (+ `knowledge-scail2`) |
 | "deu OOM / vídeo preto / nó vermelho / não gera" | `task-debug-generation` → `knowledge-comfyui-workflows` |
 | "animar personagem com SCAIL-2" | `knowledge-scail2` + `knowledge-comfyui-workflows` |
+| "criar um workflow para X / empacotar workflow" | `task-package-workflow-project` → `task-build-workflow` + knowledge da técnica |
 | nenhuma skill cobre | `meta-evolution` (propor skill nova) |

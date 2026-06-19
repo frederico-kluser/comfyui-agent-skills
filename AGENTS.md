@@ -29,6 +29,8 @@ Catálogo de skills: `.agents/skills/catalog.md`.
 ## Referências (carregue sob demanda)
 - Catálogo de skills: `.agents/skills/catalog.md`
 - Skills (fonte única): `.agents/skills/` (symlink: `.claude/skills/`)
+- Projetos de workflow entregáveis: `workflows/<projeto>/` (json + README + setup.sh) — crie via `task-package-workflow-project`.
+- Visão geral para humanos: `README.md` (raiz).
 
 ## Memória evolutiva
 Skills de tarefa rodam o passo `<evolution>` ao concluir e atualizam `LEARNINGS.md`

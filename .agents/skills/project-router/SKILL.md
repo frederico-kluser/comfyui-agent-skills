@@ -34,6 +34,7 @@ carregá-las ANTES de agir, para não reler docs nem escanear o repo.
 - Subir pod / baixar modelos → `task-launch-runpod-pod` + `knowledge-runpod-provisioning` + `knowledge-runpod-infra`.
 - Montar/adaptar workflow → `task-build-workflow` + `knowledge-comfyui-workflows` (+ `knowledge-scail2`).
 - Debug de geração → `task-debug-generation` + `knowledge-comfyui-workflows`.
+- Criar/empacotar um projeto de workflow → `task-package-workflow-project` (adapta exemplo + gera setup.sh) + a knowledge skill da técnica.
 - "Qual GPU / quanto custa" → `knowledge-runpod-infra`.
 
 ## Regras
