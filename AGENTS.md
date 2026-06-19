@@ -1,8 +1,8 @@
 # ComfyUI Commercials — RunPod Ops
 
-Base de conhecimento e workflows para produzir comerciais de vídeo IA (SCAIL-2,
-Wan 2.1/2.2, Flux) no ComfyUI rodando em RunPod.io. Não há código de aplicação:
-o valor está nos docs (`docs/`) e nas skills (`.agents/skills/`).
+Base de conhecimento e workflows para produzir vídeo IA (SCAIL-2, Wan 2.1/2.2, Flux) e
+editar imagem (inpaint, Flux Fill/Kontext, Qwen-Image-Edit, SAM/máscara) no ComfyUI rodando
+em RunPod.io. Não há código de aplicação: o valor está nos docs (`docs/`) e nas skills (`.agents/skills/`).
 
 ## Roteamento (faça primeiro)
 Toda tarefa passa por `.agents/skills/project-router` ANTES de qualquer passo.

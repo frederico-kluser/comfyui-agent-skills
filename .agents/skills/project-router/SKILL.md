@@ -35,6 +35,7 @@ carregá-las ANTES de agir, para não reler docs nem escanear o repo.
 - Montar/adaptar workflow → `task-build-workflow` + `knowledge-comfyui-workflows` (+ `knowledge-scail2`).
 - Debug de geração → `task-debug-generation` + `knowledge-comfyui-workflows`.
 - Criar/empacotar um projeto de workflow → `task-package-workflow-project` (adapta exemplo + gera setup.sh) + a knowledge skill da técnica.
+- Editar imagem (inpaint/instrução/trocar objeto/fundo) → `task-edit-image` + `knowledge-image-editing` + `knowledge-image-masking` (+ `knowledge-comfyui-api` p/ código/API, `knowledge-image-enhance` p/ upscale/relight/fundo).
 - "Qual GPU / quanto custa" → `knowledge-runpod-infra`.
 
 ## Regras

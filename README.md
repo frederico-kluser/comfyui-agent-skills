@@ -1,7 +1,8 @@
 # ComfyUI Commercials — RunPod Ops & Agent Skills
 
-Base de conhecimento + sistema de **Agent Skills** para autorar **workflows de vídeo IA** (SCAIL-2,
-Wan 2.1/2.2, Flux) no **ComfyUI** e empacotá-los como **bundles prontos para o RunPod.io**.
+Base de conhecimento + sistema de **Agent Skills** para autorar **workflows de vídeo e de edição de
+imagem IA** (SCAIL-2, Wan 2.1/2.2, Flux, Flux Fill/Kontext, Qwen-Image-Edit, SAM/inpaint) no **ComfyUI**
+e empacotá-los como **bundles prontos para o RunPod.io**.
 
 Não é um app: o valor está (1) na pesquisa curada em `docs/`, (2) nas skills em `.agents/skills/` que
 injetam esse conhecimento sob demanda, e (3) nos **projetos de workflow** entregáveis em `workflows/`.
@@ -27,8 +28,10 @@ skills carregadas sob demanda** (progressive disclosure) e **evolui com o uso**,
 docs/                     # relatórios de pesquisa (a fonte: SCAIL-2, workflows, RunPod, provisioning)
 .agents/skills/           # o sistema de skills (catálogo em catalog.md)
   project-router/         #   roteador
-  knowledge-*/            #   conhecimento (scail2, comfyui-workflows, runpod-infra, runpod-provisioning)
-  task-*/                 #   tarefas (create-commercial, build-workflow, launch-pod, debug, package-workflow-project)
+  knowledge-*/            #   conhecimento — vídeo (scail2, comfyui-workflows, runpod-infra/-provisioning)
+                          #              + imagem (image-editing, image-masking, comfyui-api, image-enhance)
+  task-*/                 #   tarefas (create-commercial, build-workflow, launch-pod, debug,
+                          #            package-workflow-project, edit-image)
   meta-*/                 #   evolução e consolidação
 workflows/                # PROJETOS de workflow entregáveis (1 pasta por projeto)
   person-swap-scail2/     #   ex.: troca de pessoa em vídeo (SCAIL-2) — json + README + setup.sh
@@ -51,6 +54,11 @@ exemplo known-good e gera o trio `<nome>.json` + `README.md` + `setup.sh`. Cada 
 | Projeto | O que faz | Técnica |
 |---|---|---|
 | [`person-swap-scail2`](workflows/person-swap-scail2/) | Substitui uma pessoa num vídeo por outra a partir de uma foto | SCAIL-2 Replacement |
+| [`inpaint-region-cropstitch`](workflows/inpaint-region-cropstitch/) | Edita só uma região da imagem e recola (inpaint + Crop&Stitch) + scripts Python | Flux Fill / SDXL-inpaint |
+| [`instruction-edit-kontext`](workflows/instruction-edit-kontext/) | Edita a imagem por instrução de texto, sem máscara | Flux Kontext |
+| [`qwen-image-edit`](workflows/qwen-image-edit/) | Edição por instrução (objeto/fundo/texto na imagem), bilíngue | Qwen-Image-Edit 2511 |
+| [`outpaint-extend`](workflows/outpaint-extend/) | Estende o enquadramento (outpainting) | Flux Fill |
+| [`remove-background`](workflows/remove-background/) | Remove/troca o fundo (alpha transparente) | RMBG / BiRefNet / SAM3 |
 
 ## Memória evolutiva (e suas salvaguardas)
 Skills de tarefa rodam um passo `<evolution>` ao concluir e registram aprendizados em `LEARNINGS.md`.
