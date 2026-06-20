@@ -1,8 +1,8 @@
 #!/usr/bin/env bash
-# setup.sh — scail2-native-3rdparty (SCAIL-2 NATIVO + CatVTON-Flux Clothing Transfer)
+# setup.sh — scail2-native-3rdparty (SCAIL-2 NATIVO + CatVTON-Flux Clothing Reference)
 # RunPod/ComfyUI — rode como ROOT:  bash setup.sh
 # SCAIL2ColoredMask/WanSCAILToVideo são CORE → garante ComfyUI nightly.
-# Dois workflows sequenciais: tryoff-preprocess → scail2-animation
+# Dois workflows sequenciais: tryoff-preprocess (corrigido, 3 estágios) → scail2-animation
 set -Euo pipefail
 if   [ -d "${WORKSPACE:-/workspace}/ComfyUI" ]; then COMFY="${WORKSPACE:-/workspace}/ComfyUI"
 elif [ -d "/opt/ComfyUI" ];                      then COMFY="/opt/ComfyUI"
@@ -12,7 +12,6 @@ HF_TOKEN="${HF_TOKEN:-}"; PIP="python -m pip install --no-cache-dir"; PAR=3
 
 WORKFLOW_BASE="https://raw.githubusercontent.com/frederico-kluser/comfyui-agent-skills/main/workflows/scail2-native-3rdparty"
 WORKFLOWS=(
-  "scail2-native-3rdparty.json"
   "tryoff-preprocess.json"
   "scail2-animation.json"
 )
@@ -84,12 +83,12 @@ echo "============================================"
 echo " scail2-native-3rdparty pronto."
 echo ""
 echo " Workflows em: $COMFY/user/default/workflows/"
-echo "  scail2-native-3rdparty.json  — SCAIL-2 original (preservado)"
-echo "  tryoff-preprocess.json       — extrai roupa do vídeo, aplica na foto"
+echo "  tryoff-preprocess.json       — segmenta + TryOff + compõe pessoa completa"
 echo "  scail2-animation.json        — SCAIL-2 com referência processada"
 echo ""
 echo " ⚠️  Execute tryoff-preprocess PRIMEIRO, depois scail2-animation."
 echo "    Feche/recarregue o ComfyUI entre eles para liberar VRAM."
 echo "    GPU min: 24 GB (RTX 4090). FLUX.1-dev ~23 GB."
+echo "    Params: num_steps=20, guidance_scale=12 (TryOffLegacy v1.1 defaults)."
 echo " Reinicie o ComfyUI após a instalação."
 echo "============================================"

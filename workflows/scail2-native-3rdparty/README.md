@@ -1,25 +1,36 @@
 # scail2-native-3rdparty — SCAIL-2 nativo + CatVTON-Flux Clothing Transfer
 
-> **Autoria de terceiros (comunidade).** O `scail2-native-3rdparty.json` foi **fornecido pelo usuário** e está
-> **preservado sem edição** (grafo original intacto). Crédito a quem o montou.
+> **Autoria de terceiros (comunidade), revisado e corrigido.** Pipeline de pré-processamento de vestimenta
+> com composição pós-TryOff para gerar referência de pessoa completa para animação SCAIL-2.
 
 **Dois pipelines complementares** para animação com SCAIL-2:
 
 | Arquivo | O que faz |
 |---------|-----------|
-| `scail2-native-3rdparty.json` | **Original preservado** — SCAIL-2 nativo (troca/anima pessoa, máscara SAM3 por texto, toggle Replace) |
-| `tryoff-preprocess.json` | **Pré-processamento** — extrai vestimenta de um frame do vídeo e aplica na foto de referência via CatVTON-Flux |
+| `tryoff-preprocess.json` | **Pré-processamento corrigido** — segmenta roupa na foto de referência, processa com TryOff, recompõe pessoa completa via ImageCompositeMasked |
 | `scail2-animation.json` | **Animação** — SCAIL-2 com referência processada (LoadImage → saída do tryoff, REPLACE=True) |
 
 ## Fluxo completo (2 passos)
 
 ```
-Passo 1: tryoff-preprocess.json
-  VHS_LoadVideo(frame 0) → Segformer (máscara da roupa) ──MASK──┐
-  LoadImage (foto referência) ──IMAGE─────────────────────→ TryOffRunNode → SaveImage
-                                                               ↑ pipe
-  TryOffQuantizerNode(8Bit) → TryOffModelNode → TryOffFluxFillModelNode(FLUX.1-dev)
-  Saída: reference_processed_*.png
+Passo 1: tryoff-preprocess.json (3 estágios internos)
+  ┌─ STAGE 1: Segmentação ─────────────────────────────────────┐
+  │ LoadImage(ref) ──→ SegformerB2ClothesUltra ──MASK──┐       │
+  │                                                     │       │
+  ├─ STAGE 2: Processamento ────────────────────────────┤       │
+  │ LoadImage(ref) ──→ TryOffRunNode ←── MASK ──────────┘       │
+  │                        │                                     │
+  │   TryOffQuantizer(8Bit) │   Saídas:                          │
+  │        ↓                │   [0] garment_image (roupa processada)
+  │   TryOffModelNode ──→ TryOffFluxFillModelNode → pipe         │
+  │                        │   [1] tryoff_image (roupa standalone)│
+  ├─ STAGE 3: Composição ───────────────────────────────────────┤
+  │ LoadImage(ref) ──→ ImageCompositeMasked ←── garment_image   │
+  │ Segformer mask → GaussianBlur(σ=3) ──→ mask                  │
+  │                        ↓                                     │
+  │                   SaveImage("reference_processed_")           │
+  └─────────────────────────────────────────────────────────────┘
+  Preview esquerdo: roupa standalone extraída | Preview direito: pessoa completa composta
 
 Passo 2: scail2-animation.json
   LoadImage ← reference_processed_*.png
@@ -29,6 +40,9 @@ Passo 2: scail2-animation.json
 
 > ⚠️ Rode os workflows **sequencialmente** (feche/recarregue o ComfyUI entre eles).
 > GPU mínima: 24 GB (RTX 4090). Workflow único exigiria >35 GB.
+> **Nota:** O VHS_LoadVideo (nó 1) no tryoff-preprocess.json ainda carrega o vídeo-condutor para
+> referência visual (o frame 0 é exibido no preview), mas a máscara de segmentação agora é
+> derivada da **foto de referência**, não do vídeo — corrigindo o bug de desalinhamento.
 
 ## Pré-requisitos (tryoff)
 
@@ -43,6 +57,7 @@ Passo 2: scail2-animation.json
 - **ComfyUI-Flux-TryOff** — nós TryOffQuantizerNode, TryOffModelNode, TryOffFluxFillModelNode, TryOffRunNode
 - **ComfyUI_LayerStyle** — nó SegformerB2ClothesUltra (segmentação de roupa)
 - **ComfyUI-VideoHelperSuite** — VHS_LoadVideo
+- **ComfyUI core** — MaskGaussianBlur, ImageCompositeMasked (nós nativos, sem instalação extra)
 
 ### Modelos adicionais
 | Modelo | Pasta | Tamanho |
@@ -60,13 +75,14 @@ Instala **10 custom nodes** (7 originais + 3 tryoff), baixa **todos** os modelos
 
 ## Como usar (:8188)
 
-### Passo 1 — Clothing Transfer
+### Passo 1 — Clothing Reference Generation
 1. Abra `tryoff-preprocess.json`.
-2. **VHS_LoadVideo** (1): carregue o vídeo-condutor. `frame_load_cap=1` usa o primeiro frame.
-3. **LoadImage** (3): carregue a foto da sambista (referência).
+2. **VHS_LoadVideo** (1): carregue o vídeo-condutor (referência visual). `frame_load_cap=1`.
+3. **LoadImage** (3): carregue a foto da pessoa (referência para SCAIL-2).
 4. **SegformerB2ClothesUltra** (4): ative as categorias de roupa (upper_clothes, pants, dress).
 5. Ajuste o **prompt** no TryOffRunNode (8) conforme o resultado desejado.
-6. Execute. Saída: `output/reference_processed_*.png`.
+6. Execute. Preview esquerdo = roupa standalone extraída. Preview direito = pessoa completa composta.
+7. Saída: `output/reference_processed_*.png` (pessoa completa com região de roupa processada).
 
 ### Passo 2 — SCAIL-2 Animation
 1. **Feche/recarregue o ComfyUI** para liberar VRAM.
@@ -87,11 +103,19 @@ Instala **10 custom nodes** (7 originais + 3 tryoff), baixa **todos** os modelos
 | `black_point` / `white_point` | 0.3 / 0.95 | Threshold binário |
 
 ### TryOffRunNode
-| Parâmetro | Default | Range |
-|-----------|---------|-------|
-| `num_steps` | 50 | 1–100 |
-| `guidance_scale` | 30.0 | 1–100 |
-| `width` × `height` | 768×1024 | 128–1024 |
+| Parâmetro | Default | Range | Nota |
+|-----------|---------|-------|------|
+| `num_steps` | 20 | 1–100 | Alinhado com TryOffLegacy v1.1 oficial |
+| `guidance_scale` | 12.0 | 1–100 | Reduzido para evitar pele artificial |
+| `width` × `height` | 768×1024 | 128–1024 | |
+| `seed` | 42 | — | Fixo para reprodutibilidade |
+
+### Composição (ImageCompositeMasked + GaussianBlur)
+| Parâmetro | Default | Descrição |
+|-----------|---------|-----------|
+| `resize_source` | True | Redimensiona source ao tamanho do destination |
+| `x` / `y` | 0, 0 | Offset zero (resize_source=True alinha automaticamente) |
+| `sigma` (GaussianBlur) | 3.0 | Feathering da borda da máscara para transição suave |
 
 ### SCAIL-2 (workflow original)
 Mantidos: `steps=6`, `cfg=1`, `shift=5`, `DURAÇÃO=81`. Ver `knowledge-scail2`.
@@ -102,14 +126,18 @@ Mantidos: `steps=6`, `cfg=1`, `shift=5`, `DURAÇÃO=81`. Ver `knowledge-scail2`.
 |----------|---------|
 | OOM no workflow 1 | Mude Quantizer para `4Bit`; reduza resolução para 512×768 |
 | Máscara não cobre toda a roupa | Ative mais toggles; aumente `detail_dilate` para 10–15 |
-| Pele artificial/plástica | Reduza `guidance_scale` para 8–15; refine o prompt |
+| Pele artificial/plástica | Reduza ainda mais `guidance_scale` (8–10); refine o prompt |
+| Borda visível na composição | Aumente `sigma` do GaussianBlur para 5–8 |
+| Máscara invertida (roupa preta, fundo branco) | Verifique os toggles do Segformer — as categorias de roupa devem estar ATIVAS |
 | SCAIL-2 regenera roupa | Mantenha REPLACE=True; teste DPO LoRA |
 | FLUX.1-dev não baixa | `git clone https://huggingface.co/black-forest-labs/FLUX.1-dev $COMFY/models/checkpoints/FLUX.1-dev` |
 | Nós vermelhos | Manager → Install Missing Custom Nodes |
 
 ## Limitações conhecidas
-- **cat-tryoff-flux é treinado para try-OFF (remoção de roupa), não try-ON (aplicação).** Funciona bem para vídeo nu → referência nua. Resultado incerto para transferir fantasias complexas.
-- Apenas **1 frame do vídeo** é usado como fonte da vestimenta.
+- **cat-tryoff-flux é treinado para try-OFF (remoção de roupa), não try-ON (aplicação).** A ferramenta correta para clothing transfer seria `TryOnRunNode` com `catvton-flux-alpha`. O pipeline atual extrai a vestimenta da foto de referência e a recompõe — não transfere roupa do vídeo para a foto.
+- Apenas **1 frame do vídeo** é carregado (referência visual). O processamento de roupa é feito exclusivamente na foto de referência.
+- O prompt do TryOffRunNode afeta a geração da roupa standalone (lado esquerdo do Flux Fill). A região preservada (lado direito, usada na composição) mantém os pixels originais.
+- Para verdadeira transferência de vestimenta (vídeo → foto), considere migrar para `TryOnRunNode` + `catvton-flux-alpha`.
 
 ## Modelos (SCAIL-2 original)
 | Arquivo | Pasta |

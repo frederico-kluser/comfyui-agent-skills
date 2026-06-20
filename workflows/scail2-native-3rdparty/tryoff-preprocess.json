@@ -1,14 +1,20 @@
 {
   "id": "c3d4e5f6-a7b8-9012-cdef-123456789012",
   "revision": 0,
-  "last_node_id": 10,
-  "last_link_id": 18,
+  "last_node_id": 14,
+  "last_link_id": 19,
   "nodes": [
     {
       "id": 1,
       "type": "VHS_LoadVideo",
-      "pos": [50, 50],
-      "size": [261.6533203125, 459.80517174586777],
+      "pos": [
+        50,
+        50
+      ],
+      "size": [
+        261.6533203125,
+        459.80517174586777
+      ],
       "flags": {},
       "order": 0,
       "mode": 0,
@@ -38,7 +44,9 @@
         {
           "name": "IMAGE",
           "type": "IMAGE",
-          "links": [4]
+          "links": [
+            4
+          ]
         },
         {
           "name": "frame_count",
@@ -93,8 +101,14 @@
     {
       "id": 2,
       "type": "ImageFromBatch",
-      "pos": [360, 50],
-      "size": [270, 82],
+      "pos": [
+        360,
+        50
+      ],
+      "size": [
+        270,
+        82
+      ],
       "flags": {},
       "order": 1,
       "mode": 0,
@@ -109,7 +123,9 @@
         {
           "name": "IMAGE",
           "type": "IMAGE",
-          "links": [5]
+          "links": [
+            5
+          ]
         }
       ],
       "title": "Frame Selector (index 0)",
@@ -118,15 +134,24 @@
         "ver": "0.3.60",
         "Node name for S&R": "ImageFromBatch"
       },
-      "widgets_values": [0, 1],
+      "widgets_values": [
+        0,
+        1
+      ],
       "color": "#2a363b",
       "bgcolor": "#3f5159"
     },
     {
       "id": 3,
       "type": "LoadImage",
-      "pos": [50, 550],
-      "size": [279.95978857780966, 348.15275335146265],
+      "pos": [
+        50,
+        550
+      ],
+      "size": [
+        279.95978857780966,
+        348.15275335146265
+      ],
       "flags": {},
       "order": 2,
       "mode": 0,
@@ -135,7 +160,9 @@
         {
           "name": "IMAGE",
           "type": "IMAGE",
-          "links": [6]
+          "links": [
+            6
+          ]
         },
         {
           "name": "MASK",
@@ -149,15 +176,24 @@
         "ver": "0.3.60",
         "Node name for S&R": "LoadImage"
       },
-      "widgets_values": ["sambista-reference.jpg", "image"],
+      "widgets_values": [
+        "sambista-reference.jpg",
+        "image"
+      ],
       "color": "#233",
       "bgcolor": "#355"
     },
     {
       "id": 4,
       "type": "LayerMask: SegformerB2ClothesUltra",
-      "pos": [680, 50],
-      "size": [315, 320],
+      "pos": [
+        680,
+        50
+      ],
+      "size": [
+        315,
+        320
+      ],
       "flags": {},
       "order": 3,
       "mode": 0,
@@ -177,26 +213,55 @@
         {
           "name": "mask",
           "type": "MASK",
-          "links": [7]
+          "links": [
+            7
+          ]
         }
       ],
-      "title": "Clothing Mask from Video Frame",
+      "title": "Clothing Mask from Reference Photo",
       "properties": {
         "cnr_id": "chflame163/ComfyUI_LayerStyle",
         "ver": "1.0.0",
         "Node name for S&R": "LayerMask: SegformerB2ClothesUltra"
       },
       "widgets_values": [
-        false, false, false, false, false, false, false, false,
-        true, false, true, true, false, false, false, false,
-        "VITMatte", 6, 6, 0.3, 0.95, true, "cuda", 2.0
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        true,
+        false,
+        true,
+        true,
+        false,
+        false,
+        false,
+        false,
+        "VITMatte",
+        6,
+        6,
+        0.3,
+        0.95,
+        true,
+        "cuda",
+        2.0
       ]
     },
     {
       "id": 5,
       "type": "TryOffQuantizerNode",
-      "pos": [50, 980],
-      "size": [270, 58],
+      "pos": [
+        50,
+        980
+      ],
+      "size": [
+        270,
+        58
+      ],
       "flags": {},
       "order": 4,
       "mode": 0,
@@ -205,12 +270,16 @@
         {
           "name": "transformers_config",
           "type": "transformers_config",
-          "links": [8]
+          "links": [
+            8
+          ]
         },
         {
           "name": "diffusers_config",
           "type": "diffusers_config",
-          "links": [9]
+          "links": [
+            9
+          ]
         }
       ],
       "properties": {
@@ -218,13 +287,21 @@
         "ver": "1.0.0",
         "Node name for S&R": "TryOffQuantizerNode"
       },
-      "widgets_values": ["8Bit"]
+      "widgets_values": [
+        "8Bit"
+      ]
     },
     {
       "id": 6,
       "type": "TryOffModelNode",
-      "pos": [370, 980],
-      "size": [315, 82],
+      "pos": [
+        370,
+        980
+      ],
+      "size": [
+        315,
+        82
+      ],
       "flags": {},
       "order": 5,
       "mode": 0,
@@ -239,7 +316,9 @@
         {
           "name": "MODEL",
           "type": "MODEL",
-          "links": [10]
+          "links": [
+            10
+          ]
         }
       ],
       "properties": {
@@ -247,13 +326,22 @@
         "ver": "1.0.0",
         "Node name for S&R": "TryOffModelNode"
       },
-      "widgets_values": ["xiaozaa/cat-tryoff-flux", "cuda"]
+      "widgets_values": [
+        "xiaozaa/cat-tryoff-flux",
+        "cuda"
+      ]
     },
     {
       "id": 7,
       "type": "TryOffFluxFillModelNode",
-      "pos": [730, 980],
-      "size": [315, 82],
+      "pos": [
+        730,
+        980
+      ],
+      "size": [
+        315,
+        82
+      ],
       "flags": {},
       "order": 6,
       "mode": 0,
@@ -273,7 +361,9 @@
         {
           "name": "MODEL",
           "type": "MODEL",
-          "links": [11]
+          "links": [
+            11
+          ]
         }
       ],
       "properties": {
@@ -281,13 +371,22 @@
         "ver": "1.0.0",
         "Node name for S&R": "TryOffFluxFillModelNode"
       },
-      "widgets_values": ["FLUX.1-dev", "cuda"]
+      "widgets_values": [
+        "FLUX.1-dev",
+        "cuda"
+      ]
     },
     {
       "id": 8,
       "type": "TryOffRunNode",
-      "pos": [680, 550],
-      "size": [380, 380],
+      "pos": [
+        680,
+        550
+      ],
+      "size": [
+        380,
+        380
+      ],
       "flags": {},
       "order": 7,
       "mode": 0,
@@ -312,30 +411,45 @@
         {
           "name": "garment_image",
           "type": "IMAGE",
-          "links": null
+          "links": [
+            13
+          ]
         },
         {
           "name": "tryoff_image",
           "type": "IMAGE",
-          "links": [12]
+          "links": [
+            19
+          ]
         }
       ],
-      "title": "TryOff — Apply Video Clothing to Reference",
+      "title": "TryOff \u2014 Process Clothing on Reference",
       "properties": {
         "cnr_id": "asutermo/ComfyUI-Flux-TryOff",
         "ver": "1.0.0",
         "Node name for S&R": "TryOffRunNode"
       },
       "widgets_values": [
-        768, 1024, 50, 30, 42, "fixed",
+        768,
+        1024,
+        20,
+        12.0,
+        42,
+        "fixed",
         "photorealistic human figure, natural skin texture with pores and subtle variations, anatomically accurate proportions, studio photography lighting, high detail skin rendering, professional portrait reference, 8k resolution, masterpiece, natural skin tones, smooth but realistic subsurface scattering, matching the style and appearance of the driving video frame, bare skin, full body reference photography"
       ]
     },
     {
       "id": 9,
       "type": "SaveImage",
-      "pos": [1120, 550],
-      "size": [315, 270],
+      "pos": [
+        1120,
+        550
+      ],
+      "size": [
+        315,
+        270
+      ],
       "flags": {},
       "order": 8,
       "mode": 0,
@@ -343,7 +457,7 @@
         {
           "name": "images",
           "type": "IMAGE",
-          "link": 12
+          "link": 17
         }
       ],
       "outputs": [],
@@ -352,13 +466,21 @@
         "ver": "0.3.60",
         "Node name for S&R": "SaveImage"
       },
-      "widgets_values": ["reference_processed_"]
+      "widgets_values": [
+        "reference_processed_"
+      ]
     },
     {
       "id": 10,
       "type": "MarkdownNote",
-      "pos": [50, 1100],
-      "size": [520, 220],
+      "pos": [
+        50,
+        1100
+      ],
+      "size": [
+        520,
+        220
+      ],
       "flags": {},
       "order": 9,
       "mode": 0,
@@ -367,49 +489,342 @@
       "title": "MODELS & USAGE",
       "properties": {},
       "widgets_values": [
-        "## TryOff Preprocess — Clothing Transfer\n\n**Models Required:**\n- 📥 [cat-tryoff-flux](https://huggingface.co/xiaozaa/cat-tryoff-flux) → models/cat-tryoff-flux/\n- 📥 [FLUX.1-dev](https://huggingface.co/black-forest-labs/FLUX.1-dev) → models/checkpoints/FLUX.1-dev/\n- 📥 [SegFormer B2 Clothes](https://huggingface.co/mattmdjaga/segformer_b2_clothes) → models/segformer_b2_clothes/\n\n**Custom Nodes:** ComfyUI-Flux-TryOff, ComfyUI_LayerStyle, ComfyUI-VideoHelperSuite\n\n**Flow:** Video frame (VHS_LoadVideo) → Segformer extracts clothing mask → TryOffRunNode applies mask to reference photo → SaveImage.\n\n**Output:** `reference_processed_*.png` — load into scail2-animation.json LoadImage.\n\n**⚠️ VRAM:** CatVTON-Flux + FLUX.1-dev ~20GB (8-bit). Rode este workflow SOZINHO (feche/recarregue o ComfyUI antes do workflow 2)."
+        "## TryOff Preprocess \u2014 Clothing Transfer\n\n**Models Required:**\n- \ud83d\udce5 [cat-tryoff-flux](https://huggingface.co/xiaozaa/cat-tryoff-flux) \u2192 models/cat-tryoff-flux/\n- \ud83d\udce5 [FLUX.1-dev](https://huggingface.co/black-forest-labs/FLUX.1-dev) \u2192 models/checkpoints/FLUX.1-dev/\n- \ud83d\udce5 [SegFormer B2 Clothes](https://huggingface.co/mattmdjaga/segformer_b2_clothes) \u2192 models/segformer_b2_clothes/\n\n**Custom Nodes:** ComfyUI-Flux-TryOff, ComfyUI_LayerStyle, ComfyUI-VideoHelperSuite\n\n**Flow (3 stages):**\n1. **Segmentation** \u2014 LoadImage (ref photo) \u2192 SegformerB2ClothesUltra \u2192 clothing mask\n2. **Processing** \u2014 LoadImage (ref photo) + mask \u2192 TryOffRunNode \u2192 garment_image & tryoff_image\n3. **Composition** \u2014 ImageCompositeMasked blends processed clothing back onto original photo\n\n**Output:** `reference_processed_*.png` \u2014 full person composite.\nLoad into scail2-animation.json LoadImage for SCAIL-2 REPLACE mode.\n\n**Preview:** Left = standalone garment (tryoff_image). Right = full person composite.\n\n**\u26a0\ufe0f VRAM:** CatVTON-Flux + FLUX.1-dev ~20GB (8-bit). Rode este workflow SOZINHO.\nFeche/recarregue o ComfyUI antes do workflow 2.\n\n**Params:** num_steps=20, guidance_scale=12 (TryOffLegacy v1.1 defaults)."
       ],
       "color": "#432",
       "bgcolor": "#653"
+    },
+    {
+      "id": 11,
+      "type": "MaskGaussianBlur",
+      "pos": [
+        680,
+        380
+      ],
+      "size": [
+        210,
+        46
+      ],
+      "flags": {},
+      "order": 4,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "mask",
+          "type": "MASK",
+          "link": 14
+        }
+      ],
+      "outputs": [
+        {
+          "name": "MASK",
+          "type": "MASK",
+          "links": [
+            15
+          ]
+        }
+      ],
+      "title": "Feather Mask Edge",
+      "properties": {
+        "cnr_id": "comfy-core",
+        "ver": "0.3.60"
+      },
+      "widgets_values": [
+        3.0
+      ]
+    },
+    {
+      "id": 12,
+      "type": "ImageCompositeMasked",
+      "pos": [
+        680,
+        550
+      ],
+      "size": [
+        315,
+        190
+      ],
+      "flags": {},
+      "order": 5,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "destination",
+          "type": "IMAGE",
+          "link": 16
+        },
+        {
+          "name": "source",
+          "type": "IMAGE",
+          "link": 13
+        },
+        {
+          "name": "x",
+          "type": "INT",
+          "link": null
+        },
+        {
+          "name": "y",
+          "type": "INT",
+          "link": null
+        },
+        {
+          "name": "resize_source",
+          "type": "BOOLEAN",
+          "link": null
+        },
+        {
+          "name": "mask",
+          "type": "MASK",
+          "link": 15
+        }
+      ],
+      "outputs": [
+        {
+          "name": "IMAGE",
+          "type": "IMAGE",
+          "links": [
+            17,
+            18
+          ]
+        }
+      ],
+      "title": "Composite \u2014 Reconstruct Full Person",
+      "properties": {
+        "cnr_id": "comfy-core",
+        "ver": "0.3.60"
+      },
+      "widgets_values": [
+        0,
+        0,
+        true
+      ]
+    },
+    {
+      "id": 13,
+      "type": "PreviewImage",
+      "pos": [
+        1050,
+        580
+      ],
+      "size": [
+        210,
+        58
+      ],
+      "flags": {},
+      "order": 6,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "images",
+          "type": "IMAGE",
+          "link": 18
+        }
+      ],
+      "outputs": [],
+      "title": "Preview Composite (Full Person)",
+      "properties": {
+        "cnr_id": "comfy-core",
+        "ver": "0.3.60"
+      }
+    },
+    {
+      "id": 14,
+      "type": "PreviewImage",
+      "pos": [
+        1050,
+        390
+      ],
+      "size": [
+        210,
+        58
+      ],
+      "flags": {},
+      "order": 3,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "images",
+          "type": "IMAGE",
+          "link": 19
+        }
+      ],
+      "outputs": [],
+      "title": "Preview Extracted Garment",
+      "properties": {
+        "cnr_id": "comfy-core",
+        "ver": "0.3.60"
+      }
     }
   ],
   "links": [
-    [4, 1, 0, 2, 0, "IMAGE"],
-    [5, 2, 0, 4, 0, "IMAGE"],
-    [6, 3, 0, 8, 0, "IMAGE"],
-    [7, 4, 1, 8, 1, "MASK"],
-    [8, 5, 0, 6, 0, "transformers_config"],
-    [9, 5, 1, 7, 1, "diffusers_config"],
-    [10, 6, 0, 7, 0, "MODEL"],
-    [11, 7, 0, 8, 2, "MODEL"],
-    [12, 8, 1, 9, 0, "IMAGE"]
+    [
+      4,
+      1,
+      0,
+      2,
+      0,
+      "IMAGE"
+    ],
+    [
+      5,
+      3,
+      0,
+      4,
+      0,
+      "IMAGE"
+    ],
+    [
+      6,
+      3,
+      0,
+      8,
+      0,
+      "IMAGE"
+    ],
+    [
+      7,
+      4,
+      1,
+      8,
+      1,
+      "MASK"
+    ],
+    [
+      8,
+      5,
+      0,
+      6,
+      0,
+      "transformers_config"
+    ],
+    [
+      9,
+      5,
+      1,
+      7,
+      1,
+      "diffusers_config"
+    ],
+    [
+      10,
+      6,
+      0,
+      7,
+      0,
+      "MODEL"
+    ],
+    [
+      11,
+      7,
+      0,
+      8,
+      2,
+      "MODEL"
+    ],
+    [
+      13,
+      8,
+      0,
+      12,
+      1,
+      "IMAGE"
+    ],
+    [
+      14,
+      4,
+      1,
+      11,
+      0,
+      "MASK"
+    ],
+    [
+      15,
+      11,
+      0,
+      12,
+      5,
+      "MASK"
+    ],
+    [
+      16,
+      3,
+      0,
+      12,
+      0,
+      "IMAGE"
+    ],
+    [
+      17,
+      12,
+      0,
+      9,
+      0,
+      "IMAGE"
+    ],
+    [
+      18,
+      12,
+      0,
+      13,
+      0,
+      "IMAGE"
+    ],
+    [
+      19,
+      8,
+      1,
+      14,
+      0,
+      "IMAGE"
+    ]
   ],
   "groups": [
     {
       "id": 1,
-      "title": "01 — VIDEO FRAME + MASK",
-      "bounding": [30, 20, 1030, 410],
+      "title": "01 \u2014 REFERENCE + MASK",
+      "bounding": [
+        30,
+        20,
+        1030,
+        410
+      ],
       "color": "#3f789e",
       "flags": {}
     },
     {
       "id": 2,
-      "title": "02 — REFERENCE + TRYOFF",
-      "bounding": [30, 520, 1070, 460],
+      "title": "02 \u2014 TRYOFF PROCESSING",
+      "bounding": [
+        30,
+        520,
+        1070,
+        460
+      ],
       "color": "#3f789e",
       "flags": {}
     },
     {
       "id": 3,
-      "title": "03 — MODEL LOADING",
-      "bounding": [30, 950, 1070, 160],
+      "title": "03 \u2014 MODEL LOADING",
+      "bounding": [
+        30,
+        950,
+        1070,
+        160
+      ],
       "color": "#3f789e",
       "flags": {}
     },
     {
       "id": 4,
-      "title": "04 — OUTPUT",
-      "bounding": [1080, 520, 400, 350],
+      "title": "04 \u2014 COMPOSITE + OUTPUT",
+      "bounding": [
+        640,
+        350,
+        650,
+        500
+      ],
       "color": "#3f789e",
       "flags": {}
     }
@@ -418,7 +833,10 @@
   "extra": {
     "ds": {
       "scale": 0.55,
-      "offset": [0, 0]
+      "offset": [
+        0,
+        0
+      ]
     },
     "frontendVersion": "1.45.15"
   },
