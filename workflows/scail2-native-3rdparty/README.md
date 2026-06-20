@@ -1,33 +1,117 @@
-# scail2-native-3rdparty — SCAIL-2 nativo (workflow de TERCEIROS)
+# scail2-native-3rdparty — SCAIL-2 nativo + CatVTON-Flux Clothing Transfer
 
 > **Autoria de terceiros (comunidade).** O `scail2-native-3rdparty.json` foi **fornecido pelo usuário** e está
-> **preservado sem edição** (grafo original intacto, incluindo a `MarkdownNote` com os links de modelo). Aqui
-> apenas o renomeamos, colocamos numa pasta e o documentamos. Crédito a quem o montou.
+> **preservado sem edição** (grafo original intacto). Crédito a quem o montou.
 
-Troca/anima uma pessoa num vídeo usando o **caminho NATIVO do SCAIL-2** (nós core do ComfyUI), com **máscara
-gerada por TEXTO** (SAM3) e **toggle Animation↔Replacement**. Conhecimento destilado em `knowledge-scail2-native`.
+**Dois pipelines complementares** para animação com SCAIL-2:
 
-> ⚠️ Exige ComfyUI **nightly/master** — `SCAIL2ColoredMask` e `WanSCAILToVideo` são **core** (vermelhos = não-nightly).
+| Arquivo | O que faz |
+|---------|-----------|
+| `scail2-native-3rdparty.json` | **Original preservado** — SCAIL-2 nativo (troca/anima pessoa, máscara SAM3 por texto, toggle Replace) |
+| `tryoff-preprocess.json` | **Pré-processamento** — extrai vestimenta de um frame do vídeo e aplica na foto de referência via CatVTON-Flux |
+| `scail2-animation.json` | **Animação** — SCAIL-2 com referência processada (LoadImage → saída do tryoff, REPLACE=True) |
 
-## O que ele faz (todas as técnicas)
-Grafo em 3 grupos — **00 MODELS · 01 INPUTS · 02 SAMPLER+OUTPUT** — 63 nós, organizado com Set/Get (KJNodes).
+## Fluxo completo (2 passos)
 
-1. **Vídeo-condutor**: `VHS_LoadVideo` com `force_rate 16` (SCAIL-2 roda a 16 fps) e `frame_load_cap 81` (máx por passada).
-2. **Foto de referência**: `LoadImage` → `CLIPVisionEncode` (`clip_vision_h`) = identidade.
-3. **Máscara por texto (SAM3)**: o subgraph **SAM3** roda `SAM3_VideoTrack` ×2 com prompts `CLIPTextEncode` (aqui **"human"**) — rastreia o conceito no **vídeo** e na **foto**, gerando `SAM3_TRACK_DATA`. Troque o texto para mudar o alvo ("the man on the left", "dog"...).
-4. **Máscara colorida**: `SCAIL2ColoredMask` recebe os dois track_data + `replacement_mode` → produz `pose_video_mask` e `reference_image_mask`.
-5. **Resolução**: `ResizeImageMaskNode` (`scale total pixels 0.5` → meia-res do pose/mask; `scale to multiple 32` → dims **÷32**).
-6. **Modelo**: `UNETLoader`(SCAIL-2 fp8) → `LoraLoaderModelOnly`(lightx2v rank64, força 1) → `ModelSamplingSD3`(**shift 5**).
-7. **Texto**: `CLIPLoader`(umt5, tipo "wan") → `CLIPTextEncode` **positivo/negativo** (vazios — preencha).
-8. **Condicionamento SCAIL**: `WanSCAILToVideo` junta tudo — `pose_video(+mask)`, `reference_image(+mask)`, `clip_vision_output`, `width/height/length` (512×896×81 = 9:16 vertical), `replacement_mode` → `positive/negative/latent`.
-9. **Sampler**: `KSampler` — `6 steps`, `cfg 1`, `euler`, `simple`, `denoise 1` (config canônica destilada).
-10. **Saída**: `VAEDecode`(`wan_2.1_vae`) → `RIFE VFI`(`rife49`, ×2 → **32 fps**) → `VHS_VideoCombine` (h264-mp4, crf 19, save_metadata).
-11. **Controles**: Primitives nomeados `DURAÇÃO (FRAMES)`=81 e **`REPLACE`** (False=Animation, True=Replacement) — o booleano alimenta SCAIL2ColoredMask **e** WanSCAILToVideo.
+```
+Passo 1: tryoff-preprocess.json
+  VHS_LoadVideo(frame 0) → Segformer (máscara da roupa) ──MASK──┐
+  LoadImage (foto referência) ──IMAGE─────────────────────→ TryOffRunNode → SaveImage
+                                                               ↑ pipe
+  TryOffQuantizerNode(8Bit) → TryOffModelNode → TryOffFluxFillModelNode(FLUX.1-dev)
+  Saída: reference_processed_*.png
 
-**Por que vale o aprendizado:** é o jeito **nativo** (alternativa mais direta ao wrapper kijai do `person-swap-scail2`),
-com o **toggle replacement_mode explícito** e **masking por texto** integrado. Ver `knowledge-scail2-native`.
+Passo 2: scail2-animation.json
+  LoadImage ← reference_processed_*.png
+  VHS_LoadVideo (vídeo completo) → SAM3 → SCAIL2ColoredMask → WanSCAILToVideo → KSampler → RIFE → VideoCombine
+  REPLACE=True | Saída: SCAIL-2_*.mp4 (32 fps)
+```
 
-## Modelos (da nota embutida no workflow)
+> ⚠️ Rode os workflows **sequencialmente** (feche/recarregue o ComfyUI entre eles).
+> GPU mínima: 24 GB (RTX 4090). Workflow único exigiria >35 GB.
+
+## Pré-requisitos (tryoff)
+
+| Requisito | Mínimo |
+|-----------|--------|
+| GPU VRAM | 24 GB (RTX 4090) — 32 GB+ recomendado |
+| ComfyUI | 0.3.60+ nightly |
+| CUDA | 12.4+ |
+| Disco | ~100 GB livres |
+
+### Custom nodes adicionais (instalados pelo setup.sh)
+- **ComfyUI-Flux-TryOff** — nós TryOffQuantizerNode, TryOffModelNode, TryOffFluxFillModelNode, TryOffRunNode
+- **ComfyUI_LayerStyle** — nó SegformerB2ClothesUltra (segmentação de roupa)
+- **ComfyUI-VideoHelperSuite** — VHS_LoadVideo
+
+### Modelos adicionais
+| Modelo | Pasta | Tamanho |
+|--------|-------|---------|
+| cat-tryoff-flux (xiaozaa) | `models/cat-tryoff-flux/` | ~12 GB |
+| FLUX.1-dev (Black Forest Labs) | `models/checkpoints/FLUX.1-dev/` | ~23 GB |
+| SegFormer B2 Clothes (mattmdjaga) | `models/segformer_b2_clothes/` | ~1 GB |
+
+## Setup (RunPod, root)
+```bash
+export HF_TOKEN=...
+bash setup.sh
+```
+Instala **10 custom nodes** (7 originais + 3 tryoff), baixa **todos** os modelos (SCAIL-2 + CatVTON-Flux + SegFormer + FLUX.1-dev) e os 3 `.json`. Reinicie o ComfyUI.
+
+## Como usar (:8188)
+
+### Passo 1 — Clothing Transfer
+1. Abra `tryoff-preprocess.json`.
+2. **VHS_LoadVideo** (1): carregue o vídeo-condutor. `frame_load_cap=1` usa o primeiro frame.
+3. **LoadImage** (3): carregue a foto da sambista (referência).
+4. **SegformerB2ClothesUltra** (4): ative as categorias de roupa (upper_clothes, pants, dress).
+5. Ajuste o **prompt** no TryOffRunNode (8) conforme o resultado desejado.
+6. Execute. Saída: `output/reference_processed_*.png`.
+
+### Passo 2 — SCAIL-2 Animation
+1. **Feche/recarregue o ComfyUI** para liberar VRAM.
+2. Abra `scail2-animation.json`.
+3. **LoadImage** (58): carregue `reference_processed_00001_.png`.
+4. **VHS_LoadVideo** (113): carregue o mesmo vídeo-condutor.
+5. Escreva prompts positivo/negativo. Confira **REPLACE** = True.
+6. Execute. Saída: `output/SCAIL-2_*.mp4`.
+
+## Parâmetros do tryoff
+
+### SegformerB2ClothesUltra — Refinamento da máscara
+| Parâmetro | Default | Descrição |
+|-----------|---------|-----------|
+| 16 boolean toggles | upper/pants/dress=true | Categorias de roupa |
+| `detail_erode` | 6 | Encolhe a máscara |
+| `detail_dilate` | 6 | Expande a máscara |
+| `black_point` / `white_point` | 0.3 / 0.95 | Threshold binário |
+
+### TryOffRunNode
+| Parâmetro | Default | Range |
+|-----------|---------|-------|
+| `num_steps` | 50 | 1–100 |
+| `guidance_scale` | 30.0 | 1–100 |
+| `width` × `height` | 768×1024 | 128–1024 |
+
+### SCAIL-2 (workflow original)
+Mantidos: `steps=6`, `cfg=1`, `shift=5`, `DURAÇÃO=81`. Ver `knowledge-scail2`.
+
+## Troubleshooting
+
+| Problema | Solução |
+|----------|---------|
+| OOM no workflow 1 | Mude Quantizer para `4Bit`; reduza resolução para 512×768 |
+| Máscara não cobre toda a roupa | Ative mais toggles; aumente `detail_dilate` para 10–15 |
+| Pele artificial/plástica | Reduza `guidance_scale` para 8–15; refine o prompt |
+| SCAIL-2 regenera roupa | Mantenha REPLACE=True; teste DPO LoRA |
+| FLUX.1-dev não baixa | `git clone https://huggingface.co/black-forest-labs/FLUX.1-dev $COMFY/models/checkpoints/FLUX.1-dev` |
+| Nós vermelhos | Manager → Install Missing Custom Nodes |
+
+## Limitações conhecidas
+- **cat-tryoff-flux é treinado para try-OFF (remoção de roupa), não try-ON (aplicação).** Funciona bem para vídeo nu → referência nua. Resultado incerto para transferir fantasias complexas.
+- Apenas **1 frame do vídeo** é usado como fonte da vestimenta.
+
+## Modelos (SCAIL-2 original)
 | Arquivo | Pasta |
 |---|---|
 | `wan2.1_14B_SCAIL_2_fp8_scaled.safetensors` (Comfy-Org/SCAIL-2) | `diffusion_models/` |
@@ -38,22 +122,9 @@ com o **toggle replacement_mode explícito** e **masking por texto** integrado. 
 | `sam3.1_multiplex_fp16.safetensors` (Comfy-Org/sam3.1) | `checkpoints/` |
 | `rife49.pth` (vem com o Frame-Interpolation) | — |
 
-## Setup (RunPod, root)
-```bash
-export HF_TOKEN=...
-bash setup.sh
-```
-Garante nightly, instala os custom nodes (SAM3, VHS, Frame-Interpolation, KJNodes), baixa os modelos e o `.json`.
-
-## Como usar (:8188)
-1. Carregue `scail2-native-3rdparty.json` (Manager → Install Missing se houver vermelho não-core; core vermelho → `git pull` no ComfyUI).
-2. **INPUTS**: suba o vídeo no `VHS_LoadVideo` e a foto no `LoadImage`. Ajuste o **prompt do SAM3** (o conceito a segmentar).
-3. Escreva os prompts **positivo/negativo** (descreva o vídeo gerado — SCAIL-2 gosta de prompt longo).
-4. Toggle **REPLACE** (True = trocar a pessoa preservando a cena). Ajuste **DURAÇÃO** (≤81).
-5. Rode. Saída em 32 fps (RIFE ×2).
-
-## Validação
-Sem vermelhos; teste 480p curto; confira a máscara (PreviewImage) e a troca. Erros → `task-debug-generation`.
-
 ## Referências
-- `knowledge-scail2-native` (grafo nativo), `knowledge-scail2` (modelo/params), `knowledge-image-masking` (SAM3), `docs/SCAIL-2.md`.
+- `knowledge-scail2`, `knowledge-scail2-native`, `knowledge-comfyui-workflows`
+- `knowledge-image-editing`, `knowledge-image-masking`
+- [ComfyUI-Flux-TryOff](https://github.com/asutermo/ComfyUI-Flux-TryOff)
+- [CatVTON-Flux](https://github.com/nftblackmagic/catvton-flux)
+- [ComfyUI_LayerStyle](https://github.com/chflame163/ComfyUI_LayerStyle)
