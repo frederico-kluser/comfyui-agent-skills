@@ -3,6 +3,19 @@
 > **Autoria de terceiros (comunidade), revisado e corrigido.** Pipeline de pré-processamento de vestimenta
 > com composição pós-TryOff para gerar referência de pessoa completa para animação SCAIL-2.
 
+|  |  |
+|---|---|
+| 🎯 Faz | SCAIL-2 nativo (2 passos) + CatVTON-Flux clothing transfer |
+| 🧠 Técnica | SCAIL-2 nativo (core) + TryOff/CatVTON-Flux + SegFormer |
+| 🎮 GPU/VRAM | 24 GB (RTX 4090) mín · 32 GB+ recomendado |
+| 📥 Entrada | foto da pessoa (`LoadImage`) + vídeo-condutor (`VHS_LoadVideo`) |
+| 📤 Saída | `reference_processed_*.png` (passo 1) → `SCAIL-2_*.mp4` 32 fps (passo 2) |
+| 🧩 Modelos | SCAIL-2 + cat-tryoff-flux ~12 GB + FLUX.1-dev ~23 GB + SegFormer ~1 GB |
+| 🧱 Requer | ComfyUI 0.3.60+ nightly · rode os 2 workflows em **sequência** |
+| 🟡 Status | Terceiros — revisado e corrigido (validar no pod) |
+
+📇 **Cards de API (inputs/params por nó):** [`API_REFERENCE_tryoff-preprocess.md`](API_REFERENCE_tryoff-preprocess.md) · [`API_REFERENCE_scail2-animation.md`](API_REFERENCE_scail2-animation.md)
+
 **Dois pipelines complementares** para animação com SCAIL-2:
 
 | Arquivo | O que faz |

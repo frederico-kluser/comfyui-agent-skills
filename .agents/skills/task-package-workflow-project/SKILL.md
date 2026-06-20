@@ -25,7 +25,7 @@ instruções e o provisioning. O usuário sobe o `.sh` no RunPod, roda como root
 ```
 workflows/<nome-do-projeto>/      # kebab-case; o nome descreve a tarefa (ex.: person-swap-scail2)
 ├── <nome-do-projeto>.json        # workflow ComfyUI (formato UI, carregável arrastando)
-├── README.md                     # o que faz, pré-req, como ANEXAR inputs, parâmetros, validação, troubleshooting
+├── README.md                     # abre com Card Informativo (tabela) + seções padronizadas (pré-req, setup, como usar, parâmetros, validação, troubleshooting, refs)
 └── setup.sh                      # provisioning RunPod (root): nodes + modelos DO workflow + baixa o .json
 ```
 
@@ -40,10 +40,13 @@ workflows/<nome-do-projeto>/      # kebab-case; o nome descreve a tarefa (ex.: p
    `.agents/skills/knowledge-runpod-provisioning/scripts/provisioning.sh`: só os custom nodes e modelos
    QUE ESTE workflow usa; garanta pré-condições (ex.: ComfyUI nightly p/ SCAIL-2); baixe o próprio `.json`
    do repo público para `ComfyUI/user/default/workflows/`. Rode `bash -n setup.sh`.
-4. **Escreva o `README.md`**: o que faz; pré-req (GPU/VRAM → `knowledge-runpod-infra`); **como anexar os
-   inputs** (qual nó recebe o vídeo, qual recebe a foto; passos manuais como gerar máscara ou clicar no
-   `PointsEditor`); parâmetros não-óbvios; **passos de validação no pod**; troubleshooting → `task-debug-generation`.
-   Referencie as knowledge skills; não duplique o conteúdo delas.
+4. **Escreva o `README.md`** (estrutura padrão). Comece com o **Card Informativo** — tabela limpa no topo:
+   `🎯 Faz · 🧠 Técnica · 🎮 GPU/VRAM · 📥 Entrada · 📤 Saída · 🧩 Modelos · 🟢/🟡 Status` (+ `🧱 Requer` só se
+   houver pré-condição dura, ex.: ComfyUI nightly). Depois, **na mesma ordem em todos os projetos**: pré-req
+   (GPU/VRAM → `knowledge-runpod-infra`); setup; **como anexar os inputs** (qual nó recebe o vídeo, qual recebe a
+   foto; passos manuais como gerar máscara ou clicar no `PointsEditor`); parâmetros não-óbvios (tabela); **passos
+   de validação no pod**; troubleshooting (tabela) → `task-debug-generation`; referências. Referencie as knowledge
+   skills; não duplique o conteúdo delas.
 5. **Registre no catálogo**: adicione o projeto à lista de `workflows/` no `README.md` raiz (e, se virar
    um tipo recorrente, uma cadeia no `catalog.md`).
 6. **Valide** (estrutural agora; funcional no pod): JSON parseia; `bash -n setup.sh`; sem segredos no `.sh`.

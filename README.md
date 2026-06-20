@@ -33,8 +33,8 @@ docs/                     # relatórios de pesquisa (a fonte: SCAIL-2, workflows
   task-*/                 #   tarefas (create-commercial, build-workflow, launch-pod, debug,
                           #            package-workflow-project, edit-image)
   meta-*/                 #   evolução e consolidação
-workflows/                # PROJETOS de workflow entregáveis (1 pasta por projeto)
-  person-swap-scail2/     #   ex.: troca de pessoa em vídeo (SCAIL-2) — json + README + setup.sh
+workflows/                # PROJETOS de workflow entregáveis (1 pasta/projeto: <nome>.json + README + setup.sh)
+  <projeto>/              #   vídeo: person-swap, scail2-native · imagem: inpaint, kontext, qwen, outpaint, remove-bg
 AGENTS.md  ·  CLAUDE.md   # always-on (symlink)
 ```
 
@@ -43,7 +43,8 @@ AGENTS.md  ·  CLAUDE.md   # always-on (symlink)
 pessoa de um vídeo", "qual GPU para 720p?", "deu OOM"). O `project-router` seleciona as skills e executa.
 
 **Criar um projeto de workflow** (`workflows/<nome>/`): a skill `task-package-workflow-project` adapta um
-exemplo known-good e gera o trio `<nome>.json` + `README.md` + `setup.sh`. Cada projeto tem seu próprio README.
+exemplo known-good e gera o trio `<nome>.json` + `README.md` + `setup.sh`. Cada README abre com um **Card
+Informativo** (faz · técnica · GPU/VRAM · entrada · saída · modelos · status) e segue a mesma ordem de seções.
 
 **Rodar um workflow no RunPod**:
 1. Suba um pod ComfyUI (→ skill `task-launch-runpod-pod`).
@@ -51,15 +52,27 @@ exemplo known-good e gera o trio `<nome>.json` + `README.md` + `setup.sh`. Cada 
 3. Abra o ComfyUI (porta 8188), carregue o workflow e siga o README do projeto.
 
 ## Projetos de workflow
-| Projeto | O que faz | Técnica |
-|---|---|---|
-| [`person-swap-scail2`](workflows/person-swap-scail2/) | Substitui uma pessoa num vídeo por outra a partir de uma foto | SCAIL-2 Replacement (wrapper kijai) |
-| [`scail2-native-3rdparty`](workflows/scail2-native-3rdparty/) | SCAIL-2 **nativo** (workflow de terceiros) + **CatVTON-Flux** clothing transfer (2 passos: tryoff-preprocess → scail2-animation). Original preservado em `scail2-native-3rdparty.json` | SCAIL-2 nativo (core) + CatVTON-Flux + SegFormer |
-| [`inpaint-region-cropstitch`](workflows/inpaint-region-cropstitch/) | Edita só uma região da imagem e recola (inpaint + Crop&Stitch) + scripts Python | Flux Fill / SDXL-inpaint |
-| [`instruction-edit-kontext`](workflows/instruction-edit-kontext/) | Edita a imagem por instrução de texto, sem máscara | Flux Kontext |
-| [`qwen-image-edit`](workflows/qwen-image-edit/) | Edição por instrução (objeto/fundo/texto na imagem), bilíngue | Qwen-Image-Edit 2511 |
-| [`outpaint-extend`](workflows/outpaint-extend/) | Estende o enquadramento (outpainting) | Flux Fill |
-| [`remove-background`](workflows/remove-background/) | Remove/troca o fundo (alpha transparente) | RMBG / BiRefNet / SAM3 |
+> Legenda de status: 🟢 pronto · 🟡 rascunho a validar no pod. Cada projeto abre com um **Card Informativo**
+> (faz · técnica · GPU/VRAM · entrada · saída · modelos · status) no topo do seu README.
+
+### 🎬 Vídeo & Animação (SCAIL-2)
+| Projeto | O que faz | Técnica | GPU/VRAM | Status |
+|---|---|---|---|---|
+| [`person-swap-scail2`](workflows/person-swap-scail2/) | Troca a pessoa de um vídeo por outra (a partir de 1 foto), preservando o movimento | SCAIL-2 Replacement (wrapper kijai) | 32–80 GB | 🟡 |
+| [`scail2-native-3rdparty`](workflows/scail2-native-3rdparty/) | SCAIL-2 **nativo** (2 passos) + **CatVTON-Flux** clothing transfer. Original preservado em `scail2-native-3rdparty.json` | SCAIL-2 core + CatVTON-Flux + SegFormer | 24 GB+ | 🟡 |
+
+### 🖼️ Edição de imagem
+| Projeto | O que faz | Técnica | GPU/VRAM | Status |
+|---|---|---|---|---|
+| [`inpaint-region-cropstitch`](workflows/inpaint-region-cropstitch/) | Edita só uma região (máscara) e recola sem tocar o resto (+ scripts Python) | Flux Fill / SDXL-inpaint + Crop&Stitch | 16–24 GB | 🟡 |
+| [`instruction-edit-kontext`](workflows/instruction-edit-kontext/) | Edita a imagem por instrução de texto, sem máscara | Flux.1 Kontext [dev] | ~16 GB | 🟡 |
+| [`qwen-image-edit`](workflows/qwen-image-edit/) | Edição por instrução (objeto/fundo/texto na imagem), bilíngue | Qwen-Image-Edit 2511 | 16–24 GB | 🟡 |
+
+### 🔭 Enquadramento & Fundo
+| Projeto | O que faz | Técnica | GPU/VRAM | Status |
+|---|---|---|---|---|
+| [`outpaint-extend`](workflows/outpaint-extend/) | Estende o enquadramento (outpainting) | Flux.1 Fill [dev] | 16–24 GB | 🟡 |
+| [`remove-background`](workflows/remove-background/) | Remove/troca o fundo (PNG com canal alpha) | RMBG / BiRefNet / BEN2 / SAM3 | Modesta | 🟢 |
 
 ## Memória evolutiva (e suas salvaguardas)
 Skills de tarefa rodam um passo `<evolution>` ao concluir e registram aprendizados em `LEARNINGS.md`.
