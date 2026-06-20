@@ -1,0 +1,426 @@
+{
+  "id": "c3d4e5f6-a7b8-9012-cdef-123456789012",
+  "revision": 0,
+  "last_node_id": 10,
+  "last_link_id": 18,
+  "nodes": [
+    {
+      "id": 1,
+      "type": "VHS_LoadVideo",
+      "pos": [50, 50],
+      "size": [261.6533203125, 459.80517174586777],
+      "flags": {},
+      "order": 0,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "meta_batch",
+          "shape": 7,
+          "type": "VHS_BatchManager",
+          "link": null
+        },
+        {
+          "name": "vae",
+          "shape": 7,
+          "type": "VAE",
+          "link": null
+        },
+        {
+          "name": "frame_load_cap",
+          "type": "INT",
+          "widget": {
+            "name": "frame_load_cap"
+          },
+          "link": null
+        }
+      ],
+      "outputs": [
+        {
+          "name": "IMAGE",
+          "type": "IMAGE",
+          "links": [4]
+        },
+        {
+          "name": "frame_count",
+          "type": "INT",
+          "links": null
+        },
+        {
+          "name": "audio",
+          "type": "AUDIO",
+          "links": null
+        },
+        {
+          "name": "video_info",
+          "type": "VHS_VIDEOINFO",
+          "links": null
+        }
+      ],
+      "title": "Driving Video (frame 0)",
+      "properties": {
+        "cnr_id": "comfyui-videohelpersuite",
+        "ver": "2984ec4c4b93292421888f38db74a5e8802a8ff8",
+        "Node name for S&R": "VHS_LoadVideo"
+      },
+      "widgets_values": {
+        "video": "carnival-dancing.mp4",
+        "force_rate": 16,
+        "custom_width": 0,
+        "custom_height": 0,
+        "frame_load_cap": 1,
+        "skip_first_frames": 0,
+        "select_every_nth": 1,
+        "format": "None",
+        "videopreview": {
+          "hidden": false,
+          "paused": false,
+          "params": {
+            "filename": "carnival-dancing.mp4",
+            "type": "input",
+            "format": "video/mp4",
+            "force_rate": 16,
+            "custom_width": 0,
+            "custom_height": 0,
+            "frame_load_cap": 1,
+            "skip_first_frames": 0,
+            "select_every_nth": 1
+          }
+        }
+      },
+      "color": "#2a363b",
+      "bgcolor": "#3f5159"
+    },
+    {
+      "id": 2,
+      "type": "ImageFromBatch",
+      "pos": [360, 50],
+      "size": [270, 82],
+      "flags": {},
+      "order": 1,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "image",
+          "type": "IMAGE",
+          "link": 4
+        }
+      ],
+      "outputs": [
+        {
+          "name": "IMAGE",
+          "type": "IMAGE",
+          "links": [5]
+        }
+      ],
+      "title": "Frame Selector (index 0)",
+      "properties": {
+        "cnr_id": "comfy-core",
+        "ver": "0.3.60",
+        "Node name for S&R": "ImageFromBatch"
+      },
+      "widgets_values": [0, 1],
+      "color": "#2a363b",
+      "bgcolor": "#3f5159"
+    },
+    {
+      "id": 3,
+      "type": "LoadImage",
+      "pos": [50, 550],
+      "size": [279.95978857780966, 348.15275335146265],
+      "flags": {},
+      "order": 2,
+      "mode": 0,
+      "inputs": [],
+      "outputs": [
+        {
+          "name": "IMAGE",
+          "type": "IMAGE",
+          "links": [6]
+        },
+        {
+          "name": "MASK",
+          "type": "MASK",
+          "links": null
+        }
+      ],
+      "title": "Reference Photo (Sambista)",
+      "properties": {
+        "cnr_id": "comfy-core",
+        "ver": "0.3.60",
+        "Node name for S&R": "LoadImage"
+      },
+      "widgets_values": ["sambista-reference.jpg", "image"],
+      "color": "#233",
+      "bgcolor": "#355"
+    },
+    {
+      "id": 4,
+      "type": "LayerMask: SegformerB2ClothesUltra",
+      "pos": [680, 50],
+      "size": [315, 320],
+      "flags": {},
+      "order": 3,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "image",
+          "type": "IMAGE",
+          "link": 5
+        }
+      ],
+      "outputs": [
+        {
+          "name": "image",
+          "type": "IMAGE",
+          "links": null
+        },
+        {
+          "name": "mask",
+          "type": "MASK",
+          "links": [7]
+        }
+      ],
+      "title": "Clothing Mask from Video Frame",
+      "properties": {
+        "cnr_id": "chflame163/ComfyUI_LayerStyle",
+        "ver": "1.0.0",
+        "Node name for S&R": "LayerMask: SegformerB2ClothesUltra"
+      },
+      "widgets_values": [
+        false, false, false, false, false, false, false, false,
+        true, false, true, true, false, false, false, false,
+        "VITMatte", 6, 6, 0.3, 0.95, true, "cuda", 2.0
+      ]
+    },
+    {
+      "id": 5,
+      "type": "TryOffQuantizerNode",
+      "pos": [50, 980],
+      "size": [270, 58],
+      "flags": {},
+      "order": 4,
+      "mode": 0,
+      "inputs": [],
+      "outputs": [
+        {
+          "name": "transformers_config",
+          "type": "transformers_config",
+          "links": [8]
+        },
+        {
+          "name": "diffusers_config",
+          "type": "diffusers_config",
+          "links": [9]
+        }
+      ],
+      "properties": {
+        "cnr_id": "asutermo/ComfyUI-Flux-TryOff",
+        "ver": "1.0.0",
+        "Node name for S&R": "TryOffQuantizerNode"
+      },
+      "widgets_values": ["8Bit"]
+    },
+    {
+      "id": 6,
+      "type": "TryOffModelNode",
+      "pos": [370, 980],
+      "size": [315, 82],
+      "flags": {},
+      "order": 5,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "transformers_config",
+          "type": "transformers_config",
+          "link": 8
+        }
+      ],
+      "outputs": [
+        {
+          "name": "MODEL",
+          "type": "MODEL",
+          "links": [10]
+        }
+      ],
+      "properties": {
+        "cnr_id": "asutermo/ComfyUI-Flux-TryOff",
+        "ver": "1.0.0",
+        "Node name for S&R": "TryOffModelNode"
+      },
+      "widgets_values": ["xiaozaa/cat-tryoff-flux", "cuda"]
+    },
+    {
+      "id": 7,
+      "type": "TryOffFluxFillModelNode",
+      "pos": [730, 980],
+      "size": [315, 82],
+      "flags": {},
+      "order": 6,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "transformer",
+          "type": "MODEL",
+          "link": 10
+        },
+        {
+          "name": "diffusers_config",
+          "type": "diffusers_config",
+          "link": 9
+        }
+      ],
+      "outputs": [
+        {
+          "name": "MODEL",
+          "type": "MODEL",
+          "links": [11]
+        }
+      ],
+      "properties": {
+        "cnr_id": "asutermo/ComfyUI-Flux-TryOff",
+        "ver": "1.0.0",
+        "Node name for S&R": "TryOffFluxFillModelNode"
+      },
+      "widgets_values": ["FLUX.1-dev", "cuda"]
+    },
+    {
+      "id": 8,
+      "type": "TryOffRunNode",
+      "pos": [680, 550],
+      "size": [380, 380],
+      "flags": {},
+      "order": 7,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "image_in",
+          "type": "IMAGE",
+          "link": 6
+        },
+        {
+          "name": "mask_in",
+          "type": "MASK",
+          "link": 7
+        },
+        {
+          "name": "pipe",
+          "type": "MODEL",
+          "link": 11
+        }
+      ],
+      "outputs": [
+        {
+          "name": "garment_image",
+          "type": "IMAGE",
+          "links": null
+        },
+        {
+          "name": "tryoff_image",
+          "type": "IMAGE",
+          "links": [12]
+        }
+      ],
+      "title": "TryOff — Apply Video Clothing to Reference",
+      "properties": {
+        "cnr_id": "asutermo/ComfyUI-Flux-TryOff",
+        "ver": "1.0.0",
+        "Node name for S&R": "TryOffRunNode"
+      },
+      "widgets_values": [
+        768, 1024, 50, 30, 42, "fixed",
+        "photorealistic human figure, natural skin texture with pores and subtle variations, anatomically accurate proportions, studio photography lighting, high detail skin rendering, professional portrait reference, 8k resolution, masterpiece, natural skin tones, smooth but realistic subsurface scattering, matching the style and appearance of the driving video frame, bare skin, full body reference photography"
+      ]
+    },
+    {
+      "id": 9,
+      "type": "SaveImage",
+      "pos": [1120, 550],
+      "size": [315, 270],
+      "flags": {},
+      "order": 8,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "images",
+          "type": "IMAGE",
+          "link": 12
+        }
+      ],
+      "outputs": [],
+      "properties": {
+        "cnr_id": "comfy-core",
+        "ver": "0.3.60",
+        "Node name for S&R": "SaveImage"
+      },
+      "widgets_values": ["reference_processed_"]
+    },
+    {
+      "id": 10,
+      "type": "MarkdownNote",
+      "pos": [50, 1100],
+      "size": [520, 220],
+      "flags": {},
+      "order": 9,
+      "mode": 0,
+      "inputs": [],
+      "outputs": [],
+      "title": "MODELS & USAGE",
+      "properties": {},
+      "widgets_values": [
+        "## TryOff Preprocess — Clothing Transfer\n\n**Models Required:**\n- 📥 [cat-tryoff-flux](https://huggingface.co/xiaozaa/cat-tryoff-flux) → models/cat-tryoff-flux/\n- 📥 [FLUX.1-dev](https://huggingface.co/black-forest-labs/FLUX.1-dev) → models/checkpoints/FLUX.1-dev/\n- 📥 [SegFormer B2 Clothes](https://huggingface.co/mattmdjaga/segformer_b2_clothes) → models/segformer_b2_clothes/\n\n**Custom Nodes:** ComfyUI-Flux-TryOff, ComfyUI_LayerStyle, ComfyUI-VideoHelperSuite\n\n**Flow:** Video frame (VHS_LoadVideo) → Segformer extracts clothing mask → TryOffRunNode applies mask to reference photo → SaveImage.\n\n**Output:** `reference_processed_*.png` — load into scail2-animation.json LoadImage.\n\n**⚠️ VRAM:** CatVTON-Flux + FLUX.1-dev ~20GB (8-bit). Rode este workflow SOZINHO (feche/recarregue o ComfyUI antes do workflow 2)."
+      ],
+      "color": "#432",
+      "bgcolor": "#653"
+    }
+  ],
+  "links": [
+    [4, 1, 0, 2, 0, "IMAGE"],
+    [5, 2, 0, 4, 0, "IMAGE"],
+    [6, 3, 0, 8, 0, "IMAGE"],
+    [7, 4, 1, 8, 1, "MASK"],
+    [8, 5, 0, 6, 0, "transformers_config"],
+    [9, 5, 1, 7, 1, "diffusers_config"],
+    [10, 6, 0, 7, 0, "MODEL"],
+    [11, 7, 0, 8, 2, "MODEL"],
+    [12, 8, 1, 9, 0, "IMAGE"]
+  ],
+  "groups": [
+    {
+      "id": 1,
+      "title": "01 — VIDEO FRAME + MASK",
+      "bounding": [30, 20, 1030, 410],
+      "color": "#3f789e",
+      "flags": {}
+    },
+    {
+      "id": 2,
+      "title": "02 — REFERENCE + TRYOFF",
+      "bounding": [30, 520, 1070, 460],
+      "color": "#3f789e",
+      "flags": {}
+    },
+    {
+      "id": 3,
+      "title": "03 — MODEL LOADING",
+      "bounding": [30, 950, 1070, 160],
+      "color": "#3f789e",
+      "flags": {}
+    },
+    {
+      "id": 4,
+      "title": "04 — OUTPUT",
+      "bounding": [1080, 520, 400, 350],
+      "color": "#3f789e",
+      "flags": {}
+    }
+  ],
+  "config": {},
+  "extra": {
+    "ds": {
+      "scale": 0.55,
+      "offset": [0, 0]
+    },
+    "frontendVersion": "1.45.15"
+  },
+  "version": 0.4
+}
