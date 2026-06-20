@@ -1,0 +1,162 @@
+{
+  "1": {
+    "class_type": "VHS_LoadVideo",
+    "inputs": {},
+    "_meta": {
+      "title": "Driving Video (frame 0)"
+    }
+  },
+  "2": {
+    "class_type": "ImageFromBatch",
+    "inputs": {
+      "image": [
+        "1",
+        0
+      ]
+    },
+    "_meta": {
+      "title": "Frame Selector (index 0)"
+    }
+  },
+  "3": {
+    "class_type": "LoadImage",
+    "inputs": {
+      "image": "sambista-reference.jpg"
+    },
+    "_meta": {
+      "title": "Reference Photo (Sambista)"
+    }
+  },
+  "4": {
+    "class_type": "LayerMask: SegformerB2ClothesUltra",
+    "inputs": {
+      "image": [
+        "3",
+        0
+      ]
+    },
+    "_meta": {
+      "title": "Clothing Mask from Reference Photo"
+    }
+  },
+  "5": {
+    "class_type": "TryOffQuantizerNode",
+    "inputs": {
+      "param_0": "8Bit"
+    }
+  },
+  "6": {
+    "class_type": "TryOffModelNode",
+    "inputs": {
+      "transformers_config": [
+        "5",
+        0
+      ]
+    }
+  },
+  "7": {
+    "class_type": "TryOffFluxFillModelNode",
+    "inputs": {
+      "transformer": [
+        "6",
+        0
+      ],
+      "diffusers_config": [
+        "5",
+        1
+      ]
+    }
+  },
+  "8": {
+    "class_type": "TryOffRunNode",
+    "inputs": {
+      "image_in": [
+        "3",
+        0
+      ],
+      "mask_in": [
+        "4",
+        1
+      ],
+      "pipe": [
+        "7",
+        0
+      ]
+    },
+    "_meta": {
+      "title": "TryOff \u2014 Process Clothing on Reference"
+    }
+  },
+  "9": {
+    "class_type": "SaveImage",
+    "inputs": {
+      "images": [
+        "12",
+        0
+      ]
+    }
+  },
+  "10": {
+    "class_type": "MarkdownNote",
+    "inputs": {},
+    "_meta": {
+      "title": "MODELS & USAGE"
+    }
+  },
+  "11": {
+    "class_type": "MaskGaussianBlur",
+    "inputs": {
+      "mask": [
+        "4",
+        1
+      ]
+    },
+    "_meta": {
+      "title": "Feather Mask Edge"
+    }
+  },
+  "12": {
+    "class_type": "ImageCompositeMasked",
+    "inputs": {
+      "destination": [
+        "3",
+        0
+      ],
+      "source": [
+        "8",
+        0
+      ],
+      "mask": [
+        "11",
+        0
+      ]
+    },
+    "_meta": {
+      "title": "Composite \u2014 Reconstruct Full Person"
+    }
+  },
+  "13": {
+    "class_type": "PreviewImage",
+    "inputs": {
+      "images": [
+        "12",
+        0
+      ]
+    },
+    "_meta": {
+      "title": "Preview Composite (Full Person)"
+    }
+  },
+  "14": {
+    "class_type": "PreviewImage",
+    "inputs": {
+      "images": [
+        "8",
+        1
+      ]
+    },
+    "_meta": {
+      "title": "Preview Extracted Garment"
+    }
+  }
+}

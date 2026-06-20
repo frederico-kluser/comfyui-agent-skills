@@ -1,0 +1,722 @@
+{
+  "3": {
+    "class_type": "KSampler",
+    "inputs": {
+      "model": [
+        "132",
+        0
+      ],
+      "positive": [
+        "101",
+        0
+      ],
+      "negative": [
+        "101",
+        1
+      ],
+      "latent_image": [
+        "101",
+        2
+      ],
+      "seed": 1234,
+      "seed_mode": "fixed",
+      "steps": 6,
+      "cfg": 1,
+      "sampler_name": "euler",
+      "scheduler": "simple",
+      "denoise": 1
+    }
+  },
+  "96": {
+    "class_type": "LoraLoaderModelOnly",
+    "inputs": {
+      "model": [
+        "37",
+        0
+      ],
+      "lora_name": "Wan21_I2V_14B_lightx2v_cfg_step_distill_lora_rank64.safetensors",
+      "strength_model": 1
+    }
+  },
+  "39": {
+    "class_type": "VAELoader",
+    "inputs": {
+      "vae_name": "wan_2.1_vae.safetensors"
+    }
+  },
+  "57": {
+    "class_type": "CLIPVisionLoader",
+    "inputs": {
+      "clip_name": "clip_vision_h.safetensors"
+    }
+  },
+  "38": {
+    "class_type": "CLIPLoader",
+    "inputs": {
+      "clip_name1": "umt5_xxl_fp8_e4m3fn_scaled.safetensors",
+      "clip_name2": "wan",
+      "type": "default"
+    }
+  },
+  "48": {
+    "class_type": "ModelSamplingSD3",
+    "inputs": {
+      "model": [
+        "96",
+        0
+      ]
+    }
+  },
+  "131": {
+    "class_type": "SetNode",
+    "inputs": {
+      "MODEL": [
+        "48",
+        0
+      ]
+    },
+    "_meta": {
+      "title": "Set_MODEL"
+    }
+  },
+  "136": {
+    "class_type": "SetNode",
+    "inputs": {
+      "VAE": [
+        "39",
+        0
+      ]
+    },
+    "_meta": {
+      "title": "Set_VAE"
+    }
+  },
+  "133": {
+    "class_type": "SetNode",
+    "inputs": {
+      "CLIP": [
+        "38",
+        0
+      ]
+    },
+    "_meta": {
+      "title": "Set_CLIP"
+    }
+  },
+  "110": {
+    "class_type": "CheckpointLoaderSimple",
+    "inputs": {
+      "ckpt_name": "sam3.1_multiplex_fp16.safetensors"
+    }
+  },
+  "138": {
+    "class_type": "SetNode",
+    "inputs": {
+      "CLIP_VISION": [
+        "57",
+        0
+      ]
+    },
+    "_meta": {
+      "title": "Set_CLIP_VISION"
+    }
+  },
+  "140": {
+    "class_type": "SetNode",
+    "inputs": {
+      "MODEL": [
+        "110",
+        0
+      ]
+    },
+    "_meta": {
+      "title": "Set_MODEL_SAM3"
+    }
+  },
+  "141": {
+    "class_type": "SetNode",
+    "inputs": {
+      "CLIP": [
+        "110",
+        1
+      ]
+    },
+    "_meta": {
+      "title": "Set_CLIP_SAM3"
+    }
+  },
+  "123": {
+    "class_type": "ResizeImageMaskNode",
+    "inputs": {
+      "input": [
+        "126",
+        0
+      ],
+      "mode": "scale total pixels",
+      "scale": 0.5,
+      "method": "nearest-exact"
+    }
+  },
+  "126": {
+    "class_type": "ImageFromBatch",
+    "inputs": {
+      "image": [
+        "113",
+        0
+      ]
+    }
+  },
+  "124": {
+    "class_type": "ResizeImageMaskNode",
+    "inputs": {
+      "input": [
+        "123",
+        0
+      ],
+      "mode": "scale to multiple",
+      "scale": 32,
+      "method": "nearest-exact"
+    }
+  },
+  "104": {
+    "class_type": "GetImageSize",
+    "inputs": {
+      "image": [
+        "124",
+        0
+      ]
+    }
+  },
+  "151": {
+    "class_type": "SetNode",
+    "inputs": {
+      "INT": [
+        "104",
+        0
+      ]
+    },
+    "_meta": {
+      "title": "Set_COMPRIMENTO"
+    }
+  },
+  "152": {
+    "class_type": "SetNode",
+    "inputs": {
+      "INT": [
+        "104",
+        1
+      ]
+    },
+    "_meta": {
+      "title": "Set_ALTURA"
+    }
+  },
+  "158": {
+    "class_type": "SetNode",
+    "inputs": {
+      "AUDIO": [
+        "113",
+        2
+      ]
+    },
+    "_meta": {
+      "title": "Set_AUDIO"
+    }
+  },
+  "155": {
+    "class_type": "SetNode",
+    "inputs": {
+      "IMAGE": [
+        "113",
+        0
+      ]
+    },
+    "_meta": {
+      "title": "Set_IMAGES"
+    }
+  },
+  "145": {
+    "class_type": "SetNode",
+    "inputs": {
+      "CONDITIONING": [
+        "6",
+        0
+      ]
+    },
+    "_meta": {
+      "title": "Set_POS"
+    }
+  },
+  "156": {
+    "class_type": "GetNode",
+    "inputs": {
+      "key": "IMAGES"
+    },
+    "_meta": {
+      "title": "Get_IMAGES"
+    }
+  },
+  "135": {
+    "class_type": "GetNode",
+    "inputs": {
+      "key": "VAE"
+    },
+    "_meta": {
+      "title": "Get_VAE"
+    }
+  },
+  "159": {
+    "class_type": "GetNode",
+    "inputs": {
+      "key": "AUDIO"
+    },
+    "_meta": {
+      "title": "Get_AUDIO"
+    }
+  },
+  "148": {
+    "class_type": "GetNode",
+    "inputs": {
+      "key": "NEG"
+    },
+    "_meta": {
+      "title": "Get_NEG"
+    }
+  },
+  "137": {
+    "class_type": "GetNode",
+    "inputs": {
+      "key": "VAE"
+    },
+    "_meta": {
+      "title": "Get_VAE"
+    }
+  },
+  "162": {
+    "class_type": "GetNode",
+    "inputs": {
+      "key": "IMAGE"
+    },
+    "_meta": {
+      "title": "Get_IMAGE"
+    }
+  },
+  "157": {
+    "class_type": "GetNode",
+    "inputs": {
+      "key": "IMAGES"
+    },
+    "_meta": {
+      "title": "Get_IMAGES"
+    }
+  },
+  "153": {
+    "class_type": "GetNode",
+    "inputs": {
+      "key": "COMPRIMENTO"
+    },
+    "_meta": {
+      "title": "Get_COMPRIMENTO"
+    }
+  },
+  "154": {
+    "class_type": "GetNode",
+    "inputs": {
+      "key": "ALTURA"
+    },
+    "_meta": {
+      "title": "Get_ALTURA"
+    }
+  },
+  "139": {
+    "class_type": "GetNode",
+    "inputs": {
+      "key": "CLIP_VISION"
+    },
+    "_meta": {
+      "title": "Get_CLIP_VISION"
+    }
+  },
+  "56": {
+    "class_type": "CLIPVisionEncode",
+    "inputs": {
+      "clip_vision": [
+        "139",
+        0
+      ],
+      "image": [
+        "162",
+        0
+      ]
+    }
+  },
+  "149": {
+    "class_type": "b164ac0a-4b9d-4c83-8861-f18f2ad4b571",
+    "inputs": {
+      "images": [
+        "161",
+        0
+      ],
+      "model": [
+        "144",
+        0
+      ],
+      "clip": [
+        "142",
+        0
+      ],
+      "images_1": [
+        "156",
+        0
+      ],
+      "model_1": [
+        "143",
+        0
+      ]
+    }
+  },
+  "143": {
+    "class_type": "GetNode",
+    "inputs": {
+      "key": "MODEL_SAM3"
+    },
+    "_meta": {
+      "title": "Get_MODEL_SAM3"
+    }
+  },
+  "161": {
+    "class_type": "GetNode",
+    "inputs": {
+      "key": "IMAGE"
+    },
+    "_meta": {
+      "title": "Get_IMAGE"
+    }
+  },
+  "142": {
+    "class_type": "GetNode",
+    "inputs": {
+      "key": "CLIP_SAM3"
+    },
+    "_meta": {
+      "title": "Get_CLIP_SAM3"
+    }
+  },
+  "118": {
+    "class_type": "PreviewImage",
+    "inputs": {
+      "images": [
+        "107",
+        0
+      ]
+    }
+  },
+  "132": {
+    "class_type": "GetNode",
+    "inputs": {
+      "key": "MODEL"
+    },
+    "_meta": {
+      "title": "Get_MODEL"
+    }
+  },
+  "117": {
+    "class_type": "PreviewImage",
+    "inputs": {
+      "images": [
+        "107",
+        1
+      ]
+    }
+  },
+  "134": {
+    "class_type": "GetNode",
+    "inputs": {
+      "key": "CLIP"
+    },
+    "_meta": {
+      "title": "Get_CLIP"
+    }
+  },
+  "37": {
+    "class_type": "UNETLoader",
+    "inputs": {
+      "unet_name": "wan2.1_14B_SCAIL_2_fp8_scaled.safetensors",
+      "weight_dtype": "default"
+    }
+  },
+  "144": {
+    "class_type": "GetNode",
+    "inputs": {
+      "key": "MODEL_SAM3"
+    },
+    "_meta": {
+      "title": "Get_MODEL_SAM3"
+    }
+  },
+  "7": {
+    "class_type": "CLIPTextEncode",
+    "inputs": {
+      "clip": [
+        "134",
+        0
+      ],
+      "text": ""
+    },
+    "_meta": {
+      "title": "CLIP Text Encode (Negative Prompt)"
+    }
+  },
+  "146": {
+    "class_type": "SetNode",
+    "inputs": {
+      "CONDITIONING": [
+        "7",
+        0
+      ]
+    },
+    "_meta": {
+      "title": "Set_NEG"
+    }
+  },
+  "167": {
+    "class_type": "SetNode",
+    "inputs": {
+      "INT": [
+        "166",
+        0
+      ]
+    },
+    "_meta": {
+      "title": "Set_FRAMES"
+    }
+  },
+  "147": {
+    "class_type": "GetNode",
+    "inputs": {
+      "key": "POS"
+    },
+    "_meta": {
+      "title": "Get_POS"
+    }
+  },
+  "168": {
+    "class_type": "GetNode",
+    "inputs": {
+      "key": "FRAMES"
+    },
+    "_meta": {
+      "title": "Get_FRAMES"
+    }
+  },
+  "49": {
+    "class_type": "VHS_VideoCombine",
+    "inputs": {
+      "images": [
+        "169",
+        0
+      ],
+      "audio": [
+        "159",
+        0
+      ]
+    }
+  },
+  "101": {
+    "class_type": "WanSCAILToVideo",
+    "inputs": {
+      "positive": [
+        "147",
+        0
+      ],
+      "negative": [
+        "148",
+        0
+      ],
+      "vae": [
+        "137",
+        0
+      ],
+      "pose_video": [
+        "157",
+        0
+      ],
+      "pose_video_mask": [
+        "107",
+        0
+      ],
+      "reference_image": [
+        "162",
+        0
+      ],
+      "reference_image_mask": [
+        "107",
+        1
+      ],
+      "clip_vision_output": [
+        "56",
+        0
+      ],
+      "width": [
+        "153",
+        0
+      ],
+      "height": [
+        "154",
+        0
+      ],
+      "length": [
+        "168",
+        0
+      ],
+      "replacement_mode": [
+        "175",
+        0
+      ],
+      "pose_strength": 1
+    }
+  },
+  "8": {
+    "class_type": "VAEDecode",
+    "inputs": {
+      "samples": [
+        "3",
+        0
+      ],
+      "vae": [
+        "135",
+        0
+      ]
+    }
+  },
+  "169": {
+    "class_type": "RIFE VFI",
+    "inputs": {
+      "frames": [
+        "8",
+        0
+      ],
+      "model": "rife49.pth",
+      "multiplier": 10,
+      "ensemble": 2,
+      "fast_mode": true
+    }
+  },
+  "113": {
+    "class_type": "VHS_LoadVideo",
+    "inputs": {
+      "frame_load_cap": [
+        "166",
+        0
+      ]
+    }
+  },
+  "58": {
+    "class_type": "LoadImage",
+    "inputs": {
+      "image": "reference_tryoff_00001_.png"
+    },
+    "_meta": {
+      "title": "Reference Image (TryOff Result)"
+    }
+  },
+  "160": {
+    "class_type": "SetNode",
+    "inputs": {
+      "IMAGE": [
+        "58",
+        0
+      ]
+    },
+    "_meta": {
+      "title": "Set_IMAGE"
+    }
+  },
+  "173": {
+    "class_type": "SetNode",
+    "inputs": {
+      "BOOLEAN": [
+        "172",
+        0
+      ]
+    },
+    "_meta": {
+      "title": "Set_REPLACE"
+    }
+  },
+  "107": {
+    "class_type": "SCAIL2ColoredMask",
+    "inputs": {
+      "driving_track_data": [
+        "149",
+        1
+      ],
+      "ref_track_data": [
+        "149",
+        0
+      ],
+      "replacement_mode": [
+        "174",
+        0
+      ],
+      "prompt": "",
+      "mode": "area"
+    }
+  },
+  "174": {
+    "class_type": "GetNode",
+    "inputs": {
+      "key": "REPLACE"
+    },
+    "_meta": {
+      "title": "Get_REPLACE"
+    }
+  },
+  "175": {
+    "class_type": "GetNode",
+    "inputs": {
+      "key": "REPLACE"
+    },
+    "_meta": {
+      "title": "Get_REPLACE"
+    }
+  },
+  "166": {
+    "class_type": "PrimitiveInt",
+    "inputs": {
+      "value": 81
+    },
+    "_meta": {
+      "title": "DURA\u00c7\u00c3O (FRAMES)"
+    }
+  },
+  "6": {
+    "class_type": "CLIPTextEncode",
+    "inputs": {
+      "clip": [
+        "134",
+        0
+      ],
+      "text": ""
+    },
+    "_meta": {
+      "title": "CLIP Text Encode (Positive Prompt)"
+    }
+  },
+  "172": {
+    "class_type": "PrimitiveBoolean",
+    "inputs": {
+      "value": true
+    },
+    "_meta": {
+      "title": "REPLACE"
+    }
+  },
+  "164": {
+    "class_type": "MarkdownNote",
+    "inputs": {},
+    "_meta": {
+      "title": "NOTE"
+    }
+  }
+}
