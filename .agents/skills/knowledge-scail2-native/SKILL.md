@@ -15,7 +15,7 @@ metadata:
 
 O caminho **nativo** (nós core do ComfyUI), distinto do wrapper kijai (`WanVideoModelLoader`/
 `WanVideoAddSCAIL*Embeds`/`WanVideoSampler`). Mapeado de um workflow real de terceiros
-(`workflows/scail2-native-3rdparty/`). `SCAIL2ColoredMask` e `WanSCAILToVideo` são **core** → exigem ComfyUI **nightly**.
+(`workflows-cloud/scail2-native-3rdparty/`). `SCAIL2ColoredMask` e `WanSCAILToVideo` são **core** → exigem ComfyUI **nightly**.
 
 ## Quando usar
 Montar/depurar/entender o workflow **nativo** do SCAIL-2; toggle Animation/Replacement; máscara por texto via SAM3.
@@ -47,10 +47,10 @@ SAM3 subgraph → SCAIL2ColoredMask → (2 máscaras) ─────→ WanSCAI
 - Máscara é gerada por **texto** (SAM3), não pintada: troque o prompt do subgraph ("human" → "the man on the left", "dog"...) para mudar o alvo. Encontra/rastreia todas as instâncias do conceito.
 - SCAIL-2 roda a **16 fps** (`force_rate 16`) → interpole com RIFE ×2 para 32, não suba o force_rate.
 - `SCAIL2ColoredMask`/`WanSCAILToVideo` vermelhos = ComfyUI não está nightly.
-- Comparação: este nativo vs `workflows/person-swap-scail2` (wrapper kijai, pose-control). O nativo tem o toggle replacement_mode explícito e máscara SAM3 por texto integrada — mais direto para "trocar pessoa".
+- Comparação: este nativo vs `workflows-cloud/person-swap-scail2` (wrapper kijai, pose-control). O nativo tem o toggle replacement_mode explícito e máscara SAM3 por texto integrada — mais direto para "trocar pessoa".
 
 ## Referências (nível 3)
-- `workflows/scail2-native-3rdparty/` (o workflow de terceiros analisado + README). `docs/SCAIL-2.md`.
+- `workflows-cloud/scail2-native-3rdparty/` (o workflow de terceiros analisado + README). `docs/SCAIL-2.md`.
 - Cadeia: modelo/VRAM/quant → `knowledge-scail2`; grafo/nós em geral → `knowledge-comfyui-workflows`; máscara por texto → `knowledge-image-masking`.
 
 ## Evolução

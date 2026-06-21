@@ -1,0 +1,558 @@
+{
+  "last_node_id": 11,
+  "last_link_id": 9,
+  "nodes": [
+    {
+      "id": 1,
+      "type": "MarkdownNote",
+      "pos": [
+        -660,
+        0
+      ],
+      "size": [
+        620,
+        760
+      ],
+      "flags": {},
+      "order": 1,
+      "mode": 0,
+      "inputs": [],
+      "outputs": [],
+      "title": "🎬➕ Estender A — Veo (handoff)",
+      "properties": {},
+      "widgets_values": [
+        "# 🎬➕ 40 — ESTENDER vídeo (método A: handoff de frame)\n\n## 🎯 PRA QUE SERVE\nContinuar um vídeo com uma AÇÃO NOVA por segmento. O Segmento 1 gera; pega-se o ÚLTIMO frame dele e ele vira o início do Segmento 2 — que tem um prompt DIFERENTE. Continuidade perfeita.\n\n## 📝 PASSO A PASSO\n1. **Load Image** = keyframe inicial.\n2. Escreva o **prompt do Seg 1** (ação 1).\n3. Escreva o **prompt do Seg 2** (a ação SEGUINTE) — mantenha identidade/figurino/luz.\n4. **Run** → salva os dois clipes. Repita o bloco p/ + segmentos.\n\n## ⚙️ COMO FUNCIONA\n- **GetImageRangeFromBatch** com `start_index=-1` pega o último frame do Seg 1.\n- Esse frame entra no **first_frame** do Veo do Seg 2.\n- Funciona com qualquer modelo (portátil).\n- ⚠️ a decodificação por frames perde o áudio nativo — baixe as URLs originais p/ manter som."
+      ],
+      "color": "#234",
+      "bgcolor": "#345"
+    },
+    {
+      "id": 2,
+      "type": "LoadImage",
+      "pos": [
+        40,
+        160
+      ],
+      "size": [
+        240,
+        280
+      ],
+      "flags": {},
+      "order": 2,
+      "mode": 0,
+      "inputs": [],
+      "outputs": [
+        {
+          "name": "IMAGE",
+          "type": "IMAGE",
+          "links": [
+            1
+          ]
+        },
+        {
+          "name": "MASK",
+          "type": "MASK",
+          "links": []
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "LoadImage"
+      },
+      "widgets_values": [
+        "example.png",
+        "image"
+      ],
+      "title": "Keyframe inicial (Seg 1)"
+    },
+    {
+      "id": 3,
+      "type": "Veo31_fal",
+      "pos": [
+        300,
+        160
+      ],
+      "size": [
+        340,
+        200
+      ],
+      "flags": {},
+      "order": 3,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "first_frame",
+          "type": "IMAGE",
+          "link": 1
+        },
+        {
+          "name": "last_frame",
+          "type": "IMAGE",
+          "link": null
+        }
+      ],
+      "outputs": [
+        {
+          "name": "STRING",
+          "type": "STRING",
+          "links": [
+            2
+          ]
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "Veo31_fal"
+      },
+      "widgets_values": [
+        "SEG 1 — <SHOT_TYPE + CAMERA_MOVE>. <<PROTAGONISTA>> <ACTION 1>. <SETTING>. <LIGHTING>. Audio: SFX <som>.",
+        "8s",
+        "16:9",
+        "1080p",
+        true
+      ],
+      "title": "Veo 3.1 — Seg 1"
+    },
+    {
+      "id": 4,
+      "type": "LoadVideoURL",
+      "pos": [
+        660,
+        160
+      ],
+      "size": [
+        300,
+        200
+      ],
+      "flags": {},
+      "order": 4,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "url",
+          "type": "STRING",
+          "link": 2,
+          "widget": {
+            "name": "url"
+          }
+        }
+      ],
+      "outputs": [
+        {
+          "name": "frames",
+          "type": "IMAGE",
+          "links": [
+            3,
+            5
+          ]
+        },
+        {
+          "name": "frame_count",
+          "type": "INT",
+          "links": []
+        },
+        {
+          "name": "video_info",
+          "type": "VHS_VIDEOINFO",
+          "links": []
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "LoadVideoURL"
+      },
+      "widgets_values": [
+        "https://example.com/video.mp4",
+        0,
+        "Disabled",
+        512,
+        512,
+        0,
+        0,
+        1
+      ],
+      "title": "LoadVideoURL (url←string)"
+    },
+    {
+      "id": 5,
+      "type": "CreateVideo",
+      "pos": [
+        1000,
+        160
+      ],
+      "size": [
+        220,
+        90
+      ],
+      "flags": {},
+      "order": 5,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "images",
+          "type": "IMAGE",
+          "link": 3
+        },
+        {
+          "name": "audio",
+          "type": "AUDIO",
+          "link": null
+        }
+      ],
+      "outputs": [
+        {
+          "name": "VIDEO",
+          "type": "VIDEO",
+          "links": [
+            4
+          ]
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "CreateVideo"
+      },
+      "widgets_values": [
+        24.0,
+        8
+      ],
+      "title": "CreateVideo"
+    },
+    {
+      "id": 6,
+      "type": "SaveVideo",
+      "pos": [
+        1260,
+        160
+      ],
+      "size": [
+        260,
+        120
+      ],
+      "flags": {},
+      "order": 6,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "video",
+          "type": "VIDEO",
+          "link": 4
+        }
+      ],
+      "outputs": [],
+      "properties": {
+        "Node name for S&R": "SaveVideo"
+      },
+      "widgets_values": [
+        "extend_seg1",
+        "mp4",
+        "h264"
+      ],
+      "title": "SaveVideo"
+    },
+    {
+      "id": 7,
+      "type": "GetImageRangeFromBatch",
+      "pos": [
+        660,
+        420
+      ],
+      "size": [
+        280,
+        90
+      ],
+      "flags": {},
+      "order": 7,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "images",
+          "type": "IMAGE",
+          "link": 5
+        },
+        {
+          "name": "masks",
+          "type": "MASK",
+          "link": null
+        }
+      ],
+      "outputs": [
+        {
+          "name": "IMAGE",
+          "type": "IMAGE",
+          "links": [
+            6
+          ]
+        },
+        {
+          "name": "MASK",
+          "type": "MASK",
+          "links": []
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "GetImageRangeFromBatch"
+      },
+      "widgets_values": [
+        -1,
+        1
+      ],
+      "title": "Último frame do Seg 1 (-1)"
+    },
+    {
+      "id": 8,
+      "type": "Veo31_fal",
+      "pos": [
+        1000,
+        160
+      ],
+      "size": [
+        360,
+        220
+      ],
+      "flags": {},
+      "order": 8,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "first_frame",
+          "type": "IMAGE",
+          "link": 6
+        },
+        {
+          "name": "last_frame",
+          "type": "IMAGE",
+          "link": null
+        }
+      ],
+      "outputs": [
+        {
+          "name": "STRING",
+          "type": "STRING",
+          "links": [
+            7
+          ]
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "Veo31_fal"
+      },
+      "widgets_values": [
+        "SEG 2 (continuação dirigida) — <NOVO SHOT_TYPE + CAMERA_MOVE>. <<PROTAGONISTA>> <NOVA AÇÃO 2 — o que acontece depois>. mantenha identidade, figurino e luz do seg anterior. <LIGHTING>. Audio: dialogue — \"<FALA>\"; SFX <som>.",
+        "8s",
+        "16:9",
+        "1080p",
+        true
+      ],
+      "title": "Veo 3.1 — Seg 2 (novo prompt)"
+    },
+    {
+      "id": 9,
+      "type": "LoadVideoURL",
+      "pos": [
+        1360,
+        160
+      ],
+      "size": [
+        300,
+        200
+      ],
+      "flags": {},
+      "order": 9,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "url",
+          "type": "STRING",
+          "link": 7,
+          "widget": {
+            "name": "url"
+          }
+        }
+      ],
+      "outputs": [
+        {
+          "name": "frames",
+          "type": "IMAGE",
+          "links": [
+            8
+          ]
+        },
+        {
+          "name": "frame_count",
+          "type": "INT",
+          "links": []
+        },
+        {
+          "name": "video_info",
+          "type": "VHS_VIDEOINFO",
+          "links": []
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "LoadVideoURL"
+      },
+      "widgets_values": [
+        "https://example.com/video.mp4",
+        0,
+        "Disabled",
+        512,
+        512,
+        0,
+        0,
+        1
+      ],
+      "title": "LoadVideoURL (url←string)"
+    },
+    {
+      "id": 10,
+      "type": "CreateVideo",
+      "pos": [
+        1700,
+        160
+      ],
+      "size": [
+        220,
+        90
+      ],
+      "flags": {},
+      "order": 10,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "images",
+          "type": "IMAGE",
+          "link": 8
+        },
+        {
+          "name": "audio",
+          "type": "AUDIO",
+          "link": null
+        }
+      ],
+      "outputs": [
+        {
+          "name": "VIDEO",
+          "type": "VIDEO",
+          "links": [
+            9
+          ]
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "CreateVideo"
+      },
+      "widgets_values": [
+        24.0,
+        8
+      ],
+      "title": "CreateVideo"
+    },
+    {
+      "id": 11,
+      "type": "SaveVideo",
+      "pos": [
+        1960,
+        160
+      ],
+      "size": [
+        260,
+        120
+      ],
+      "flags": {},
+      "order": 11,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "video",
+          "type": "VIDEO",
+          "link": 9
+        }
+      ],
+      "outputs": [],
+      "properties": {
+        "Node name for S&R": "SaveVideo"
+      },
+      "widgets_values": [
+        "extend_seg2",
+        "mp4",
+        "h264"
+      ],
+      "title": "SaveVideo"
+    }
+  ],
+  "links": [
+    [
+      1,
+      2,
+      0,
+      3,
+      0,
+      "IMAGE"
+    ],
+    [
+      2,
+      3,
+      0,
+      4,
+      0,
+      "STRING"
+    ],
+    [
+      3,
+      4,
+      0,
+      5,
+      0,
+      "IMAGE"
+    ],
+    [
+      4,
+      5,
+      0,
+      6,
+      0,
+      "VIDEO"
+    ],
+    [
+      5,
+      4,
+      0,
+      7,
+      0,
+      "IMAGE"
+    ],
+    [
+      6,
+      7,
+      0,
+      8,
+      0,
+      "IMAGE"
+    ],
+    [
+      7,
+      8,
+      0,
+      9,
+      0,
+      "STRING"
+    ],
+    [
+      8,
+      9,
+      0,
+      10,
+      0,
+      "IMAGE"
+    ],
+    [
+      9,
+      10,
+      0,
+      11,
+      0,
+      "VIDEO"
+    ]
+  ],
+  "groups": [],
+  "config": {},
+  "extra": {},
+  "version": 0.4
+}

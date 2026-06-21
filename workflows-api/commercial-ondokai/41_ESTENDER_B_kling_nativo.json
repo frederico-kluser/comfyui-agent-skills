@@ -1,0 +1,384 @@
+{
+  "last_node_id": 8,
+  "last_link_id": 6,
+  "nodes": [
+    {
+      "id": 1,
+      "type": "MarkdownNote",
+      "pos": [
+        -660,
+        0
+      ],
+      "size": [
+        620,
+        760
+      ],
+      "flags": {},
+      "order": 1,
+      "mode": 0,
+      "inputs": [],
+      "outputs": [],
+      "title": "🎬➕ Estender B — Kling nativo",
+      "properties": {},
+      "widgets_values": [
+        "# 🎬➕ 41 — ESTENDER vídeo (método B: Kling nativo)\n\n## 🎯 PRA QUE SERVE\nExtensão NATIVA do Kling: gera um clipe e o estende ~5s com um NOVO prompt, encadeável (Seg1→Seg2→Seg3). Cada extensão recebe uma instrução nova.\n\n## 📝 PASSO A PASSO\n1. **Load Image** = start_frame.\n2. Prompt do **Seg 1** (KlingImage2Video).\n3. Prompts dos **Seg 2 e 3** (KlingVideoExtend) com as ações seguintes.\n4. **Run** → salva os 3 clipes.\n\n## ⚙️ COMO FUNCIONA\n- Cada nó Kling devolve um **video_id**; o nó Extend usa esse id p/ continuar o MESMO vídeo.\n- **cfg_scale** ~0.5; **negative_prompt** p/ evitar morphing.\n- Saída é VIDEO direto → SaveVideo."
+      ],
+      "color": "#234",
+      "bgcolor": "#345"
+    },
+    {
+      "id": 2,
+      "type": "LoadImage",
+      "pos": [
+        40,
+        140
+      ],
+      "size": [
+        240,
+        280
+      ],
+      "flags": {},
+      "order": 2,
+      "mode": 0,
+      "inputs": [],
+      "outputs": [
+        {
+          "name": "IMAGE",
+          "type": "IMAGE",
+          "links": [
+            1
+          ]
+        },
+        {
+          "name": "MASK",
+          "type": "MASK",
+          "links": []
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "LoadImage"
+      },
+      "widgets_values": [
+        "example.png",
+        "image"
+      ],
+      "title": "start_frame"
+    },
+    {
+      "id": 3,
+      "type": "KlingImage2VideoNode",
+      "pos": [
+        300,
+        140
+      ],
+      "size": [
+        340,
+        260
+      ],
+      "flags": {},
+      "order": 3,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "start_frame",
+          "type": "IMAGE",
+          "link": 1
+        }
+      ],
+      "outputs": [
+        {
+          "name": "VIDEO",
+          "type": "VIDEO",
+          "links": [
+            2
+          ]
+        },
+        {
+          "name": "video_id",
+          "type": "STRING",
+          "links": [
+            3
+          ]
+        },
+        {
+          "name": "duration",
+          "type": "STRING",
+          "links": []
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "KlingImage2VideoNode"
+      },
+      "widgets_values": [
+        "SEG 1 — <<PROTAGONISTA>> <ACTION 1>. <SETTING>. <LIGHTING>.",
+        "no morphing, distorted hands, flicker, face morphing, camera shake",
+        "kling-v2-1",
+        0.8,
+        "pro",
+        "16:9",
+        "5"
+      ],
+      "title": "Kling I2V — Seg 1"
+    },
+    {
+      "id": 4,
+      "type": "SaveVideo",
+      "pos": [
+        680,
+        420
+      ],
+      "size": [
+        240,
+        120
+      ],
+      "flags": {},
+      "order": 4,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "video",
+          "type": "VIDEO",
+          "link": 2
+        }
+      ],
+      "outputs": [],
+      "properties": {
+        "Node name for S&R": "SaveVideo"
+      },
+      "widgets_values": [
+        "extend_kling_seg1",
+        "mp4",
+        "h264"
+      ],
+      "title": "SaveVideo Seg 1"
+    },
+    {
+      "id": 5,
+      "type": "KlingVideoExtendNode",
+      "pos": [
+        680,
+        140
+      ],
+      "size": [
+        340,
+        200
+      ],
+      "flags": {},
+      "order": 5,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "video_id",
+          "type": "STRING",
+          "link": 3,
+          "widget": {
+            "name": "video_id"
+          }
+        }
+      ],
+      "outputs": [
+        {
+          "name": "VIDEO",
+          "type": "VIDEO",
+          "links": [
+            4
+          ]
+        },
+        {
+          "name": "video_id",
+          "type": "STRING",
+          "links": [
+            5
+          ]
+        },
+        {
+          "name": "duration",
+          "type": "STRING",
+          "links": []
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "KlingVideoExtendNode"
+      },
+      "widgets_values": [
+        "SEG 2 — <NOVA AÇÃO 2 dirigida>, mantém identidade/figurino.",
+        "no morphing, face morphing, flicker",
+        0.5,
+        ""
+      ],
+      "title": "Kling Extend — Seg 2 (novo prompt)"
+    },
+    {
+      "id": 6,
+      "type": "SaveVideo",
+      "pos": [
+        1060,
+        420
+      ],
+      "size": [
+        240,
+        120
+      ],
+      "flags": {},
+      "order": 6,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "video",
+          "type": "VIDEO",
+          "link": 4
+        }
+      ],
+      "outputs": [],
+      "properties": {
+        "Node name for S&R": "SaveVideo"
+      },
+      "widgets_values": [
+        "extend_kling_seg2",
+        "mp4",
+        "h264"
+      ],
+      "title": "SaveVideo Seg 2"
+    },
+    {
+      "id": 7,
+      "type": "KlingVideoExtendNode",
+      "pos": [
+        1060,
+        140
+      ],
+      "size": [
+        340,
+        200
+      ],
+      "flags": {},
+      "order": 7,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "video_id",
+          "type": "STRING",
+          "link": 5,
+          "widget": {
+            "name": "video_id"
+          }
+        }
+      ],
+      "outputs": [
+        {
+          "name": "VIDEO",
+          "type": "VIDEO",
+          "links": [
+            6
+          ]
+        },
+        {
+          "name": "video_id",
+          "type": "STRING",
+          "links": []
+        },
+        {
+          "name": "duration",
+          "type": "STRING",
+          "links": []
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "KlingVideoExtendNode"
+      },
+      "widgets_values": [
+        "SEG 3 — <NOVA AÇÃO 3 dirigida (clímax)>.",
+        "no morphing, face morphing, flicker",
+        0.5,
+        ""
+      ],
+      "title": "Kling Extend — Seg 3 (novo prompt)"
+    },
+    {
+      "id": 8,
+      "type": "SaveVideo",
+      "pos": [
+        1440,
+        140
+      ],
+      "size": [
+        240,
+        120
+      ],
+      "flags": {},
+      "order": 8,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "video",
+          "type": "VIDEO",
+          "link": 6
+        }
+      ],
+      "outputs": [],
+      "properties": {
+        "Node name for S&R": "SaveVideo"
+      },
+      "widgets_values": [
+        "extend_kling_seg3",
+        "mp4",
+        "h264"
+      ],
+      "title": "SaveVideo Seg 3"
+    }
+  ],
+  "links": [
+    [
+      1,
+      2,
+      0,
+      3,
+      0,
+      "IMAGE"
+    ],
+    [
+      2,
+      3,
+      0,
+      4,
+      0,
+      "VIDEO"
+    ],
+    [
+      3,
+      3,
+      1,
+      5,
+      0,
+      "STRING"
+    ],
+    [
+      4,
+      5,
+      0,
+      6,
+      0,
+      "VIDEO"
+    ],
+    [
+      5,
+      5,
+      1,
+      7,
+      0,
+      "STRING"
+    ],
+    [
+      6,
+      7,
+      0,
+      8,
+      0,
+      "VIDEO"
+    ]
+  ],
+  "groups": [],
+  "config": {},
+  "extra": {},
+  "version": 0.4
+}

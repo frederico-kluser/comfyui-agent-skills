@@ -7,7 +7,7 @@ elif [ -d "/opt/ComfyUI" ];                      then COMFY="/opt/ComfyUI"
 else COMFY="${WORKSPACE:-/workspace}/ComfyUI"; fi
 echo ">> ComfyUI em: $COMFY"
 HF_TOKEN="${HF_TOKEN:-}"; PIP="python -m pip install --no-cache-dir"
-WORKFLOW_URL="https://raw.githubusercontent.com/frederico-kluser/comfyui-agent-skills/main/workflows/remove-background/remove-background.json"
+WORKFLOW_URL="https://raw.githubusercontent.com/frederico-kluser/comfyui-agent-skills/main/workflows-cloud/remove-background/remove-background.json"
 
 # Os modelos de matting do RMBG baixam sozinhos no 1º uso do nó; SAM3 exige licença no HF.
 NODES=(

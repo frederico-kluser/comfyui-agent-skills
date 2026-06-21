@@ -25,7 +25,7 @@ Técnicas além do inpaint puro: ampliar, estender, reiluminar, controlar e limp
 
 ## Outpainting
 `Pad Image for Outpainting` (adiciona borda + cria a máscara) → Flux Fill / modelo de inpaint. `Extend Image for
-Outpainting` (CropAndStitch) traz rescale/blend/restitch. Veja `workflows/outpaint-extend`.
+Outpainting` (CropAndStitch) traz rescale/blend/restitch. Veja `workflows-cloud/outpaint-extend`.
 
 ## Relighting — IC-Light
 `kijai/ComfyUI-IC-Light` (ou huchenlei native): `iclight_sd15_fc` (foreground/por texto), `iclight_sd15_fbc` (por background).
@@ -37,10 +37,10 @@ Outpainting` (CropAndStitch) traz rescale/blend/restitch. Veja `workflows/outpai
 - **Regional prompting**: `ConditioningSetArea`/`ConditioningSetMask`. **Detailers**: FaceDetailer (rostos), hand detailer (LoRA de mãos).
 
 ## Remoção de fundo
-**ComfyUI-RMBG** (1038lab): RMBG-2.0, INSPYRENET, BEN2, **BiRefNet**, e **SAM3** (v3.0.0). Veja `workflows/remove-background`.
+**ComfyUI-RMBG** (1038lab): RMBG-2.0, INSPYRENET, BEN2, **BiRefNet**, e **SAM3** (v3.0.0). Veja `workflows-cloud/remove-background`.
 
 ## Referências (nível 3)
-- `docs/image-editing.md` §4 (fonte). Projetos: `workflows/outpaint-extend`, `workflows/remove-background`.
+- `docs/image-editing.md` §4 (fonte). Projetos: `workflows-cloud/outpaint-extend`, `workflows-cloud/remove-background`.
 - Cadeia: editar a região → `knowledge-image-editing`; selecionar → `knowledge-image-masking`; provisionar modelos → `knowledge-runpod-provisioning`.
 
 ## Evolução

@@ -1,0 +1,35 @@
+{
+  "last_node_id": 1,
+  "last_link_id": 0,
+  "nodes": [
+    {
+      "id": 1,
+      "type": "MarkdownNote",
+      "pos": [
+        0,
+        0
+      ],
+      "size": [
+        820,
+        900
+      ],
+      "flags": {},
+      "order": 0,
+      "mode": 0,
+      "inputs": [],
+      "outputs": [],
+      "properties": {},
+      "widgets_values": [
+        "# ✂️ COMECE AQUI — Editar SÓ uma parte da imagem (e colar de volta)\n\nA técnica que você pediu: **(1) selecionar** só a região a mudar → **(2) gerar/editar apenas ela** →\n**(3) \"colar\" o resultado de volta** sobre a imagem ORIGINAL, deixando o resto **pixel-idêntico**.\nFunciona com ferramentas OPEN e é leve em 8GB (você processa uma região, não a imagem toda).\n\n## 🗂️ OS WORKFLOWS\n- `01_selecionar_regiao_texto` — só a SELEÇÃO: gera a máscara por texto ('the shirt', 'the sky') ou manual (MaskEditor). Veja o que vai mudar antes.\n- `02_inpaint_local_sdxl_composite` 🏠 — edita a região com **SDXL local (grátis)** + cola de volta. Comece aqui.\n- `03_inpaint_nuvem_fal_composite` ☁️ — mesma coisa com **Flux Fill na nuvem** (qualidade máx, cobra fal).\n- `04_crop_stitch_alta_res` 🔬 — recorta a região, gera em 1024 (alta-res) e costura de volta (KJNodes). Melhor detalhe em 8GB.\n- `replace_via_codigo.py` — faz o \"colar de volta\" **por CÓDIGO** (PIL), fora do ComfyUI.\n\n## 🧠 POR QUE COLAR DE VOLTA (e não só inpaintar)\nO `ImageCompositeMasked` usa a imagem ORIGINAL como destino e cola só a região gerada pela máscara.\nResultado: o que está fora da máscara é **byte-a-byte o original** (o VAE/encode não estraga o fundo).\nÉ o \"replace\" de verdade: original + região nova = imagem final.\n\n## 🔪 SELEÇÃO (3 formas)\n1. **Texto** → `GroundingDinoSAMSegment` ('the dog', 'the jacket'). Ajuste `threshold` (0.25–0.4).\n2. **Manual** → clique direito no Load Image → **Open in MaskEditor** e pinte.\n3. **Refino** → `GrowMaskWithBlur`: `expand` pega a borda, `blur_radius` suaviza a costura.\n\n## 🎚️ FORÇA DA EDIÇÃO\n- Local (KSampler **denoise**): 0.5–0.6 = ajuste leve · 0.8–0.9 = troca forte.\n- Quanto MENOR a região (recorte), MAIOR a resolução efetiva → mais detalhe. (Para recorte+stitch dedicado, dá p/ instalar `ComfyUI-Inpaint-CropAndStitch` via cm-cli.)\n\n## 📄 Tutorial completo (passo a passo, modelos, código): `config/06-ai-agents/comfyui-edicao-por-mascara.md`.\n"
+      ],
+      "title": "✂️ COMECE AQUI — Edição por máscara",
+      "color": "#234",
+      "bgcolor": "#345"
+    }
+  ],
+  "links": [],
+  "groups": [],
+  "config": {},
+  "extra": {},
+  "version": 0.4
+}

@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# setup.sh — qwen-image-edit (Qwen-Image-Edit 2511, edição por instrução)
+# setup.sh — instruction-edit-kontext (Flux Kontext, edição por instrução)
 # RunPod/ComfyUI — rode como ROOT:  bash setup.sh
 set -Euo pipefail
 if   [ -d "${WORKSPACE:-/workspace}/ComfyUI" ]; then COMFY="${WORKSPACE:-/workspace}/ComfyUI"
@@ -7,19 +7,20 @@ elif [ -d "/opt/ComfyUI" ];                      then COMFY="/opt/ComfyUI"
 else COMFY="${WORKSPACE:-/workspace}/ComfyUI"; fi
 echo ">> ComfyUI em: $COMFY"
 HF_TOKEN="${HF_TOKEN:-}"; PIP="python -m pip install --no-cache-dir"; PAR=3
-WORKFLOW_URL="https://raw.githubusercontent.com/frederico-kluser/comfyui-agent-skills/main/workflows/qwen-image-edit/qwen-image-edit.json"
+WORKFLOW_URL="https://raw.githubusercontent.com/frederico-kluser/comfyui-agent-skills/main/workflows-cloud/instruction-edit-kontext/instruction-edit-kontext.json"
 
 NODES=(
   "https://github.com/ltdrdata/ComfyUI-Manager"
   "https://github.com/kijai/ComfyUI-KJNodes"
-  "https://github.com/city96/ComfyUI-GGUF"
   "https://github.com/rgthree/rgthree-comfy"
+  "https://github.com/city96/ComfyUI-GGUF"
 )
-# Qwen-Image-Edit 2511 (Comfy-Org repackaged — CONFIRME os nomes/versão na aba Files do HF):
 MODELS=(
-  "https://huggingface.co/Comfy-Org/Qwen-Image-Edit_ComfyUI/resolve/main/split_files/diffusion_models/qwen_image_edit_2511_fp8_e4m3fn.safetensors|diffusion_models"
-  "https://huggingface.co/Comfy-Org/Qwen-Image-Edit_ComfyUI/resolve/main/split_files/text_encoders/qwen_2.5_vl_7b_fp8_scaled.safetensors|text_encoders"
-  "https://huggingface.co/Comfy-Org/Qwen-Image-Edit_ComfyUI/resolve/main/split_files/vae/qwen_image_vae.safetensors|vae"
+  "https://huggingface.co/comfyanonymous/flux_text_encoders/resolve/main/clip_l.safetensors|text_encoders"
+  "https://huggingface.co/comfyanonymous/flux_text_encoders/resolve/main/t5xxl_fp8_e4m3fn_scaled.safetensors|text_encoders"
+  "https://huggingface.co/Comfy-Org/Lumina_Image_2.0_Repackaged/resolve/main/split_files/vae/ae.safetensors|vae"
+  # Flux Kontext dev fp8 (Comfy-Org repackaged — confirme na aba Files):
+  "https://huggingface.co/Comfy-Org/FLUX.1-Kontext-dev_ComfyUI/resolve/main/split_files/diffusion_models/flux1-dev-kontext_fp8_scaled.safetensors|diffusion_models"
 )
 
 setup_tools(){ command -v aria2c >/dev/null 2>&1 || { apt-get update -y && apt-get install -y aria2 git git-lfs; }; }
@@ -37,5 +38,5 @@ get_workflow(){ local d="$COMFY/user/default/workflows"; mkdir -p "$d"; wget -nc
 
 setup_tools; get_nodes; get_workflow; get_models
 echo "============================================"
-echo " qwen-image-edit pronto. Reinicie o ComfyUI. Modelos faltantes: Manager > Model Manager."
+echo " instruction-edit-kontext pronto. Reinicie o ComfyUI. Modelos faltantes: Manager > Model Manager."
 echo "============================================"

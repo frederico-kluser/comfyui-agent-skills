@@ -17,7 +17,7 @@ PIP="python -m pip install --no-cache-dir"
 PAR=3
 
 # URL raw deste workflow no repo público (baixado p/ o pod automaticamente)
-WORKFLOW_URL="https://raw.githubusercontent.com/frederico-kluser/comfyui-agent-skills/main/workflows/person-swap-scail2/person-swap-scail2.json"
+WORKFLOW_URL="https://raw.githubusercontent.com/frederico-kluser/comfyui-agent-skills/main/workflows-cloud/person-swap-scail2/person-swap-scail2.json"
 
 # ---- Custom nodes (conjunto SCAIL-2) ----
 NODES=(

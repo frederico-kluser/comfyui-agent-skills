@@ -1,0 +1,338 @@
+{
+  "last_node_id": 7,
+  "last_link_id": 5,
+  "nodes": [
+    {
+      "id": 1,
+      "type": "MarkdownNote",
+      "pos": [
+        -660,
+        0
+      ],
+      "size": [
+        620,
+        760
+      ],
+      "flags": {},
+      "order": 1,
+      "mode": 0,
+      "inputs": [],
+      "outputs": [],
+      "title": "🧩 Modelo: cena nova (keyframe→Veo)",
+      "properties": {},
+      "widgets_values": [
+        "# 🧩 30 — MODELO: criar uma CENA NOVA\n\n## 🎯 PRA QUE SERVE\nMolde reutilizável p/ inventar uma cena que NÃO está no roteiro. Gera o keyframe (Nano Banana) e anima (Veo).\n\n## 📝 PASSO A PASSO\n1. **Load Image** = âncora (se a cena tem o protagonista).\n2. Preencha os `<PLACEHOLDERS>` dos prompts usando o `01_GUIA`. **Varie** plano/câmera/luz p/ não ficar tudo igual.\n3. **Run**.\n\n## ⚙️ CONFIGS (nó Nano Banana Pro = gera a imagem/keyframe)\n- **prompt**: descrição da imagem. Prosa fotográfica. Mantenha `<<PROTAGONISTA>>` IGUAL em todos os shots.\n- **aspect_ratio**: formato. `16:9` TV/YouTube · `9:16` Reels/Shorts · `1:1` feed.\n- **resolution**: `4K` (herói) · `2K`/`1K` (mais barato). Mais resolução = mais crédito.\n- **output_format**: `png` (sem perda).  **num_images**: nº de variações (1 = mais barato).\n- ⚠️ Nano Banana Pro NÃO tem seed: identidade = ÂNCORA ligada em `images` + a MESMA frase no prompt.\n\n## ⚙️ CONFIGS (nó Veo 3.1 = anima a imagem em vídeo)\n- **prompt**: direção do MOVIMENTO. Gramática: plano+câmera+lente → sujeito → ação → cenário → luz → áudio.\n- **first_frame**: imagem que INICIA o vídeo (o keyframe). Obrigatório.\n- **last_frame**: (opcional) imagem FINAL — só p/ MORPH (a cena se transforma em outra).\n- **duration**: `4s`/`6s`/`8s` (mais longo = mais crédito).  **resolution**: `1080p` final · `720p` teste.\n- **aspect_ratio**: `16:9` etc.  **generate_audio**: liga/desliga o áudio nativo do Veo (diálogo/SFX).\n\n## 💾 SAÍDA\nO Veo devolve uma URL → `LoadVideoURL` baixa os frames → `CreateVideo` monta → `SaveVideo` grava em `~/ComfyUI/output/`. ⚠️ essa cadeia pega só os FRAMES (perde o áudio do Veo) — p/ manter o áudio, baixe a URL original que o nó Veo retorna."
+      ],
+      "color": "#234",
+      "bgcolor": "#345"
+    },
+    {
+      "id": 2,
+      "type": "LoadImage",
+      "pos": [
+        40,
+        120
+      ],
+      "size": [
+        240,
+        280
+      ],
+      "flags": {},
+      "order": 2,
+      "mode": 0,
+      "inputs": [],
+      "outputs": [
+        {
+          "name": "IMAGE",
+          "type": "IMAGE",
+          "links": [
+            1
+          ]
+        },
+        {
+          "name": "MASK",
+          "type": "MASK",
+          "links": []
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "LoadImage"
+      },
+      "widgets_values": [
+        "example.png",
+        "image"
+      ],
+      "title": "ÂNCORA (protagonista)"
+    },
+    {
+      "id": 3,
+      "type": "NanoBananaPro_fal",
+      "pos": [
+        320,
+        120
+      ],
+      "size": [
+        360,
+        240
+      ],
+      "flags": {},
+      "order": 3,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "images",
+          "type": "IMAGE",
+          "link": 1
+        }
+      ],
+      "outputs": [
+        {
+          "name": "IMAGE",
+          "type": "IMAGE",
+          "links": [
+            2
+          ]
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "NanoBananaPro_fal"
+      },
+      "widgets_values": [
+        "16:9 4K cinematic photoreal still. <<PROTAGONISTA — a MESMA frase de identidade em todo shot>>. <ACTION/POSE>, em <SETTING + hora do dia>, figurino: <FIGURINO nomeado>, props: <PROPS>. <LIGHTING>. Style: <film stock / grade>. Composição p/ o movimento seguinte.",
+        1,
+        "16:9",
+        "png",
+        "4K",
+        false
+      ],
+      "title": "Keyframe (Nano Banana Pro)"
+    },
+    {
+      "id": 4,
+      "type": "Veo31_fal",
+      "pos": [
+        720,
+        120
+      ],
+      "size": [
+        360,
+        200
+      ],
+      "flags": {},
+      "order": 4,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "first_frame",
+          "type": "IMAGE",
+          "link": 2
+        },
+        {
+          "name": "last_frame",
+          "type": "IMAGE",
+          "link": null
+        }
+      ],
+      "outputs": [
+        {
+          "name": "STRING",
+          "type": "STRING",
+          "links": [
+            3
+          ]
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "Veo31_fal"
+      },
+      "widgets_values": [
+        "<SHOT_TYPE: establishing|wide|medium|CU|ECU|OTS|two-shot> + <CAMERA_MOVE: dolly in|tracking|crane up|orbit|whip pan|rack focus|slow-mo — só UM> + <LENS: 35mm|anamorphic|shallow DoF|macro>. Subject: <<PROTAGONISTA>> <ACTION com física/timing>. Setting: <CONTEXT>. Lighting: <golden hour|noir|high-key|neon|practical>. Style: <film stock / grade>. Audio: dialogue — \"<FALA ou none>\"; SFX: <som>; Ambient: <paisagem>. Avoid (em prosa): no morphing, no distorted hands, no flicker, no face morphing, no camera shake.",
+        "8s",
+        "16:9",
+        "1080p",
+        true
+      ],
+      "title": "Veo 3.1 (movimento)"
+    },
+    {
+      "id": 5,
+      "type": "LoadVideoURL",
+      "pos": [
+        1080,
+        120
+      ],
+      "size": [
+        300,
+        200
+      ],
+      "flags": {},
+      "order": 5,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "url",
+          "type": "STRING",
+          "link": 3,
+          "widget": {
+            "name": "url"
+          }
+        }
+      ],
+      "outputs": [
+        {
+          "name": "frames",
+          "type": "IMAGE",
+          "links": [
+            4
+          ]
+        },
+        {
+          "name": "frame_count",
+          "type": "INT",
+          "links": []
+        },
+        {
+          "name": "video_info",
+          "type": "VHS_VIDEOINFO",
+          "links": []
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "LoadVideoURL"
+      },
+      "widgets_values": [
+        "https://example.com/video.mp4",
+        0,
+        "Disabled",
+        512,
+        512,
+        0,
+        0,
+        1
+      ],
+      "title": "LoadVideoURL (url←string)"
+    },
+    {
+      "id": 6,
+      "type": "CreateVideo",
+      "pos": [
+        1420,
+        120
+      ],
+      "size": [
+        220,
+        90
+      ],
+      "flags": {},
+      "order": 6,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "images",
+          "type": "IMAGE",
+          "link": 4
+        },
+        {
+          "name": "audio",
+          "type": "AUDIO",
+          "link": null
+        }
+      ],
+      "outputs": [
+        {
+          "name": "VIDEO",
+          "type": "VIDEO",
+          "links": [
+            5
+          ]
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "CreateVideo"
+      },
+      "widgets_values": [
+        24.0,
+        8
+      ],
+      "title": "CreateVideo"
+    },
+    {
+      "id": 7,
+      "type": "SaveVideo",
+      "pos": [
+        1680,
+        120
+      ],
+      "size": [
+        260,
+        120
+      ],
+      "flags": {},
+      "order": 7,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "video",
+          "type": "VIDEO",
+          "link": 5
+        }
+      ],
+      "outputs": [],
+      "properties": {
+        "Node name for S&R": "SaveVideo"
+      },
+      "widgets_values": [
+        "cena_guiada",
+        "mp4",
+        "h264"
+      ],
+      "title": "SaveVideo"
+    }
+  ],
+  "links": [
+    [
+      1,
+      2,
+      0,
+      3,
+      0,
+      "IMAGE"
+    ],
+    [
+      2,
+      3,
+      0,
+      4,
+      0,
+      "IMAGE"
+    ],
+    [
+      3,
+      4,
+      0,
+      5,
+      0,
+      "STRING"
+    ],
+    [
+      4,
+      5,
+      0,
+      6,
+      0,
+      "IMAGE"
+    ],
+    [
+      5,
+      6,
+      0,
+      7,
+      0,
+      "VIDEO"
+    ]
+  ],
+  "groups": [],
+  "config": {},
+  "extra": {},
+  "version": 0.4
+}

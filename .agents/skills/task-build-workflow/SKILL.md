@@ -33,7 +33,7 @@ p/ SCAIL-2) — carregue conforme o passo.
 7. **Low-VRAM se preciso**: block swap (20→40) → fp8 → GGUF → menos frames. (→ `task-debug-generation` p/ OOM.)
 8. **Organize**: Groups titulados, Get/Set, Subgraphs p/ blocos reusáveis.
 9. **Valide com Partial Execution** (rode só o ramo do sampler) e Preview no meio.
-10. **Exporte**: salve o **JSON** (Workflows → Export) com nome `AAAAMMDD-proposito-vN.json` em `workflows/`; p/
+10. **Exporte**: salve o **JSON** (Workflows → Export) com nome `AAAAMMDD-proposito-vN.json` em `workflows-cloud/`; p/
     automação use "Save (API Format)". Registre a ficha de reprodução (modelos+hash, custom nodes, versão, seed/size/sampler/steps/cfg).
 
 ## Gotchas
@@ -48,4 +48,4 @@ p/ SCAIL-2) — carregue conforme o passo.
 1. O workflow rodou e gerou o esperado? Só então persista.
 2. Persista: arranjo de nós que funcionou, default que mudou, incompatibilidade, template bom. Ignore o óbvio/volátil.
 3. Append em `LEARNINGS.md` (data + fonte). Destile no corpo se estável (`version++`). Nova área → `meta-evolution`.
-4. Diff git para revisão. Salve o JSON reusável em `workflows/`.
+4. Diff git para revisão. Salve o JSON reusável em `workflows-cloud/` (self-hosted) — ou empacote em `workflows-api/` se for por API.

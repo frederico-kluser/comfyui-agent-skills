@@ -1,8 +1,9 @@
 # ComfyUI Commercials — RunPod Ops
 
 Base de conhecimento e workflows para produzir vídeo IA (SCAIL-2, Wan 2.1/2.2, Flux) e
-editar imagem (inpaint, Flux Fill/Kontext, Qwen-Image-Edit, SAM/máscara) no ComfyUI rodando
-em RunPod.io. Não há código de aplicação: o valor está nos docs (`docs/`) e nas skills (`.agents/skills/`).
+editar imagem (inpaint, Flux Fill/Kontext, Qwen-Image-Edit, SAM/máscara) no ComfyUI — por **APIs online**
+(Veo 3.1, Kling, Nano Banana, Seedance; sem GPU) ou **self-hosted no RunPod.io**. Não há código de aplicação:
+o valor está nos docs (`docs/`) e nas skills (`.agents/skills/`).
 
 ## Roteamento (faça primeiro)
 Toda tarefa passa por `.agents/skills/project-router` ANTES de qualquer passo.
@@ -14,6 +15,7 @@ Catálogo de skills: `.agents/skills/catalog.md`.
 - ComfyUI roda na porta 8188; flag de inferência: `--fast` (GPUs ≥48GB: `--highvram`).
 - SCAIL-2 exige ComfyUI nightly/master (o nó `Create SCAIL-2 Colored Mask` é core, não custom).
 - Modelos vão em `ComfyUI/models/<subpasta>` no Network Volume (montado em `/workspace`).
+- **Por API online** (sem GPU): nós fal (`*_fal`, lê `FAL_KEY`) + partner (login comfy.org). Chaves em `~/ComfyUI/secrets.env` (chmod 600), **nunca** `~/.secrets`. Bundles em `workflows-api/`; conhecimento: `knowledge-comfyui-api-nodes`.
 
 ## Convenções não-óbvias
 - SCAIL-2/Wan destilado (LightX2V): `cfg=1`, shift 1, euler/simple, 6–8 steps. `cfg>1` → vídeo borrado.
@@ -29,7 +31,7 @@ Catálogo de skills: `.agents/skills/catalog.md`.
 ## Referências (carregue sob demanda)
 - Catálogo de skills: `.agents/skills/catalog.md`
 - Skills (fonte única): `.agents/skills/` (symlink: `.claude/skills/`)
-- Projetos de workflow entregáveis: `workflows/<projeto>/` (json + README + setup.sh) — crie via `task-package-workflow-project`.
+- Projetos de workflow: `workflows-api/<projeto>/` (rodam por API, sem GPU) e `workflows-cloud/<projeto>/` (self-hosted em GPU RunPod) — json + README + setup.sh; crie via `task-package-workflow-project`.
 - Visão geral para humanos: `README.md` (raiz).
 
 ## Memória evolutiva

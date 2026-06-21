@@ -1,0 +1,224 @@
+{
+  "last_node_id": 5,
+  "last_link_id": 3,
+  "nodes": [
+    {
+      "id": 1,
+      "type": "MarkdownNote",
+      "pos": [
+        -660,
+        0
+      ],
+      "size": [
+        620,
+        760
+      ],
+      "flags": {},
+      "order": 1,
+      "mode": 0,
+      "inputs": [],
+      "outputs": [],
+      "title": "🧩 Modelo: câmera precisa (Kling)",
+      "properties": {},
+      "widgets_values": [
+        "# 🧩 31 — MODELO: cena com CÂMERA PRECISA\n\n## 🎯 PRA QUE SERVE\nQuando você quer um movimento de câmera EXATO (dolly/orbit/zoom) controlado por números, não por texto.\n\n## 📝 PASSO A PASSO\n1. **Load Image** = keyframe inicial (start_frame).\n2. No nó **KlingCameraControls** deixe só UM valor ≠ 0 (ex.: `zoom=5` p/ aproximar; resto 0).\n3. Escreva o prompt da ação. **Run**.\n\n## ⚙️ CONFIGS (KlingCameraControls)\n- **zoom** (+aproxima/−afasta) · **pan** (gira) · **tilt** (inclina) · **horizontal/vertical_movement** (desliza). Range −10..+10, **só UM eixo por cena**.\n- **cfg_scale**: obediência ao prompt (~0.75).  - **negative_prompt**: o que evitar.  - **aspect_ratio**: formato."
+      ],
+      "color": "#234",
+      "bgcolor": "#345"
+    },
+    {
+      "id": 2,
+      "type": "LoadImage",
+      "pos": [
+        40,
+        120
+      ],
+      "size": [
+        240,
+        280
+      ],
+      "flags": {},
+      "order": 2,
+      "mode": 0,
+      "inputs": [],
+      "outputs": [
+        {
+          "name": "IMAGE",
+          "type": "IMAGE",
+          "links": [
+            1
+          ]
+        },
+        {
+          "name": "MASK",
+          "type": "MASK",
+          "links": []
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "LoadImage"
+      },
+      "widgets_values": [
+        "example.png",
+        "image"
+      ],
+      "title": "ÂNCORA / keyframe (start_frame)"
+    },
+    {
+      "id": 3,
+      "type": "KlingCameraControls",
+      "pos": [
+        320,
+        420
+      ],
+      "size": [
+        300,
+        200
+      ],
+      "flags": {},
+      "order": 3,
+      "mode": 0,
+      "inputs": [],
+      "outputs": [
+        {
+          "name": "camera_control",
+          "type": "CAMERA_CONTROL",
+          "links": [
+            2
+          ]
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "KlingCameraControls"
+      },
+      "widgets_values": [
+        "simple",
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        5.0
+      ],
+      "title": "Câmera (ex.: zoom=5, resto=0)"
+    },
+    {
+      "id": 4,
+      "type": "KlingCameraControlI2VNode",
+      "pos": [
+        640,
+        120
+      ],
+      "size": [
+        360,
+        260
+      ],
+      "flags": {},
+      "order": 4,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "start_frame",
+          "type": "IMAGE",
+          "link": 1
+        },
+        {
+          "name": "camera_control",
+          "type": "CAMERA_CONTROL",
+          "link": 2
+        }
+      ],
+      "outputs": [
+        {
+          "name": "VIDEO",
+          "type": "VIDEO",
+          "links": [
+            3
+          ]
+        },
+        {
+          "name": "video_id",
+          "type": "STRING",
+          "links": []
+        },
+        {
+          "name": "duration",
+          "type": "STRING",
+          "links": []
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "KlingCameraControlI2VNode"
+      },
+      "widgets_values": [
+        "<<PROTAGONISTA>> <ACTION>. <SETTING>. <LIGHTING>. Single deliberate camera move set by the camera params.",
+        "no morphing, distorted hands, flicker, face morphing, camera shake, changing wardrobe",
+        0.75,
+        "16:9"
+      ],
+      "title": "Kling Camera-Control I2V"
+    },
+    {
+      "id": 5,
+      "type": "SaveVideo",
+      "pos": [
+        1040,
+        120
+      ],
+      "size": [
+        260,
+        120
+      ],
+      "flags": {},
+      "order": 5,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "video",
+          "type": "VIDEO",
+          "link": 3
+        }
+      ],
+      "outputs": [],
+      "properties": {
+        "Node name for S&R": "SaveVideo"
+      },
+      "widgets_values": [
+        "cena_camera_kling",
+        "mp4",
+        "h264"
+      ],
+      "title": "SaveVideo"
+    }
+  ],
+  "links": [
+    [
+      1,
+      2,
+      0,
+      4,
+      0,
+      "IMAGE"
+    ],
+    [
+      2,
+      3,
+      0,
+      4,
+      1,
+      "CAMERA_CONTROL"
+    ],
+    [
+      3,
+      4,
+      0,
+      5,
+      0,
+      "VIDEO"
+    ]
+  ],
+  "groups": [],
+  "config": {},
+  "extra": {},
+  "version": 0.4
+}

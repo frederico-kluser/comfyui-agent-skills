@@ -10,7 +10,7 @@ else COMFY="${WORKSPACE:-/workspace}/ComfyUI"; fi
 echo ">> ComfyUI em: $COMFY"
 HF_TOKEN="${HF_TOKEN:-}"; PIP="python -m pip install --no-cache-dir"; PAR=3
 
-WORKFLOW_BASE="https://raw.githubusercontent.com/frederico-kluser/comfyui-agent-skills/main/workflows/scail2-native-3rdparty"
+WORKFLOW_BASE="https://raw.githubusercontent.com/frederico-kluser/comfyui-agent-skills/main/workflows-cloud/scail2-native-3rdparty"
 WORKFLOWS=(
   "tryoff-preprocess.json"
   "scail2-animation.json"

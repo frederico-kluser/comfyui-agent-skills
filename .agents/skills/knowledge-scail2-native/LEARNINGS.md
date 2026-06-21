@@ -4,7 +4,7 @@
 > Promova ao corpo o que virar padrão estável (≥2× ou confirmado). Revisão humana via git diff.
 
 ## 2026-06-19 — Mapeado do workflow de terceiros (probação)
-- **Contexto**: análise do `WORKFLOW - SCAIL2.json` (terceiros) → `workflows/scail2-native-3rdparty/`.
+- **Contexto**: análise do `WORKFLOW - SCAIL2.json` (terceiros) → `workflows-cloud/scail2-native-3rdparty/`.
 - **Aprendizado**: (1) O caminho **nativo** existe e usa nós **core** `WanSCAILToVideo` + `SCAIL2ColoredMask`
   (≠ wrapper kijai). (2) `replacement_mode` é UM booleano compartilhado por `SCAIL2ColoredMask` e
   `WanSCAILToVideo` (Animation/Replacement). (3) Máscara é por **texto** via `SAM3_VideoTrack` (concept,

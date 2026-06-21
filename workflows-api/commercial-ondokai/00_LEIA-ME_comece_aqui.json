@@ -1,0 +1,59 @@
+{
+  "last_node_id": 2,
+  "last_link_id": 0,
+  "nodes": [
+    {
+      "id": 1,
+      "type": "MarkdownNote",
+      "pos": [
+        -660,
+        0
+      ],
+      "size": [
+        620,
+        760
+      ],
+      "flags": {},
+      "order": 0,
+      "mode": 0,
+      "inputs": [],
+      "outputs": [],
+      "title": "🎬 COMECE AQUI — LEIA-ME",
+      "properties": {},
+      "widgets_values": [
+        "# 🎬 COMECE AQUI — Comercial Ondokai (LEIA-ME)\n\nEsta pasta monta um **comercial de ~30s** e traz **ferramentas** p/ criar cenas novas e estender vídeos.\nVocê NÃO precisa saber nada de ComfyUI — siga os números dos arquivos, de cima p/ baixo.\n\n## 🗂️ O QUE É CADA ARQUIVO (a ordem dos números = a ordem de uso)\n**GUIAS (leia primeiro, não geram nada):**\n- `00_LEIA-ME` — este guia.\n- `01_GUIA_prompts_e_camera` — como escrever prompt de cena e de câmera (gramática do Veo).\n- `02_GLOSSARIO_configuracoes` — o que cada botão/campo (config) faz.\n\n**O COMERCIAL (rode nesta ordem):**\n- `10_ANCORA_protagonista` — **comece por aqui.** Cria o protagonista 1× e SALVA. Trava a identidade.\n- `11_cena01_coldopen` … `19_cena09_logo` — as 9 cenas do filme, na ordem do roteiro.\n\n**FERRAMENTAS (opcionais, use quando precisar):**\n- `20_FERRAMENTA_rascunho_barato` — testa o movimento de QUALQUER cena bem barato antes de gastar Veo.\n- `30_MODELO_cena_nova_keyframe_veo` — molde p/ inventar uma cena NOVA do zero (keyframe → Veo).\n- `31_MODELO_cena_camera_kling` — cena nova com movimento de câmera preciso por números.\n- `40/41/42_ESTENDER_*` — **continuar um vídeo** com uma ação NOVA por segmento (3 métodos).\n\n## ▶️ FLUXO RECOMENDADO\n1. Abra `10_ANCORA`, gere o protagonista, escolha a melhor e **salve** (anote o nome do arquivo).\n2. (opcional/barato) Em cada cena, teste o timing no `20_FERRAMENTA_rascunho_barato`.\n3. Rode `11`…`19` em ordem. Em CADA uma: Load Image = a âncora; mantenha `<<PROTAGONISTA>>`.\n4. Junte os clipes (ficam em `~/ComfyUI/output/`):\n```bash\nffmpeg -f concat -safe 0 -i lista.txt -r 24 -c:v libx264 -pix_fmt yuv420p ondokai.mp4\n```\nVersão Reels 9:16: `ffmpeg -i ondokai.mp4 -vf \"crop=ih*9/16:ih,scale=1080:1920\" -c:a copy reels.mp4`\n\n## 🧠 A REGRA DE OURO — IDENTIDADE\nO protagonista é sintético. Pra ele parecer a MESMA pessoa em todas as cenas:\n(a) a **ÂNCORA** entra ligada em `images` de cada keyframe, e (b) a frase `<<PROTAGONISTA — ...>>`\né **idêntica** em TODOS os prompts. Troque essa frase 1× pela sua descrição e replique igual.\n\n## 💳 CUSTO\nTudo cobra **crédito fal** (Nano Banana Pro + Veo 3.1 + Seedance). Resolução/duração maiores = mais caro.\nTeste barato no `20_FERRAMENTA` e no `720p` antes do `1080p`/`4K`.\n\n## 🎞️ O ROTEIRO (os 9 beats)\n1 tédio do escritório · 2 a gaiola da repetição · 3 a faísca (still) · 4 o estalo/morph ·\n5 o herói diante do grafo de blocos-e-fios · 6 roda sozinho (automação) ·\n7 santuário local-first (still) · 8 libertação · 9 logo Ondokai (still)."
+      ],
+      "color": "#234",
+      "bgcolor": "#345"
+    },
+    {
+      "id": 2,
+      "type": "MarkdownNote",
+      "pos": [
+        0,
+        660
+      ],
+      "size": [
+        680,
+        260
+      ],
+      "flags": {},
+      "order": 1,
+      "mode": 0,
+      "inputs": [],
+      "outputs": [],
+      "title": "TECNICO",
+      "properties": {},
+      "widgets_values": [
+        "# ⚠️ Notas tecnicas\n- Nativo aqui = Veo2/Gemini2.5 (antigos). Por isso uso **fal** (Veo 3.1, Nano Banana Pro Gemini 3).\n- Nano Banana Pro **nao tem seed** -> a trava de identidade e a ANCORA + a frase repetida. Se precisar de seed reprodutivel, troque por `NanoBanana2_fal` (tem seed).\n- Veo 3.1: duracao 4/6/8s, 1080p. Clipes saem em `~/ComfyUI/output/`.\n- Rostos reais podem ser barrados por moderacao -> use o protagonista sintetico (recomendado)."
+      ],
+      "color": "#223",
+      "bgcolor": "#335"
+    }
+  ],
+  "links": [],
+  "groups": [],
+  "config": {},
+  "extra": {},
+  "version": 0.4
+}

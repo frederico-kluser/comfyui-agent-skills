@@ -40,7 +40,7 @@ Saídas `IMAGE` + `MASK`. Pinte um pouco além do objeto (margem p/ blend). Alph
 `SEGSPaste` (cola SEGS na original). Por cor: `ImageColorToMask`. Por texto sem SAM: CLIPSeg (`CLIPSegDetectorProvider`). Depth/luminância → threshold.
 
 ## Referências (nível 3)
-- `docs/image-editing.md` §2 (fonte). Projeto: `workflows/remove-background` (RMBG/SAM3).
+- `docs/image-editing.md` §2 (fonte). Projeto: `workflows-cloud/remove-background` (RMBG/SAM3).
 - Cadeia: editar a região → `knowledge-image-editing`; rostos/detail → também Impact Pack.
 
 ## Evolução

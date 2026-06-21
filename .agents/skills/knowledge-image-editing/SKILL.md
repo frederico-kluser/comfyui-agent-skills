@@ -55,7 +55,7 @@ Sampler: Flux/Fill euler/res_multistep; Kontext guidance ~2.5; Qwen ~10 passos C
 (`--sage-attention`). Resolução nativa 1024 (SDXL/Flux/Qwen). Erros: bordas → grow+blur+Differential; desvio de cor Flux → Color Match.
 
 ## Referências (nível 3)
-- `docs/image-editing.md` (fonte completa). Projetos: `workflows/inpaint-region-cropstitch`, `instruction-edit-kontext`, `qwen-image-edit`, `outpaint-extend`.
+- `docs/image-editing.md` (fonte completa). Projetos: `workflows-cloud/inpaint-region-cropstitch`, `instruction-edit-kontext`, `qwen-image-edit`, `outpaint-extend`.
 - Cadeia: selecionar região → `knowledge-image-masking`; recolar via código/API → `knowledge-comfyui-api`; upscale/relight/controlnet → `knowledge-image-enhance`.
 
 ## Evolução

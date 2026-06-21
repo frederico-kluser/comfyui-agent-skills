@@ -1,0 +1,922 @@
+{
+  "last_node_id": 17,
+  "last_link_id": 24,
+  "nodes": [
+    {
+      "id": 1,
+      "type": "MarkdownNote",
+      "pos": [
+        0,
+        -340
+      ],
+      "size": [
+        800,
+        340
+      ],
+      "flags": {},
+      "order": 1,
+      "mode": 0,
+      "inputs": [],
+      "outputs": [],
+      "title": "🔬 04 — Crop & Stitch alta-res",
+      "properties": {},
+      "widgets_values": [
+        "# 🔬 04 — Alta resolução na região (crop & stitch) — KJNodes\n\n## O GANHO\nRecorta SÓ a região (+ contexto), reescala esse pedaço pra 1024 e gera ali em ALTA resolução; depois `ImageUncropByMask` costura de volta. O resto da imagem **nunca passa pelo VAE** → fica idêntico, e a região sai com muito mais detalhe. Melhor opção em 8GB (diffunde um tile pequeno).\n\n## PASSO A PASSO\n1. Load Image. 2. Segmentação = a região. 3. `ImageCropByMaskAndResize` recorta (base_resolution 1024, padding 32). 4. Inpaint do TILE (SDXL + SetLatentNoiseMask). 5. `ImageUncropByMask` costura no original. Run.\n\n## 💡 Para inpaint dedicado no tile, troque o SDXL por Flux Fill GGUF (ver tutorial)."
+      ],
+      "color": "#234",
+      "bgcolor": "#345"
+    },
+    {
+      "id": 2,
+      "type": "CheckpointLoaderSimple",
+      "pos": [
+        40,
+        80
+      ],
+      "size": [
+        280,
+        100
+      ],
+      "flags": {},
+      "order": 2,
+      "mode": 0,
+      "inputs": [],
+      "outputs": [
+        {
+          "name": "MODEL",
+          "type": "MODEL",
+          "links": [
+            1
+          ]
+        },
+        {
+          "name": "CLIP",
+          "type": "CLIP",
+          "links": [
+            8,
+            9
+          ]
+        },
+        {
+          "name": "VAE",
+          "type": "VAE",
+          "links": [
+            11,
+            19
+          ]
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "CheckpointLoaderSimple"
+      },
+      "widgets_values": [
+        "sd_xl_base_1.0.safetensors"
+      ],
+      "title": "SDXL base"
+    },
+    {
+      "id": 3,
+      "type": "DifferentialDiffusion",
+      "pos": [
+        40,
+        220
+      ],
+      "size": [
+        260,
+        80
+      ],
+      "flags": {},
+      "order": 3,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "model",
+          "type": "MODEL",
+          "link": 1
+        }
+      ],
+      "outputs": [
+        {
+          "name": "MODEL",
+          "type": "MODEL",
+          "links": [
+            14
+          ]
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "DifferentialDiffusion"
+      },
+      "widgets_values": [
+        1.0
+      ],
+      "title": "DifferentialDiffusion"
+    },
+    {
+      "id": 4,
+      "type": "LoadImage",
+      "pos": [
+        40,
+        340
+      ],
+      "size": [
+        240,
+        280
+      ],
+      "flags": {},
+      "order": 4,
+      "mode": 0,
+      "inputs": [],
+      "outputs": [
+        {
+          "name": "IMAGE",
+          "type": "IMAGE",
+          "links": [
+            4,
+            6,
+            20
+          ]
+        },
+        {
+          "name": "MASK",
+          "type": "MASK",
+          "links": []
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "LoadImage"
+      },
+      "widgets_values": [
+        "example.png",
+        "image"
+      ],
+      "title": "Imagem original"
+    },
+    {
+      "id": 5,
+      "type": "SAMModelLoader (segment anything)",
+      "pos": [
+        360,
+        700
+      ],
+      "size": [
+        280,
+        80
+      ],
+      "flags": {},
+      "order": 5,
+      "mode": 0,
+      "inputs": [],
+      "outputs": [
+        {
+          "name": "SAM_MODEL",
+          "type": "SAM_MODEL",
+          "links": [
+            2
+          ]
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "SAMModelLoader (segment anything)"
+      },
+      "widgets_values": [
+        "sam_vit_h (2.56GB)"
+      ],
+      "title": "SAM loader"
+    },
+    {
+      "id": 6,
+      "type": "GroundingDinoModelLoader (segment anything)",
+      "pos": [
+        360,
+        810
+      ],
+      "size": [
+        280,
+        80
+      ],
+      "flags": {},
+      "order": 6,
+      "mode": 0,
+      "inputs": [],
+      "outputs": [
+        {
+          "name": "GROUNDING_DINO_MODEL",
+          "type": "GROUNDING_DINO_MODEL",
+          "links": [
+            3
+          ]
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "GroundingDinoModelLoader (segment anything)"
+      },
+      "widgets_values": [
+        "GroundingDINO_SwinT_OGC (694MB)"
+      ],
+      "title": "GroundingDINO loader"
+    },
+    {
+      "id": 7,
+      "type": "GroundingDinoSAMSegment (segment anything)",
+      "pos": [
+        360,
+        420
+      ],
+      "size": [
+        300,
+        160
+      ],
+      "flags": {},
+      "order": 7,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "sam_model",
+          "type": "SAM_MODEL",
+          "link": 2
+        },
+        {
+          "name": "grounding_dino_model",
+          "type": "GROUNDING_DINO_MODEL",
+          "link": 3
+        },
+        {
+          "name": "image",
+          "type": "IMAGE",
+          "link": 4
+        }
+      ],
+      "outputs": [
+        {
+          "name": "IMAGE",
+          "type": "IMAGE",
+          "links": []
+        },
+        {
+          "name": "MASK",
+          "type": "MASK",
+          "links": [
+            5
+          ]
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "GroundingDinoSAMSegment (segment anything)"
+      },
+      "widgets_values": [
+        "<O QUE TROCAR>",
+        0.3
+      ],
+      "title": "Segmenta por TEXTO → máscara"
+    },
+    {
+      "id": 8,
+      "type": "GrowMaskWithBlur",
+      "pos": [
+        690,
+        420
+      ],
+      "size": [
+        300,
+        260
+      ],
+      "flags": {},
+      "order": 8,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "mask",
+          "type": "MASK",
+          "link": 5
+        }
+      ],
+      "outputs": [
+        {
+          "name": "mask",
+          "type": "MASK",
+          "links": [
+            7,
+            22
+          ]
+        },
+        {
+          "name": "mask_inverted",
+          "type": "MASK",
+          "links": []
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "GrowMaskWithBlur"
+      },
+      "widgets_values": [
+        10,
+        0.0,
+        true,
+        false,
+        8.0,
+        1.0,
+        1.0,
+        true
+      ],
+      "title": "Expande+borra máscara"
+    },
+    {
+      "id": 9,
+      "type": "ImageCropByMaskAndResize",
+      "pos": [
+        1020,
+        340
+      ],
+      "size": [
+        280,
+        140
+      ],
+      "flags": {},
+      "order": 9,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "image",
+          "type": "IMAGE",
+          "link": 6
+        },
+        {
+          "name": "mask",
+          "type": "MASK",
+          "link": 7
+        }
+      ],
+      "outputs": [
+        {
+          "name": "images",
+          "type": "IMAGE",
+          "links": [
+            10
+          ]
+        },
+        {
+          "name": "masks",
+          "type": "MASK",
+          "links": [
+            13
+          ]
+        },
+        {
+          "name": "bbox",
+          "type": "BBOX",
+          "links": [
+            23
+          ]
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "ImageCropByMaskAndResize"
+      },
+      "widgets_values": [
+        1024,
+        32,
+        256,
+        1024
+      ],
+      "title": "Recorta a região (→1024)"
+    },
+    {
+      "id": 10,
+      "type": "CLIPTextEncode",
+      "pos": [
+        360,
+        80
+      ],
+      "size": [
+        330,
+        120
+      ],
+      "flags": {},
+      "order": 10,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "clip",
+          "type": "CLIP",
+          "link": 8
+        }
+      ],
+      "outputs": [
+        {
+          "name": "CONDITIONING",
+          "type": "CONDITIONING",
+          "links": [
+            15
+          ]
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "CLIPTextEncode"
+      },
+      "widgets_values": [
+        "<O QUE COLOCAR NA REGIÃO>"
+      ],
+      "title": "Prompt POSITIVO"
+    },
+    {
+      "id": 11,
+      "type": "CLIPTextEncode",
+      "pos": [
+        360,
+        210
+      ],
+      "size": [
+        330,
+        90
+      ],
+      "flags": {},
+      "order": 11,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "clip",
+          "type": "CLIP",
+          "link": 9
+        }
+      ],
+      "outputs": [
+        {
+          "name": "CONDITIONING",
+          "type": "CONDITIONING",
+          "links": [
+            16
+          ]
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "CLIPTextEncode"
+      },
+      "widgets_values": [
+        "low quality, blurry, artifacts"
+      ],
+      "title": "Prompt NEGATIVO"
+    },
+    {
+      "id": 12,
+      "type": "VAEEncode",
+      "pos": [
+        1340,
+        340
+      ],
+      "size": [
+        200,
+        80
+      ],
+      "flags": {},
+      "order": 12,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "pixels",
+          "type": "IMAGE",
+          "link": 10
+        },
+        {
+          "name": "vae",
+          "type": "VAE",
+          "link": 11
+        }
+      ],
+      "outputs": [
+        {
+          "name": "LATENT",
+          "type": "LATENT",
+          "links": [
+            12
+          ]
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "VAEEncode"
+      },
+      "widgets_values": [],
+      "title": "VAE Encode (tile)"
+    },
+    {
+      "id": 13,
+      "type": "SetLatentNoiseMask",
+      "pos": [
+        1560,
+        340
+      ],
+      "size": [
+        220,
+        80
+      ],
+      "flags": {},
+      "order": 13,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "samples",
+          "type": "LATENT",
+          "link": 12
+        },
+        {
+          "name": "mask",
+          "type": "MASK",
+          "link": 13
+        }
+      ],
+      "outputs": [
+        {
+          "name": "LATENT",
+          "type": "LATENT",
+          "links": [
+            17
+          ]
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "SetLatentNoiseMask"
+      },
+      "widgets_values": [],
+      "title": "SetLatentNoiseMask (tile)"
+    },
+    {
+      "id": 14,
+      "type": "KSampler",
+      "pos": [
+        1340,
+        80
+      ],
+      "size": [
+        300,
+        250
+      ],
+      "flags": {},
+      "order": 14,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "model",
+          "type": "MODEL",
+          "link": 14
+        },
+        {
+          "name": "positive",
+          "type": "CONDITIONING",
+          "link": 15
+        },
+        {
+          "name": "negative",
+          "type": "CONDITIONING",
+          "link": 16
+        },
+        {
+          "name": "latent_image",
+          "type": "LATENT",
+          "link": 17
+        }
+      ],
+      "outputs": [
+        {
+          "name": "LATENT",
+          "type": "LATENT",
+          "links": [
+            18
+          ]
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "KSampler"
+      },
+      "widgets_values": [
+        0,
+        "fixed",
+        28,
+        6.0,
+        "dpmpp_2m",
+        "karras",
+        0.85
+      ],
+      "title": "KSampler (tile, denoise 0.85)"
+    },
+    {
+      "id": 15,
+      "type": "VAEDecode",
+      "pos": [
+        1680,
+        80
+      ],
+      "size": [
+        200,
+        80
+      ],
+      "flags": {},
+      "order": 15,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "samples",
+          "type": "LATENT",
+          "link": 18
+        },
+        {
+          "name": "vae",
+          "type": "VAE",
+          "link": 19
+        }
+      ],
+      "outputs": [
+        {
+          "name": "IMAGE",
+          "type": "IMAGE",
+          "links": [
+            21
+          ]
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "VAEDecode"
+      },
+      "widgets_values": [],
+      "title": "VAE Decode (tile)"
+    },
+    {
+      "id": 16,
+      "type": "ImageUncropByMask",
+      "pos": [
+        1900,
+        80
+      ],
+      "size": [
+        260,
+        120
+      ],
+      "flags": {},
+      "order": 16,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "destination",
+          "type": "IMAGE",
+          "link": 20
+        },
+        {
+          "name": "source",
+          "type": "IMAGE",
+          "link": 21
+        },
+        {
+          "name": "mask",
+          "type": "MASK",
+          "link": 22
+        },
+        {
+          "name": "bbox",
+          "type": "BBOX",
+          "link": 23
+        }
+      ],
+      "outputs": [
+        {
+          "name": "image",
+          "type": "IMAGE",
+          "links": [
+            24
+          ]
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "ImageUncropByMask"
+      },
+      "widgets_values": [],
+      "title": "Costura no original (uncrop)"
+    },
+    {
+      "id": 17,
+      "type": "SaveImage",
+      "pos": [
+        2180,
+        80
+      ],
+      "size": [
+        280,
+        280
+      ],
+      "flags": {},
+      "order": 17,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "images",
+          "type": "IMAGE",
+          "link": 24
+        }
+      ],
+      "outputs": [],
+      "properties": {
+        "Node name for S&R": "SaveImage"
+      },
+      "widgets_values": [
+        "edit_cropstitch"
+      ],
+      "title": "Salvar"
+    }
+  ],
+  "links": [
+    [
+      1,
+      2,
+      0,
+      3,
+      0,
+      "MODEL"
+    ],
+    [
+      2,
+      5,
+      0,
+      7,
+      0,
+      "SAM_MODEL"
+    ],
+    [
+      3,
+      6,
+      0,
+      7,
+      1,
+      "GROUNDING_DINO_MODEL"
+    ],
+    [
+      4,
+      4,
+      0,
+      7,
+      2,
+      "IMAGE"
+    ],
+    [
+      5,
+      7,
+      1,
+      8,
+      0,
+      "MASK"
+    ],
+    [
+      6,
+      4,
+      0,
+      9,
+      0,
+      "IMAGE"
+    ],
+    [
+      7,
+      8,
+      0,
+      9,
+      1,
+      "MASK"
+    ],
+    [
+      8,
+      2,
+      1,
+      10,
+      0,
+      "CLIP"
+    ],
+    [
+      9,
+      2,
+      1,
+      11,
+      0,
+      "CLIP"
+    ],
+    [
+      10,
+      9,
+      0,
+      12,
+      0,
+      "IMAGE"
+    ],
+    [
+      11,
+      2,
+      2,
+      12,
+      1,
+      "VAE"
+    ],
+    [
+      12,
+      12,
+      0,
+      13,
+      0,
+      "LATENT"
+    ],
+    [
+      13,
+      9,
+      1,
+      13,
+      1,
+      "MASK"
+    ],
+    [
+      14,
+      3,
+      0,
+      14,
+      0,
+      "MODEL"
+    ],
+    [
+      15,
+      10,
+      0,
+      14,
+      1,
+      "CONDITIONING"
+    ],
+    [
+      16,
+      11,
+      0,
+      14,
+      2,
+      "CONDITIONING"
+    ],
+    [
+      17,
+      13,
+      0,
+      14,
+      3,
+      "LATENT"
+    ],
+    [
+      18,
+      14,
+      0,
+      15,
+      0,
+      "LATENT"
+    ],
+    [
+      19,
+      2,
+      2,
+      15,
+      1,
+      "VAE"
+    ],
+    [
+      20,
+      4,
+      0,
+      16,
+      0,
+      "IMAGE"
+    ],
+    [
+      21,
+      15,
+      0,
+      16,
+      1,
+      "IMAGE"
+    ],
+    [
+      22,
+      8,
+      0,
+      16,
+      2,
+      "MASK"
+    ],
+    [
+      23,
+      9,
+      2,
+      16,
+      3,
+      "BBOX"
+    ],
+    [
+      24,
+      16,
+      0,
+      17,
+      0,
+      "IMAGE"
+    ]
+  ],
+  "groups": [],
+  "config": {},
+  "extra": {},
+  "version": 0.4
+}

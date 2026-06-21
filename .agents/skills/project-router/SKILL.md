@@ -18,11 +18,11 @@ carregá-las ANTES de agir, para não reler docs nem escanear o repo.
 
 ## Protocolo (execute antes de qualquer trabalho)
 1. **Classifique a tarefa**: domínio(s) tocado(s) — SCAIL-2 / ComfyUI / RunPod-infra /
-   provisioning / comercial; tipo — gerar / montar workflow / setup / debug / decisão de custo;
+   API-online (fal/partner) / provisioning / comercial; tipo — gerar / montar workflow / setup / debug / decisão de custo;
    complexidade (passo único vs pipeline).
 2. **Consulte o catálogo** (`catalog.md` → "Cadeias típicas") e selecione as skills relevantes.
 3. **Monte a cadeia**: ordem + o que pode rodar em paralelo via subagentes (contexto isolado
-   para análise pesada, p.ex. ler um doc inteiro ou escanear `workflows/`).
+   para análise pesada, p.ex. ler um doc inteiro ou escanear `workflows-api/`/`workflows-cloud/`).
 4. **Carregue o conhecimento** das skills selecionadas (leia os `SKILL.md`; abra `references`/docs
    de nível 3 só se o `SKILL.md` não bastar).
 5. **Execute** a cadeia.
@@ -31,11 +31,13 @@ carregá-las ANTES de agir, para não reler docs nem escanear o repo.
 
 ## Cadeias típicas (resumo — ver `catalog.md`)
 - Criar comercial → `task-create-commercial` (orquestra `knowledge-scail2` + `knowledge-comfyui-workflows` + provisioning).
+- Criar comercial **por API / sem GPU** → `task-create-commercial-api` + `knowledge-comfyui-api-nodes` (bundle `workflows-api/commercial-ondokai/`).
 - Subir pod / baixar modelos → `task-launch-runpod-pod` + `knowledge-runpod-provisioning` + `knowledge-runpod-infra`.
 - Montar/adaptar workflow → `task-build-workflow` + `knowledge-comfyui-workflows` (+ `knowledge-scail2`).
 - Debug de geração → `task-debug-generation` + `knowledge-comfyui-workflows`.
 - Criar/empacotar um projeto de workflow → `task-package-workflow-project` (adapta exemplo + gera setup.sh) + a knowledge skill da técnica.
 - Editar imagem (inpaint/instrução/trocar objeto/fundo) → `task-edit-image` + `knowledge-image-editing` + `knowledge-image-masking` (+ `knowledge-comfyui-api` p/ código/API, `knowledge-image-enhance` p/ upscale/relight/fundo).
+- Rodar/montar workflow **por API online** (Veo/Kling/Nano Banana/fal), escolher provedor, custo em créditos, nó fal travado → `knowledge-comfyui-api-nodes`.
 - "Qual GPU / quanto custa" → `knowledge-runpod-infra`.
 
 ## Regras

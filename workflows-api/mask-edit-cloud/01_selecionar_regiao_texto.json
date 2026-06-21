@@ -1,0 +1,356 @@
+{
+  "last_node_id": 8,
+  "last_link_id": 6,
+  "nodes": [
+    {
+      "id": 1,
+      "type": "MarkdownNote",
+      "pos": [
+        0,
+        -300
+      ],
+      "size": [
+        760,
+        290
+      ],
+      "flags": {},
+      "order": 1,
+      "mode": 0,
+      "inputs": [],
+      "outputs": [],
+      "title": "🎯 01 — Selecionar região",
+      "properties": {},
+      "widgets_values": [
+        "# 🎯 01 — SELECIONAR só a parte a mudar\n\n## PRA QUE SERVE\nGera a MÁSCARA da região que você vai editar — por TEXTO ('the shirt', 'the face', 'the sky'). A máscara é o que diz ao modelo (e ao composite) QUAL parte mexer; o resto fica intocado.\n\n## PASSO A PASSO\n1. Load Image.\n2. Escreva no nó de segmentação o que selecionar.\n3. Run → vê a máscara (branco=muda, preto=mantém). Ajuste `threshold` e `expand`/`blur`.\n\n## ✋ ALTERNATIVA MANUAL\nClique direito no Load Image → **Open in MaskEditor** e pinte a região à mão (em vez do texto).\n\n## ⚙️ GrowMaskWithBlur\n- **expand**: cresce a máscara (pega a borda). - **blur_radius**: suaviza (costura sem emenda). - **fill_holes**: tampa buracos."
+      ],
+      "color": "#234",
+      "bgcolor": "#345"
+    },
+    {
+      "id": 2,
+      "type": "LoadImage",
+      "pos": [
+        40,
+        80
+      ],
+      "size": [
+        240,
+        280
+      ],
+      "flags": {},
+      "order": 2,
+      "mode": 0,
+      "inputs": [],
+      "outputs": [
+        {
+          "name": "IMAGE",
+          "type": "IMAGE",
+          "links": [
+            3
+          ]
+        },
+        {
+          "name": "MASK",
+          "type": "MASK",
+          "links": []
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "LoadImage"
+      },
+      "widgets_values": [
+        "example.png",
+        "image"
+      ],
+      "title": "Imagem original"
+    },
+    {
+      "id": 3,
+      "type": "SAMModelLoader (segment anything)",
+      "pos": [
+        320,
+        440
+      ],
+      "size": [
+        280,
+        80
+      ],
+      "flags": {},
+      "order": 3,
+      "mode": 0,
+      "inputs": [],
+      "outputs": [
+        {
+          "name": "SAM_MODEL",
+          "type": "SAM_MODEL",
+          "links": [
+            1
+          ]
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "SAMModelLoader (segment anything)"
+      },
+      "widgets_values": [
+        "sam_vit_h (2.56GB)"
+      ],
+      "title": "SAM loader"
+    },
+    {
+      "id": 4,
+      "type": "GroundingDinoModelLoader (segment anything)",
+      "pos": [
+        320,
+        550
+      ],
+      "size": [
+        280,
+        80
+      ],
+      "flags": {},
+      "order": 4,
+      "mode": 0,
+      "inputs": [],
+      "outputs": [
+        {
+          "name": "GROUNDING_DINO_MODEL",
+          "type": "GROUNDING_DINO_MODEL",
+          "links": [
+            2
+          ]
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "GroundingDinoModelLoader (segment anything)"
+      },
+      "widgets_values": [
+        "GroundingDINO_SwinT_OGC (694MB)"
+      ],
+      "title": "GroundingDINO loader"
+    },
+    {
+      "id": 5,
+      "type": "GroundingDinoSAMSegment (segment anything)",
+      "pos": [
+        320,
+        160
+      ],
+      "size": [
+        300,
+        160
+      ],
+      "flags": {},
+      "order": 5,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "sam_model",
+          "type": "SAM_MODEL",
+          "link": 1
+        },
+        {
+          "name": "grounding_dino_model",
+          "type": "GROUNDING_DINO_MODEL",
+          "link": 2
+        },
+        {
+          "name": "image",
+          "type": "IMAGE",
+          "link": 3
+        }
+      ],
+      "outputs": [
+        {
+          "name": "IMAGE",
+          "type": "IMAGE",
+          "links": []
+        },
+        {
+          "name": "MASK",
+          "type": "MASK",
+          "links": [
+            4
+          ]
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "GroundingDinoSAMSegment (segment anything)"
+      },
+      "widgets_values": [
+        "<O QUE SELECIONAR: ex. 'the shirt' / 'the sky' / 'the face'>",
+        0.3
+      ],
+      "title": "Segmenta por TEXTO → máscara"
+    },
+    {
+      "id": 6,
+      "type": "GrowMaskWithBlur",
+      "pos": [
+        650,
+        160
+      ],
+      "size": [
+        300,
+        260
+      ],
+      "flags": {},
+      "order": 6,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "mask",
+          "type": "MASK",
+          "link": 4
+        }
+      ],
+      "outputs": [
+        {
+          "name": "mask",
+          "type": "MASK",
+          "links": [
+            5
+          ]
+        },
+        {
+          "name": "mask_inverted",
+          "type": "MASK",
+          "links": []
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "GrowMaskWithBlur"
+      },
+      "widgets_values": [
+        10,
+        0.0,
+        true,
+        false,
+        8.0,
+        1.0,
+        1.0,
+        true
+      ],
+      "title": "Expande+borra a máscara (bordas suaves)"
+    },
+    {
+      "id": 7,
+      "type": "MaskToImage",
+      "pos": [
+        990,
+        80
+      ],
+      "size": [
+        260,
+        80
+      ],
+      "flags": {},
+      "order": 7,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "mask",
+          "type": "MASK",
+          "link": 5
+        }
+      ],
+      "outputs": [
+        {
+          "name": "IMAGE",
+          "type": "IMAGE",
+          "links": [
+            6
+          ]
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "MaskToImage"
+      },
+      "widgets_values": [],
+      "title": "Máscara → imagem (preview)"
+    },
+    {
+      "id": 8,
+      "type": "SaveImage",
+      "pos": [
+        1280,
+        80
+      ],
+      "size": [
+        280,
+        280
+      ],
+      "flags": {},
+      "order": 8,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "images",
+          "type": "IMAGE",
+          "link": 6
+        }
+      ],
+      "outputs": [],
+      "properties": {
+        "Node name for S&R": "SaveImage"
+      },
+      "widgets_values": [
+        "mascara_preview"
+      ],
+      "title": "Salvar máscara"
+    }
+  ],
+  "links": [
+    [
+      1,
+      3,
+      0,
+      5,
+      0,
+      "SAM_MODEL"
+    ],
+    [
+      2,
+      4,
+      0,
+      5,
+      1,
+      "GROUNDING_DINO_MODEL"
+    ],
+    [
+      3,
+      2,
+      0,
+      5,
+      2,
+      "IMAGE"
+    ],
+    [
+      4,
+      5,
+      1,
+      6,
+      0,
+      "MASK"
+    ],
+    [
+      5,
+      6,
+      0,
+      7,
+      0,
+      "MASK"
+    ],
+    [
+      6,
+      7,
+      0,
+      8,
+      0,
+      "IMAGE"
+    ]
+  ],
+  "groups": [],
+  "config": {},
+  "extra": {},
+  "version": 0.4
+}

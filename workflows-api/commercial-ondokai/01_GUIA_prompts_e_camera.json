@@ -1,0 +1,35 @@
+{
+  "last_node_id": 1,
+  "last_link_id": 0,
+  "nodes": [
+    {
+      "id": 1,
+      "type": "MarkdownNote",
+      "pos": [
+        0,
+        0
+      ],
+      "size": [
+        900,
+        1500
+      ],
+      "flags": {},
+      "order": 1,
+      "mode": 0,
+      "inputs": [],
+      "outputs": [],
+      "title": "🎬 00 — GUIA MESTRE",
+      "properties": {},
+      "widgets_values": [
+        "# 🎬 GUIA MESTRE DO COMERCIAL — leia antes de montar qualquer shot\n\n## 1) Pipeline\nKEYFRAME (NanoBananaPro_fal, identidade travada pela ÂNCORA) → MOVIMENTO (Veo31_fal / KlingV3Pro_fal) → (extensão dirigida opcional) → ColorMatch vs 1 frame-herói → concat ffmpeg.\n\n## 2) Gramática de prompt do Veo 3.1 (OFICIAL — cinematografia primeiro)\n`[plano + movimento de câmera + lente] + [sujeito + figurino] + [ação + física/tempo] + [cenário + hora do dia] + [estilo: filme/grade/luz] + [áudio]`\n\nTemplate copiável:\n```\n[SHOT_TYPE + CAMERA_MOVE + LENS], <<PROTAGONISTA — a MESMA frase de identidade em todo shot>>,\n<ACTION com timing>, em <SETTING + hora do dia + atmosfera>, iluminado por <LIGHTING>.\nStyle: <film stock / grão / grade de cor>.\nAudio: dialogue — \"<FALA exata ou nenhuma>\"; SFX: <som>; Ambient: <paisagem sonora>.\n```\n\n## 3) Vocabulário que o modelo responde (varie de propósito entre os beats)\n- Planos: establishing, wide, medium, medium close-up, close-up, extreme close-up, two-shot, OTS, POV.\n- Câmera (UMA por shot!): dolly in/out, tracking, truck L/R, orbit, crane up/down, pedestal, slow pan, whip pan, tilt, rack focus, zoom, drone/aerial, FPV, handheld, locked-off.\n- Tempo: slow motion, time-lapse, motion ramp.\n- Lente/filme: 35mm, anamorphic, wide-angle, macro, shallow DoF, bokeh, lens flare, film grain.\n- Luz: golden hour, low-key noir, high-key, neon/cyberpunk, practical, volumetric/god rays, rim light.\n- REGRA: só UM movimento de câmera claro por shot (Veo/Runway/Kling) — movimentos conflitantes degradam.\n\n## 4) Bloco de NEGATIVOS de vídeo (cole onde o nó tiver negative_prompt)\n`no morphing, no warping, distorted hands, extra fingers, flickering textures, face morphing, jitter, camera shake, sudden cuts, changing wardrobe color, identity drift`\n(Veo31_fal NÃO tem campo negative → use Veo3FirstLastFrameNode / KlingV3Pro_fal / SeedanceProImageToVideo_fal, ou dobre os negativos em prosa positiva: \"a clean empty street with no people\".)\n\n## 5) Extensão de vídeo COM instrução por segmento (3 jeitos nesta pasta)\n- `extend_A_veo_handoff` — pega o ÚLTIMO frame do clipe (GetImageRangeFromBatch -1) e usa como first_frame do próximo Veo com NOVO prompt. Portátil, multi-modelo.\n- `extend_B_kling_nativo` — KlingImage2VideoNode → KlingVideoExtendNode(novo prompt) × N (extensão nativa, encadeável).\n- `extend_C_seedance_barato` — Seedance Pro (tem negative + end_image) p/ rascunho de timing barato antes do Veo.\n\n## 6) Consistência entre shots\n- Identidade: âncora em `images` + a MESMA frase de identidade em todo prompt; nomear figurino/props SEMPRE (\"gray hoodie, round glasses\").\n- Cor: ColorMatch (hm-mkl-hm, 0.4) de cada clipe contra UM frame-herói canônico (não contra o clipe anterior → evita deriva acumulada).\n- Áudio Veo: diálogo entre aspas, `SFX:`, `Ambient:`; `generate_audio=false` em B-roll. ⚠️ a cadeia LoadVideoURL→CreateVideo extrai só FRAMES (perde o áudio nativo do Veo) — p/ manter áudio, baixe a URL original do Veo (o STRING de saída).\n\n## 7) Plataforma / aspect\n- 16:9 master. 9:16 Reels: gere nativo onde der; 1:1 NÃO é saída oficial do Veo → recorte no pós.\n- Recipe concat 16:9: `ffmpeg -f concat -safe 0 -i lista.txt -r 24 -c:v libx264 -pix_fmt yuv420p ondokai.mp4`\n- Recipe crop 16:9→9:16: `ffmpeg -i in.mp4 -vf \"crop=ih*9/16:ih,scale=1080:1920\" -c:a copy reels.mp4`\n\n## 8) Render ledger (preencha por clipe — reprodutibilidade)\n`| shot | modelo+versão | seed | aspecto | dur | prompt(resumo) | frame-herói |`\n(Prefira nós COM seed p/ shots que precisa repetir: Veo3FirstLastFrameNode, SeedanceProImageToVideo_fal, GrokVideoExtendNode. Veo31_fal/NanoBananaPro_fal NÃO têm seed.)\n\n## 9) Modelos 2026 por necessidade\n- Herói humano sintético + lip-sync → Veo 3.1. (⚠️ recusa semelhança de pessoa REAL; SynthID.)\n- Talento real / UGC → KlingV3Pro_fal (até 15s) ou SeedanceProImageToVideo_fal.\n- Produto barato cinematográfico → Wan 2.5 / Seedance 720p.\n"
+      ],
+      "color": "#234",
+      "bgcolor": "#345"
+    }
+  ],
+  "links": [],
+  "groups": [],
+  "config": {},
+  "extra": {},
+  "version": 0.4
+}

@@ -1,0 +1,558 @@
+{
+  "last_node_id": 11,
+  "last_link_id": 9,
+  "nodes": [
+    {
+      "id": 1,
+      "type": "MarkdownNote",
+      "pos": [
+        -660,
+        0
+      ],
+      "size": [
+        620,
+        760
+      ],
+      "flags": {},
+      "order": 1,
+      "mode": 0,
+      "inputs": [],
+      "outputs": [],
+      "title": "🎬➕ Estender C — Seedance (barato)",
+      "properties": {},
+      "widgets_values": [
+        "# 🎬➕ 42 — ESTENDER vídeo (método C: Seedance barato)\n\n## 🎯 PRA QUE SERVE\nMesma ideia do método A (handoff de frame), mas com Seedance (mais barato + tem negative/seed) — ideal p/ RASCUNHAR a ação dos segmentos antes de gastar Veo.\n\n## 📝 PASSO A PASSO\n1. **Load Image** = keyframe.\n2. Prompt do **Seg 1**, depois do **Seg 2** (ação seguinte).\n3. **Run**.\n\n## ⚙️ CONFIGS\n- **duration**: curto p/ testar.  - **negative_prompt**: evitar morphing.  - **cfg_scale** ~0.5.  - pega o último frame (start_index=-1) p/ emendar, igual ao método A."
+      ],
+      "color": "#234",
+      "bgcolor": "#345"
+    },
+    {
+      "id": 2,
+      "type": "LoadImage",
+      "pos": [
+        40,
+        150
+      ],
+      "size": [
+        240,
+        280
+      ],
+      "flags": {},
+      "order": 2,
+      "mode": 0,
+      "inputs": [],
+      "outputs": [
+        {
+          "name": "IMAGE",
+          "type": "IMAGE",
+          "links": [
+            1
+          ]
+        },
+        {
+          "name": "MASK",
+          "type": "MASK",
+          "links": []
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "LoadImage"
+      },
+      "widgets_values": [
+        "example.png",
+        "image"
+      ],
+      "title": "Keyframe inicial"
+    },
+    {
+      "id": 3,
+      "type": "SeedanceProImageToVideo_fal",
+      "pos": [
+        300,
+        150
+      ],
+      "size": [
+        340,
+        220
+      ],
+      "flags": {},
+      "order": 3,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "image",
+          "type": "IMAGE",
+          "link": 1
+        },
+        {
+          "name": "end_image",
+          "type": "IMAGE",
+          "link": null
+        }
+      ],
+      "outputs": [
+        {
+          "name": "STRING",
+          "type": "STRING",
+          "links": [
+            2
+          ]
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "SeedanceProImageToVideo_fal"
+      },
+      "widgets_values": [
+        "SEG 1 — <<PROTAGONISTA>> <ACTION 1>. <SETTING>. <LIGHTING>.",
+        "5",
+        "morphing, distorted hands, flicker, face morphing",
+        0.5,
+        1
+      ],
+      "title": "Seedance Pro — Seg 1"
+    },
+    {
+      "id": 4,
+      "type": "LoadVideoURL",
+      "pos": [
+        660,
+        150
+      ],
+      "size": [
+        300,
+        200
+      ],
+      "flags": {},
+      "order": 4,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "url",
+          "type": "STRING",
+          "link": 2,
+          "widget": {
+            "name": "url"
+          }
+        }
+      ],
+      "outputs": [
+        {
+          "name": "frames",
+          "type": "IMAGE",
+          "links": [
+            3,
+            5
+          ]
+        },
+        {
+          "name": "frame_count",
+          "type": "INT",
+          "links": []
+        },
+        {
+          "name": "video_info",
+          "type": "VHS_VIDEOINFO",
+          "links": []
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "LoadVideoURL"
+      },
+      "widgets_values": [
+        "https://example.com/video.mp4",
+        0,
+        "Disabled",
+        512,
+        512,
+        0,
+        0,
+        1
+      ],
+      "title": "LoadVideoURL (url←string)"
+    },
+    {
+      "id": 5,
+      "type": "CreateVideo",
+      "pos": [
+        1000,
+        150
+      ],
+      "size": [
+        220,
+        90
+      ],
+      "flags": {},
+      "order": 5,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "images",
+          "type": "IMAGE",
+          "link": 3
+        },
+        {
+          "name": "audio",
+          "type": "AUDIO",
+          "link": null
+        }
+      ],
+      "outputs": [
+        {
+          "name": "VIDEO",
+          "type": "VIDEO",
+          "links": [
+            4
+          ]
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "CreateVideo"
+      },
+      "widgets_values": [
+        24.0,
+        8
+      ],
+      "title": "CreateVideo"
+    },
+    {
+      "id": 6,
+      "type": "SaveVideo",
+      "pos": [
+        1260,
+        150
+      ],
+      "size": [
+        260,
+        120
+      ],
+      "flags": {},
+      "order": 6,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "video",
+          "type": "VIDEO",
+          "link": 4
+        }
+      ],
+      "outputs": [],
+      "properties": {
+        "Node name for S&R": "SaveVideo"
+      },
+      "widgets_values": [
+        "extend_seedance_seg1",
+        "mp4",
+        "h264"
+      ],
+      "title": "SaveVideo"
+    },
+    {
+      "id": 7,
+      "type": "GetImageRangeFromBatch",
+      "pos": [
+        660,
+        420
+      ],
+      "size": [
+        260,
+        90
+      ],
+      "flags": {},
+      "order": 7,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "images",
+          "type": "IMAGE",
+          "link": 5
+        },
+        {
+          "name": "masks",
+          "type": "MASK",
+          "link": null
+        }
+      ],
+      "outputs": [
+        {
+          "name": "IMAGE",
+          "type": "IMAGE",
+          "links": [
+            6
+          ]
+        },
+        {
+          "name": "MASK",
+          "type": "MASK",
+          "links": []
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "GetImageRangeFromBatch"
+      },
+      "widgets_values": [
+        -1,
+        1
+      ],
+      "title": "Último frame (-1)"
+    },
+    {
+      "id": 8,
+      "type": "SeedanceProImageToVideo_fal",
+      "pos": [
+        1000,
+        150
+      ],
+      "size": [
+        360,
+        220
+      ],
+      "flags": {},
+      "order": 8,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "image",
+          "type": "IMAGE",
+          "link": 6
+        },
+        {
+          "name": "end_image",
+          "type": "IMAGE",
+          "link": null
+        }
+      ],
+      "outputs": [
+        {
+          "name": "STRING",
+          "type": "STRING",
+          "links": [
+            7
+          ]
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "SeedanceProImageToVideo_fal"
+      },
+      "widgets_values": [
+        "SEG 2 — <NOVA AÇÃO 2 dirigida>, mantém identidade/figurino.",
+        "5",
+        "morphing, face morphing, flicker",
+        0.5,
+        1
+      ],
+      "title": "Seedance Pro — Seg 2 (novo prompt)"
+    },
+    {
+      "id": 9,
+      "type": "LoadVideoURL",
+      "pos": [
+        1360,
+        150
+      ],
+      "size": [
+        300,
+        200
+      ],
+      "flags": {},
+      "order": 9,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "url",
+          "type": "STRING",
+          "link": 7,
+          "widget": {
+            "name": "url"
+          }
+        }
+      ],
+      "outputs": [
+        {
+          "name": "frames",
+          "type": "IMAGE",
+          "links": [
+            8
+          ]
+        },
+        {
+          "name": "frame_count",
+          "type": "INT",
+          "links": []
+        },
+        {
+          "name": "video_info",
+          "type": "VHS_VIDEOINFO",
+          "links": []
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "LoadVideoURL"
+      },
+      "widgets_values": [
+        "https://example.com/video.mp4",
+        0,
+        "Disabled",
+        512,
+        512,
+        0,
+        0,
+        1
+      ],
+      "title": "LoadVideoURL (url←string)"
+    },
+    {
+      "id": 10,
+      "type": "CreateVideo",
+      "pos": [
+        1700,
+        150
+      ],
+      "size": [
+        220,
+        90
+      ],
+      "flags": {},
+      "order": 10,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "images",
+          "type": "IMAGE",
+          "link": 8
+        },
+        {
+          "name": "audio",
+          "type": "AUDIO",
+          "link": null
+        }
+      ],
+      "outputs": [
+        {
+          "name": "VIDEO",
+          "type": "VIDEO",
+          "links": [
+            9
+          ]
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "CreateVideo"
+      },
+      "widgets_values": [
+        24.0,
+        8
+      ],
+      "title": "CreateVideo"
+    },
+    {
+      "id": 11,
+      "type": "SaveVideo",
+      "pos": [
+        1960,
+        150
+      ],
+      "size": [
+        260,
+        120
+      ],
+      "flags": {},
+      "order": 11,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "video",
+          "type": "VIDEO",
+          "link": 9
+        }
+      ],
+      "outputs": [],
+      "properties": {
+        "Node name for S&R": "SaveVideo"
+      },
+      "widgets_values": [
+        "extend_seedance_seg2",
+        "mp4",
+        "h264"
+      ],
+      "title": "SaveVideo"
+    }
+  ],
+  "links": [
+    [
+      1,
+      2,
+      0,
+      3,
+      0,
+      "IMAGE"
+    ],
+    [
+      2,
+      3,
+      0,
+      4,
+      0,
+      "STRING"
+    ],
+    [
+      3,
+      4,
+      0,
+      5,
+      0,
+      "IMAGE"
+    ],
+    [
+      4,
+      5,
+      0,
+      6,
+      0,
+      "VIDEO"
+    ],
+    [
+      5,
+      4,
+      0,
+      7,
+      0,
+      "IMAGE"
+    ],
+    [
+      6,
+      7,
+      0,
+      8,
+      0,
+      "IMAGE"
+    ],
+    [
+      7,
+      8,
+      0,
+      9,
+      0,
+      "STRING"
+    ],
+    [
+      8,
+      9,
+      0,
+      10,
+      0,
+      "IMAGE"
+    ],
+    [
+      9,
+      10,
+      0,
+      11,
+      0,
+      "VIDEO"
+    ]
+  ],
+  "groups": [],
+  "config": {},
+  "extra": {},
+  "version": 0.4
+}

@@ -21,10 +21,10 @@ Selecionar só a máscara → `knowledge-image-masking`; só montar o grafo → 
 
 ## Decisão da técnica (escolha a mais direta)
 1. **Edição global por instrução, sem máscara** ("deixe noturno", "troque a jaqueta") → **Flux Kontext** ou
-   **Qwen-Image-Edit** (`workflows/instruction-edit-kontext` / `qwen-image-edit`). Mais rápido quando não precisa de precisão.
+   **Qwen-Image-Edit** (`workflows-cloud/instruction-edit-kontext` / `qwen-image-edit`). Mais rápido quando não precisa de precisão.
 2. **Edição cirúrgica de uma região** ("troque só este objeto") → **máscara + inpaint + recolar**
-   (`workflows/inpaint-region-cropstitch`). Use quando a precisão importa.
-3. **Estender** → `workflows/outpaint-extend`. **Tirar fundo** → `workflows/remove-background`.
+   (`workflows-cloud/inpaint-region-cropstitch`). Use quando a precisão importa.
+3. **Estender** → `workflows-cloud/outpaint-extend`. **Tirar fundo** → `workflows-cloud/remove-background`.
 
 ## Procedimento (caso 2 — região)
 1. **Selecione a região** (→ `knowledge-image-masking`): MaskEditor (manual), SAM3/Florence/Grounding DINO (por texto), ou Impact Pack (rostos/mãos).

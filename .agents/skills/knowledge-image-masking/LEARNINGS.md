@@ -10,7 +10,7 @@
 - **Ação**: promover? / atualizar description? -->
 
 ## 2026-06-19 — SAM3_VideoTrack: rastreio por texto em vídeo (probação)
-- **Contexto**: workflow SCAIL-2 nativo de terceiros (`workflows/scail2-native-3rdparty/`).
+- **Contexto**: workflow SCAIL-2 nativo de terceiros (`workflows-cloud/scail2-native-3rdparty/`).
 - **Aprendizado**: `SAM3_VideoTrack` segmenta um **conceito por texto** (ex.: "human") e o **rastreia ao
   longo dos frames** do vídeo, gerando `SAM3_TRACK_DATA` (≠ máscara estática de imagem). Alimenta o
   `SCAIL2ColoredMask`. Útil sempre que a máscara precisa seguir um sujeito no tempo. Ver [[knowledge-scail2-native]].

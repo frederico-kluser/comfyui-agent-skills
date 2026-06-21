@@ -27,14 +27,14 @@ Ative **Settings → "Enable Dev mode Options"** e exporte **"Save (API Format)"
 - `GET /ws?clientId=` — progresso (espere `executing` com `node==None` e o seu `prompt_id` = fim).
 - **Re-rodar exige mudar a seed** (senão volta do cache). Sem auth nativa → proxy em produção.
 - Edite o workflow no script: `wf["10"]["inputs"]["image"]=nome`, `wf["6"]["inputs"]["text"]=prompt`, `wf["3"]["inputs"]["seed"]=N`.
-- Cliente pronto: `workflows/inpaint-region-cropstitch/scripts/run_api.py` (e ref. oficial `script_examples/websockets_api_example.py`).
+- Cliente pronto: `workflows-cloud/inpaint-region-cropstitch/scripts/run_api.py` (e ref. oficial `script_examples/websockets_api_example.py`).
 
 ## Composição/replace em Python (fora do ComfyUI)
 Fórmula única (alpha matte): `saída = original*(1−m) + editada*m`. Feathering = transição invisível.
 - **Pillow**: `result.paste(edited,(0,0), mask.filter(ImageFilter.GaussianBlur(10)))` (copie a original antes; `paste` é in-place). Ou `Image.composite(edited, original, mask_blur)`.
 - **NumPy**: normalize `m/255.0` ANTES, `m=m[...,None]` p/ broadcast, `out=orig*(1-m)+edited*m`, `clip(0,255)`.
 - **OpenCV `seamlessClone`** (Poisson): casa gradientes, borda invisível. `center` = centro do `boundingRect(mask)`, é **(x,y)**. `NORMAL_CLONE` preserva textura; `MIXED_CLONE` p/ estruturas finas. Cuidados: o src deve caber no dst ao redor do center (senão erro -215); guarde `if np.any(mask)`; pode **alterar cor/luz** — p/ fidelidade de pixels prefira o alpha blend feathered.
-- Script pronto: `workflows/inpaint-region-cropstitch/scripts/compose.py` (alpha-blend e seamlessclone por flag).
+- Script pronto: `workflows-cloud/inpaint-region-cropstitch/scripts/compose.py` (alpha-blend e seamlessclone por flag).
 
 ## Quando usar cada um
 Fidelidade de pixels exata (cor original) → **alpha blend feathered** (Pillow/NumPy). Harmonizar cor/luz da

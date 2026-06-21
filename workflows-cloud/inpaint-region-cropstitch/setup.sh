@@ -8,7 +8,7 @@ elif [ -d "/opt/ComfyUI" ];                      then COMFY="/opt/ComfyUI"
 else COMFY="${WORKSPACE:-/workspace}/ComfyUI"; fi
 echo ">> ComfyUI em: $COMFY"
 HF_TOKEN="${HF_TOKEN:-}"; PIP="python -m pip install --no-cache-dir"; PAR=3
-WORKFLOW_URL="https://raw.githubusercontent.com/frederico-kluser/comfyui-agent-skills/main/workflows/inpaint-region-cropstitch/inpaint-region-cropstitch.json"
+WORKFLOW_URL="https://raw.githubusercontent.com/frederico-kluser/comfyui-agent-skills/main/workflows-cloud/inpaint-region-cropstitch/inpaint-region-cropstitch.json"
 
 NODES=(
   "https://github.com/ltdrdata/ComfyUI-Manager"

@@ -20,16 +20,18 @@
 | [knowledge-image-masking](knowledge-image-masking/SKILL.md) | seleção/segmentação: MaskEditor, SAM2/3, Florence-2, Grounding DINO, Impact Pack | `docs/image-editing.md` |
 | [knowledge-comfyui-api](knowledge-comfyui-api/SKILL.md) | API HTTP (/prompt,/upload,/history,/view) + composição Python (Pillow/NumPy/OpenCV) | `docs/image-editing.md` |
 | [knowledge-image-enhance](knowledge-image-enhance/SKILL.md) | upscale, outpaint, relight (IC-Light), ControlNet, IPAdapter, remoção de fundo | `docs/image-editing.md` |
-| [knowledge-scail2-native](knowledge-scail2-native/SKILL.md) | grafo NATIVO do SCAIL-2 (WanSCAILToVideo, SCAIL2ColoredMask, SAM3 por texto, toggle Replace, shift 5) | `workflows/scail2-native-3rdparty/` |
+| [knowledge-scail2-native](knowledge-scail2-native/SKILL.md) | grafo NATIVO do SCAIL-2 (WanSCAILToVideo, SCAIL2ColoredMask, SAM3 por texto, toggle Replace, shift 5) | `workflows-cloud/scail2-native-3rdparty/` |
+| [knowledge-comfyui-api-nodes](knowledge-comfyui-api-nodes/SKILL.md) | nós de API ONLINE: partner (Comfy credits) vs fal (`*_fal`) vs Replicate; catálogo Veo/Kling/Nano Banana/Seedance/Flux Pro; **seed gates**; chaves; decisão API-vs-self-hosted | `workflows-api/` (+ pesquisa cloud-first) |
 
 ## Tarefa (memória procedural)
 | Skill | O que faz |
 |---|---|
-| [task-create-commercial](task-create-commercial/SKILL.md) | pipeline end-to-end de um comercial (Flux→SCAIL-2/Wan→RIFE→upscale→edição) |
+| [task-create-commercial](task-create-commercial/SKILL.md) | pipeline end-to-end de um comercial **self-hosted** (Flux→SCAIL-2/Wan→RIFE→upscale→edição) |
+| [task-create-commercial-api](task-create-commercial-api/SKILL.md) | pipeline de comercial 100% **por API** (Nano Banana Pro→Veo 3.1→extend→ColorMatch→ffmpeg), sem GPU |
 | [task-launch-runpod-pod](task-launch-runpod-pod/SKILL.md) | subir um pod ComfyUI pronto para gerar |
 | [task-build-workflow](task-build-workflow/SKILL.md) | montar/adaptar um workflow de vídeo |
 | [task-debug-generation](task-debug-generation/SKILL.md) | diagnosticar falhas (OOM, vídeo preto, nós vermelhos) |
-| [task-package-workflow-project](task-package-workflow-project/SKILL.md) | empacotar um workflow entregável em `workflows/<nome>/` (json + README + setup.sh) |
+| [task-package-workflow-project](task-package-workflow-project/SKILL.md) | empacotar um workflow entregável em `workflows-cloud/` (GPU) ou `workflows-api/` (API) — json + README + setup.sh |
 | [task-edit-image](task-edit-image/SKILL.md) | editar uma imagem fim-a-fim (selecionar → editar → recolar) |
 
 ## Meta (auto-evolução)
@@ -51,5 +53,8 @@
 | "editar/retocar imagem, trocar objeto/cor/fundo" | `task-edit-image` → `knowledge-image-editing` + `knowledge-image-masking` |
 | "editar por instrução (sem máscara)" | `knowledge-image-editing` (projetos `instruction-edit-kontext` / `qwen-image-edit`) |
 | "automatizar por API / recolar via código" | `knowledge-comfyui-api` |
+| "criar comercial SEM GPU / por API / Veo-Kling-Seedance" | `task-create-commercial-api` → `knowledge-comfyui-api-nodes` (bundle `workflows-api/commercial-ondokai/`) |
+| "rodar workflow por API / qual provedor / custo em créditos / fal vs Comfy / nó fal travou" | `knowledge-comfyui-api-nodes` |
+| "editar imagem na nuvem / fal / sem GPU" | `task-edit-image` → `knowledge-comfyui-api-nodes` + `knowledge-image-editing`/`knowledge-image-masking` (bundle `workflows-api/mask-edit-cloud/`) |
 | "upscale / outpaint / relight / tirar fundo" | `knowledge-image-enhance` |
 | nenhuma skill cobre | `meta-evolution` (propor skill nova) |

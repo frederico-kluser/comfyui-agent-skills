@@ -1,0 +1,35 @@
+{
+  "last_node_id": 1,
+  "last_link_id": 0,
+  "nodes": [
+    {
+      "id": 1,
+      "type": "MarkdownNote",
+      "pos": [
+        0,
+        0
+      ],
+      "size": [
+        760,
+        1100
+      ],
+      "flags": {},
+      "order": 0,
+      "mode": 0,
+      "inputs": [],
+      "outputs": [],
+      "properties": {},
+      "widgets_values": [
+        "# 📖 GLOSSÁRIO — o que cada CONFIG faz\n\n## Imagem (Nano Banana Pro)\n- **prompt** — texto que descreve a imagem.\n- **aspect_ratio** — formato/proporção: `16:9` (deitado, TV) · `9:16` (em pé, celular) · `1:1` (quadrado).\n- **resolution** — nitidez: `1K`<`2K`<`4K`. Mais alto = mais detalhe e mais crédito.\n- **output_format** — `png` (qualidade máxima) ou `jpeg` (menor).\n- **num_images** — quantas opções gerar de uma vez.\n- **images** (entrada) — imagens de referência. Aqui é a ÂNCORA (trava identidade).\n- *Sem seed:* não dá p/ \"fixar\" o resultado; varie pela âncora + frase repetida.\n\n## Vídeo (Veo 3.1)\n- **prompt** — descreve o MOVIMENTO/ação e a câmera.\n- **first_frame** — a imagem inicial do vídeo (obrigatória).\n- **last_frame** — imagem final (opcional). Com as duas, o Veo faz a transição entre elas (MORPH).\n- **duration** — duração do clipe: `4s`/`6s`/`8s`.\n- **resolution** — `720p` (teste) ou `1080p` (final).\n- **generate_audio** — `true` gera som (diálogo/SFX/ambiente); `false` deixa mudo (B-roll).\n\n## Câmera precisa (Kling)\n- **KlingCameraControls** — define o movimento por NÚMEROS (range -10 a +10). Regra: só UM eixo ≠ 0 por cena.\n  - **zoom** + = aproxima · **pan** = gira horizontal · **tilt** = inclina vertical · **horizontal/vertical_movement** = desliza.\n- **cfg_scale** — quanto o modelo \"obedece\" ao prompt (0–1). ~0.5 equilibrado.\n- **negative_prompt** — o que você NÃO quer (ex.: `morphing, distorted hands, flicker`).\n\n## Estender vídeo\n- **video_id** — \"código\" de um vídeo Kling já gerado; o nó Extend usa p/ continuar aquele vídeo.\n- **GetImageRangeFromBatch (start_index=-1)** — pega o ÚLTIMO frame de um clipe p/ emendar o próximo.\n- **end_image** (Seedance) — define o frame final desejado do segmento.\n\n## Saída de vídeo\n- **LoadVideoURL** — baixa o vídeo (a partir da URL que o nó fal devolve) e vira frames.\n- **CreateVideo / SaveVideo** — remontam e gravam o `.mp4` em `~/ComfyUI/output/`.\n- ⚠️ baixar por frames PERDE o áudio nativo do Veo — p/ manter, baixe a URL original.\n\n## Termos\n- **keyframe** — a imagem que vira o 1º frame do vídeo.\n- **âncora** — a foto do protagonista sintético, reusada p/ manter a identidade.\n- **morph** — a cena se transforma em outra coisa (usa first+last frame).\n- **B-roll** — cena de apoio sem fala."
+      ],
+      "title": "📖 GLOSSÁRIO de configurações",
+      "color": "#234",
+      "bgcolor": "#345"
+    }
+  ],
+  "links": [],
+  "groups": [],
+  "config": {},
+  "extra": {},
+  "version": 0.4
+}
