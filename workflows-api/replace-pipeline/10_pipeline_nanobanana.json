@@ -1,0 +1,1768 @@
+{
+ "last_node_id": 18,
+ "last_link_id": 22,
+ "nodes": [
+  {
+   "id": 1,
+   "type": "MarkdownNote",
+   "pos": [
+    0,
+    -380
+   ],
+   "size": [
+    1240,
+    340
+   ],
+   "flags": {},
+   "order": 0,
+   "mode": 0,
+   "inputs": [],
+   "outputs": [],
+   "title": "⛓️ replace-pipeline — Nano Banana Pro (roupa→fundo→pose, 1 run)",
+   "properties": {},
+   "widgets_values": [
+    "**ROUPA → FUNDO → POSE numa única run.** A saída de cada etapa entra na próxima; o Salvar final tem o resultado das 3 edições.\n\nEdite o **prompt** de cada etapa (Nano Banana Pro — ROUPA/FUNDO/POSE).\n\nCada etapa tem um grupo **Referência** em **bypass** (= modo TEXTO: descreva no prompt). Para usar uma FOTO de referência: selecione os 3 nós do grupo + **Ctrl+B** (ativa) e suba a foto. Sem seed (reprodutível por âncora: a 1ª imagem). Nunca 'transform'; sem pronomes.\n\n⚠️ 3 chamadas fal por run (mais lento/caro). Itere em 1K, finalize em 2K/4K."
+   ],
+   "color": "#234",
+   "bgcolor": "#345"
+  },
+  {
+   "id": 2,
+   "type": "LoadImage",
+   "pos": [
+    40,
+    60
+   ],
+   "size": [
+    250,
+    314
+   ],
+   "flags": {},
+   "order": 0,
+   "mode": 0,
+   "inputs": [
+    {
+     "localized_name": "image",
+     "name": "image",
+     "type": "COMBO",
+     "widget": {
+      "name": "image"
+     },
+     "link": null
+    },
+    {
+     "localized_name": "choose file to upload",
+     "name": "upload",
+     "type": "IMAGEUPLOAD",
+     "widget": {
+      "name": "upload"
+     },
+     "link": null
+    }
+   ],
+   "outputs": [
+    {
+     "localized_name": "IMAGE",
+     "name": "IMAGE",
+     "type": "IMAGE",
+     "links": [
+      1,
+      2,
+      4
+     ]
+    },
+    {
+     "localized_name": "MASK",
+     "name": "MASK",
+     "type": "MASK",
+     "links": []
+    }
+   ],
+   "title": "BASE = a pessoa [1ª = âncora]",
+   "properties": {
+    "cnr_id": "comfy-core",
+    "ver": "0.25.0",
+    "Node name for S&R": "LoadImage"
+   },
+   "widgets_values": [
+    "example.png",
+    "image"
+   ]
+  },
+  {
+   "id": 3,
+   "type": "ImageResizeKJ",
+   "pos": [
+    360,
+    60
+   ],
+   "size": [
+    280,
+    218
+   ],
+   "flags": {},
+   "order": 0,
+   "mode": 0,
+   "inputs": [
+    {
+     "localized_name": "image",
+     "name": "image",
+     "type": "IMAGE",
+     "link": 1
+    },
+    {
+     "localized_name": "get_image_size",
+     "name": "get_image_size",
+     "type": "IMAGE",
+     "shape": 7,
+     "link": 2
+    },
+    {
+     "localized_name": "width",
+     "name": "width",
+     "type": "INT",
+     "widget": {
+      "name": "width"
+     },
+     "link": null
+    },
+    {
+     "localized_name": "height",
+     "name": "height",
+     "type": "INT",
+     "widget": {
+      "name": "height"
+     },
+     "link": null
+    },
+    {
+     "localized_name": "upscale_method",
+     "name": "upscale_method",
+     "type": "COMBO",
+     "widget": {
+      "name": "upscale_method"
+     },
+     "link": null
+    },
+    {
+     "localized_name": "keep_proportion",
+     "name": "keep_proportion",
+     "type": "BOOLEAN",
+     "widget": {
+      "name": "keep_proportion"
+     },
+     "link": null
+    },
+    {
+     "localized_name": "divisible_by",
+     "name": "divisible_by",
+     "type": "INT",
+     "widget": {
+      "name": "divisible_by"
+     },
+     "link": null
+    },
+    {
+     "localized_name": "crop",
+     "name": "crop",
+     "type": "COMBO",
+     "shape": 7,
+     "widget": {
+      "name": "crop"
+     },
+     "link": null
+    }
+   ],
+   "outputs": [
+    {
+     "localized_name": "IMAGE",
+     "name": "IMAGE",
+     "type": "IMAGE",
+     "links": [
+      5
+     ]
+    },
+    {
+     "localized_name": "width",
+     "name": "width",
+     "type": "INT",
+     "links": []
+    },
+    {
+     "localized_name": "height",
+     "name": "height",
+     "type": "INT",
+     "links": []
+    }
+   ],
+   "title": "Resize base",
+   "properties": {
+    "cnr_id": "comfyui-kjnodes",
+    "ver": "450dc91069e28496bbd67bd657f820ef0cb8d5ba",
+    "Node name for S&R": "ImageResizeKJ"
+   },
+   "widgets_values": [
+    1024,
+    1024,
+    "lanczos",
+    true,
+    2,
+    "center"
+   ]
+  },
+  {
+   "id": 4,
+   "type": "ImageBatch",
+   "pos": [
+    680,
+    60
+   ],
+   "size": [
+    200,
+    80
+   ],
+   "flags": {},
+   "order": 0,
+   "mode": 4,
+   "inputs": [
+    {
+     "localized_name": "image1",
+     "name": "image1",
+     "type": "IMAGE",
+     "link": 5
+    },
+    {
+     "localized_name": "image2",
+     "name": "image2",
+     "type": "IMAGE",
+     "link": 6
+    }
+   ],
+   "outputs": [
+    {
+     "localized_name": "IMAGE",
+     "name": "IMAGE",
+     "type": "IMAGE",
+     "links": [
+      7
+     ]
+    }
+   ],
+   "title": "Empilha (base + ref)",
+   "properties": {
+    "cnr_id": "comfy-core",
+    "ver": "0.25.0",
+    "Node name for S&R": "ImageBatch"
+   },
+   "widgets_values": []
+  },
+  {
+   "id": 5,
+   "type": "LoadImage",
+   "pos": [
+    360,
+    320
+   ],
+   "size": [
+    250,
+    314
+   ],
+   "flags": {},
+   "order": 0,
+   "mode": 4,
+   "inputs": [
+    {
+     "localized_name": "image",
+     "name": "image",
+     "type": "COMBO",
+     "widget": {
+      "name": "image"
+     },
+     "link": null
+    },
+    {
+     "localized_name": "choose file to upload",
+     "name": "upload",
+     "type": "IMAGEUPLOAD",
+     "widget": {
+      "name": "upload"
+     },
+     "link": null
+    }
+   ],
+   "outputs": [
+    {
+     "localized_name": "IMAGE",
+     "name": "IMAGE",
+     "type": "IMAGE",
+     "links": [
+      3
+     ]
+    },
+    {
+     "localized_name": "MASK",
+     "name": "MASK",
+     "type": "MASK",
+     "links": []
+    }
+   ],
+   "title": "REF roupa (a peça/look)",
+   "properties": {
+    "cnr_id": "comfy-core",
+    "ver": "0.25.0",
+    "Node name for S&R": "LoadImage"
+   },
+   "widgets_values": [
+    "example.png",
+    "image"
+   ]
+  },
+  {
+   "id": 6,
+   "type": "ImageResizeKJ",
+   "pos": [
+    680,
+    320
+   ],
+   "size": [
+    280,
+    218
+   ],
+   "flags": {},
+   "order": 0,
+   "mode": 4,
+   "inputs": [
+    {
+     "localized_name": "image",
+     "name": "image",
+     "type": "IMAGE",
+     "link": 3
+    },
+    {
+     "localized_name": "get_image_size",
+     "name": "get_image_size",
+     "type": "IMAGE",
+     "shape": 7,
+     "link": 4
+    },
+    {
+     "localized_name": "width",
+     "name": "width",
+     "type": "INT",
+     "widget": {
+      "name": "width"
+     },
+     "link": null
+    },
+    {
+     "localized_name": "height",
+     "name": "height",
+     "type": "INT",
+     "widget": {
+      "name": "height"
+     },
+     "link": null
+    },
+    {
+     "localized_name": "upscale_method",
+     "name": "upscale_method",
+     "type": "COMBO",
+     "widget": {
+      "name": "upscale_method"
+     },
+     "link": null
+    },
+    {
+     "localized_name": "keep_proportion",
+     "name": "keep_proportion",
+     "type": "BOOLEAN",
+     "widget": {
+      "name": "keep_proportion"
+     },
+     "link": null
+    },
+    {
+     "localized_name": "divisible_by",
+     "name": "divisible_by",
+     "type": "INT",
+     "widget": {
+      "name": "divisible_by"
+     },
+     "link": null
+    },
+    {
+     "localized_name": "crop",
+     "name": "crop",
+     "type": "COMBO",
+     "shape": 7,
+     "widget": {
+      "name": "crop"
+     },
+     "link": null
+    }
+   ],
+   "outputs": [
+    {
+     "localized_name": "IMAGE",
+     "name": "IMAGE",
+     "type": "IMAGE",
+     "links": [
+      6
+     ]
+    },
+    {
+     "localized_name": "width",
+     "name": "width",
+     "type": "INT",
+     "links": []
+    },
+    {
+     "localized_name": "height",
+     "name": "height",
+     "type": "INT",
+     "links": []
+    }
+   ],
+   "title": "Resize ref",
+   "properties": {
+    "cnr_id": "comfyui-kjnodes",
+    "ver": "450dc91069e28496bbd67bd657f820ef0cb8d5ba",
+    "Node name for S&R": "ImageResizeKJ"
+   },
+   "widgets_values": [
+    1024,
+    1024,
+    "lanczos",
+    true,
+    2,
+    "center"
+   ]
+  },
+  {
+   "id": 7,
+   "type": "NanoBananaPro_fal",
+   "pos": [
+    1020,
+    60
+   ],
+   "size": [
+    380,
+    240
+   ],
+   "flags": {},
+   "order": 0,
+   "mode": 0,
+   "inputs": [
+    {
+     "localized_name": "images",
+     "name": "images",
+     "type": "IMAGE",
+     "shape": 7,
+     "link": 7
+    },
+    {
+     "localized_name": "prompt",
+     "name": "prompt",
+     "type": "STRING",
+     "widget": {
+      "name": "prompt"
+     },
+     "link": null
+    },
+    {
+     "localized_name": "num_images",
+     "name": "num_images",
+     "type": "INT",
+     "shape": 7,
+     "widget": {
+      "name": "num_images"
+     },
+     "link": null
+    },
+    {
+     "localized_name": "aspect_ratio",
+     "name": "aspect_ratio",
+     "type": "COMBO",
+     "shape": 7,
+     "widget": {
+      "name": "aspect_ratio"
+     },
+     "link": null
+    },
+    {
+     "localized_name": "output_format",
+     "name": "output_format",
+     "type": "COMBO",
+     "shape": 7,
+     "widget": {
+      "name": "output_format"
+     },
+     "link": null
+    },
+    {
+     "localized_name": "resolution",
+     "name": "resolution",
+     "type": "COMBO",
+     "shape": 7,
+     "widget": {
+      "name": "resolution"
+     },
+     "link": null
+    },
+    {
+     "localized_name": "sync_mode",
+     "name": "sync_mode",
+     "type": "BOOLEAN",
+     "shape": 7,
+     "widget": {
+      "name": "sync_mode"
+     },
+     "link": null
+    }
+   ],
+   "outputs": [
+    {
+     "localized_name": "IMAGE",
+     "name": "IMAGE",
+     "type": "IMAGE",
+     "links": [
+      8,
+      9,
+      11
+     ]
+    }
+   ],
+   "title": "Nano Banana Pro — ROUPA",
+   "properties": {
+    "cnr_id": "fal-api",
+    "ver": "1b14ab3164a6c654a47080bd39c9944a23c254c3",
+    "Node name for S&R": "NanoBananaPro_fal"
+   },
+   "widgets_values": [
+    "Change ONLY the clothing/outfit of the person in this image to: <DESCREVA A ROUPA — ex.: a tailored navy three-piece suit with a white shirt>. Preserve the exact face, hair, body, pose and background. Fit the new garments naturally to the body and pose with correct drape, folds and contact shadows. Keep everything else exactly the same. Photorealistic, seamless, high detail.",
+    1,
+    "auto",
+    "png",
+    "2K",
+    false
+   ]
+  },
+  {
+   "id": 8,
+   "type": "ImageResizeKJ",
+   "pos": [
+    1700,
+    60
+   ],
+   "size": [
+    280,
+    218
+   ],
+   "flags": {},
+   "order": 0,
+   "mode": 0,
+   "inputs": [
+    {
+     "localized_name": "image",
+     "name": "image",
+     "type": "IMAGE",
+     "link": 8
+    },
+    {
+     "localized_name": "get_image_size",
+     "name": "get_image_size",
+     "type": "IMAGE",
+     "shape": 7,
+     "link": 9
+    },
+    {
+     "localized_name": "width",
+     "name": "width",
+     "type": "INT",
+     "widget": {
+      "name": "width"
+     },
+     "link": null
+    },
+    {
+     "localized_name": "height",
+     "name": "height",
+     "type": "INT",
+     "widget": {
+      "name": "height"
+     },
+     "link": null
+    },
+    {
+     "localized_name": "upscale_method",
+     "name": "upscale_method",
+     "type": "COMBO",
+     "widget": {
+      "name": "upscale_method"
+     },
+     "link": null
+    },
+    {
+     "localized_name": "keep_proportion",
+     "name": "keep_proportion",
+     "type": "BOOLEAN",
+     "widget": {
+      "name": "keep_proportion"
+     },
+     "link": null
+    },
+    {
+     "localized_name": "divisible_by",
+     "name": "divisible_by",
+     "type": "INT",
+     "widget": {
+      "name": "divisible_by"
+     },
+     "link": null
+    },
+    {
+     "localized_name": "crop",
+     "name": "crop",
+     "type": "COMBO",
+     "shape": 7,
+     "widget": {
+      "name": "crop"
+     },
+     "link": null
+    }
+   ],
+   "outputs": [
+    {
+     "localized_name": "IMAGE",
+     "name": "IMAGE",
+     "type": "IMAGE",
+     "links": [
+      12
+     ]
+    },
+    {
+     "localized_name": "width",
+     "name": "width",
+     "type": "INT",
+     "links": []
+    },
+    {
+     "localized_name": "height",
+     "name": "height",
+     "type": "INT",
+     "links": []
+    }
+   ],
+   "title": "Resize base",
+   "properties": {
+    "cnr_id": "comfyui-kjnodes",
+    "ver": "450dc91069e28496bbd67bd657f820ef0cb8d5ba",
+    "Node name for S&R": "ImageResizeKJ"
+   },
+   "widgets_values": [
+    1024,
+    1024,
+    "lanczos",
+    true,
+    2,
+    "center"
+   ]
+  },
+  {
+   "id": 9,
+   "type": "ImageBatch",
+   "pos": [
+    2020,
+    60
+   ],
+   "size": [
+    200,
+    80
+   ],
+   "flags": {},
+   "order": 0,
+   "mode": 4,
+   "inputs": [
+    {
+     "localized_name": "image1",
+     "name": "image1",
+     "type": "IMAGE",
+     "link": 12
+    },
+    {
+     "localized_name": "image2",
+     "name": "image2",
+     "type": "IMAGE",
+     "link": 13
+    }
+   ],
+   "outputs": [
+    {
+     "localized_name": "IMAGE",
+     "name": "IMAGE",
+     "type": "IMAGE",
+     "links": [
+      14
+     ]
+    }
+   ],
+   "title": "Empilha (base + ref)",
+   "properties": {
+    "cnr_id": "comfy-core",
+    "ver": "0.25.0",
+    "Node name for S&R": "ImageBatch"
+   },
+   "widgets_values": []
+  },
+  {
+   "id": 10,
+   "type": "LoadImage",
+   "pos": [
+    1700,
+    320
+   ],
+   "size": [
+    250,
+    314
+   ],
+   "flags": {},
+   "order": 0,
+   "mode": 4,
+   "inputs": [
+    {
+     "localized_name": "image",
+     "name": "image",
+     "type": "COMBO",
+     "widget": {
+      "name": "image"
+     },
+     "link": null
+    },
+    {
+     "localized_name": "choose file to upload",
+     "name": "upload",
+     "type": "IMAGEUPLOAD",
+     "widget": {
+      "name": "upload"
+     },
+     "link": null
+    }
+   ],
+   "outputs": [
+    {
+     "localized_name": "IMAGE",
+     "name": "IMAGE",
+     "type": "IMAGE",
+     "links": [
+      10
+     ]
+    },
+    {
+     "localized_name": "MASK",
+     "name": "MASK",
+     "type": "MASK",
+     "links": []
+    }
+   ],
+   "title": "REF fundo (o ambiente)",
+   "properties": {
+    "cnr_id": "comfy-core",
+    "ver": "0.25.0",
+    "Node name for S&R": "LoadImage"
+   },
+   "widgets_values": [
+    "example.png",
+    "image"
+   ]
+  },
+  {
+   "id": 11,
+   "type": "ImageResizeKJ",
+   "pos": [
+    2020,
+    320
+   ],
+   "size": [
+    280,
+    218
+   ],
+   "flags": {},
+   "order": 0,
+   "mode": 4,
+   "inputs": [
+    {
+     "localized_name": "image",
+     "name": "image",
+     "type": "IMAGE",
+     "link": 10
+    },
+    {
+     "localized_name": "get_image_size",
+     "name": "get_image_size",
+     "type": "IMAGE",
+     "shape": 7,
+     "link": 11
+    },
+    {
+     "localized_name": "width",
+     "name": "width",
+     "type": "INT",
+     "widget": {
+      "name": "width"
+     },
+     "link": null
+    },
+    {
+     "localized_name": "height",
+     "name": "height",
+     "type": "INT",
+     "widget": {
+      "name": "height"
+     },
+     "link": null
+    },
+    {
+     "localized_name": "upscale_method",
+     "name": "upscale_method",
+     "type": "COMBO",
+     "widget": {
+      "name": "upscale_method"
+     },
+     "link": null
+    },
+    {
+     "localized_name": "keep_proportion",
+     "name": "keep_proportion",
+     "type": "BOOLEAN",
+     "widget": {
+      "name": "keep_proportion"
+     },
+     "link": null
+    },
+    {
+     "localized_name": "divisible_by",
+     "name": "divisible_by",
+     "type": "INT",
+     "widget": {
+      "name": "divisible_by"
+     },
+     "link": null
+    },
+    {
+     "localized_name": "crop",
+     "name": "crop",
+     "type": "COMBO",
+     "shape": 7,
+     "widget": {
+      "name": "crop"
+     },
+     "link": null
+    }
+   ],
+   "outputs": [
+    {
+     "localized_name": "IMAGE",
+     "name": "IMAGE",
+     "type": "IMAGE",
+     "links": [
+      13
+     ]
+    },
+    {
+     "localized_name": "width",
+     "name": "width",
+     "type": "INT",
+     "links": []
+    },
+    {
+     "localized_name": "height",
+     "name": "height",
+     "type": "INT",
+     "links": []
+    }
+   ],
+   "title": "Resize ref",
+   "properties": {
+    "cnr_id": "comfyui-kjnodes",
+    "ver": "450dc91069e28496bbd67bd657f820ef0cb8d5ba",
+    "Node name for S&R": "ImageResizeKJ"
+   },
+   "widgets_values": [
+    1024,
+    1024,
+    "lanczos",
+    true,
+    2,
+    "center"
+   ]
+  },
+  {
+   "id": 12,
+   "type": "NanoBananaPro_fal",
+   "pos": [
+    2360,
+    60
+   ],
+   "size": [
+    380,
+    240
+   ],
+   "flags": {},
+   "order": 0,
+   "mode": 0,
+   "inputs": [
+    {
+     "localized_name": "images",
+     "name": "images",
+     "type": "IMAGE",
+     "shape": 7,
+     "link": 14
+    },
+    {
+     "localized_name": "prompt",
+     "name": "prompt",
+     "type": "STRING",
+     "widget": {
+      "name": "prompt"
+     },
+     "link": null
+    },
+    {
+     "localized_name": "num_images",
+     "name": "num_images",
+     "type": "INT",
+     "shape": 7,
+     "widget": {
+      "name": "num_images"
+     },
+     "link": null
+    },
+    {
+     "localized_name": "aspect_ratio",
+     "name": "aspect_ratio",
+     "type": "COMBO",
+     "shape": 7,
+     "widget": {
+      "name": "aspect_ratio"
+     },
+     "link": null
+    },
+    {
+     "localized_name": "output_format",
+     "name": "output_format",
+     "type": "COMBO",
+     "shape": 7,
+     "widget": {
+      "name": "output_format"
+     },
+     "link": null
+    },
+    {
+     "localized_name": "resolution",
+     "name": "resolution",
+     "type": "COMBO",
+     "shape": 7,
+     "widget": {
+      "name": "resolution"
+     },
+     "link": null
+    },
+    {
+     "localized_name": "sync_mode",
+     "name": "sync_mode",
+     "type": "BOOLEAN",
+     "shape": 7,
+     "widget": {
+      "name": "sync_mode"
+     },
+     "link": null
+    }
+   ],
+   "outputs": [
+    {
+     "localized_name": "IMAGE",
+     "name": "IMAGE",
+     "type": "IMAGE",
+     "links": [
+      15,
+      16,
+      18
+     ]
+    }
+   ],
+   "title": "Nano Banana Pro — FUNDO",
+   "properties": {
+    "cnr_id": "fal-api",
+    "ver": "1b14ab3164a6c654a47080bd39c9944a23c254c3",
+    "Node name for S&R": "NanoBananaPro_fal"
+   },
+   "widgets_values": [
+    "Replace ONLY the background/scene behind the subject with: <DESCREVA O FUNDO — ex.: a sunlit modern office with floor-to-ceiling windows>. Keep the subject's identity, face, pose, body proportions and clothing exactly the same. Match the new scene's perspective and horizon, and relight the subject to match its light direction, color and intensity, with realistic contact shadows. Photorealistic, seamless.",
+    1,
+    "auto",
+    "png",
+    "2K",
+    false
+   ]
+  },
+  {
+   "id": 13,
+   "type": "ImageResizeKJ",
+   "pos": [
+    3040,
+    60
+   ],
+   "size": [
+    280,
+    218
+   ],
+   "flags": {},
+   "order": 0,
+   "mode": 0,
+   "inputs": [
+    {
+     "localized_name": "image",
+     "name": "image",
+     "type": "IMAGE",
+     "link": 15
+    },
+    {
+     "localized_name": "get_image_size",
+     "name": "get_image_size",
+     "type": "IMAGE",
+     "shape": 7,
+     "link": 16
+    },
+    {
+     "localized_name": "width",
+     "name": "width",
+     "type": "INT",
+     "widget": {
+      "name": "width"
+     },
+     "link": null
+    },
+    {
+     "localized_name": "height",
+     "name": "height",
+     "type": "INT",
+     "widget": {
+      "name": "height"
+     },
+     "link": null
+    },
+    {
+     "localized_name": "upscale_method",
+     "name": "upscale_method",
+     "type": "COMBO",
+     "widget": {
+      "name": "upscale_method"
+     },
+     "link": null
+    },
+    {
+     "localized_name": "keep_proportion",
+     "name": "keep_proportion",
+     "type": "BOOLEAN",
+     "widget": {
+      "name": "keep_proportion"
+     },
+     "link": null
+    },
+    {
+     "localized_name": "divisible_by",
+     "name": "divisible_by",
+     "type": "INT",
+     "widget": {
+      "name": "divisible_by"
+     },
+     "link": null
+    },
+    {
+     "localized_name": "crop",
+     "name": "crop",
+     "type": "COMBO",
+     "shape": 7,
+     "widget": {
+      "name": "crop"
+     },
+     "link": null
+    }
+   ],
+   "outputs": [
+    {
+     "localized_name": "IMAGE",
+     "name": "IMAGE",
+     "type": "IMAGE",
+     "links": [
+      19
+     ]
+    },
+    {
+     "localized_name": "width",
+     "name": "width",
+     "type": "INT",
+     "links": []
+    },
+    {
+     "localized_name": "height",
+     "name": "height",
+     "type": "INT",
+     "links": []
+    }
+   ],
+   "title": "Resize base",
+   "properties": {
+    "cnr_id": "comfyui-kjnodes",
+    "ver": "450dc91069e28496bbd67bd657f820ef0cb8d5ba",
+    "Node name for S&R": "ImageResizeKJ"
+   },
+   "widgets_values": [
+    1024,
+    1024,
+    "lanczos",
+    true,
+    2,
+    "center"
+   ]
+  },
+  {
+   "id": 14,
+   "type": "ImageBatch",
+   "pos": [
+    3360,
+    60
+   ],
+   "size": [
+    200,
+    80
+   ],
+   "flags": {},
+   "order": 0,
+   "mode": 4,
+   "inputs": [
+    {
+     "localized_name": "image1",
+     "name": "image1",
+     "type": "IMAGE",
+     "link": 19
+    },
+    {
+     "localized_name": "image2",
+     "name": "image2",
+     "type": "IMAGE",
+     "link": 20
+    }
+   ],
+   "outputs": [
+    {
+     "localized_name": "IMAGE",
+     "name": "IMAGE",
+     "type": "IMAGE",
+     "links": [
+      21
+     ]
+    }
+   ],
+   "title": "Empilha (base + ref)",
+   "properties": {
+    "cnr_id": "comfy-core",
+    "ver": "0.25.0",
+    "Node name for S&R": "ImageBatch"
+   },
+   "widgets_values": []
+  },
+  {
+   "id": 15,
+   "type": "LoadImage",
+   "pos": [
+    3040,
+    320
+   ],
+   "size": [
+    250,
+    314
+   ],
+   "flags": {},
+   "order": 0,
+   "mode": 4,
+   "inputs": [
+    {
+     "localized_name": "image",
+     "name": "image",
+     "type": "COMBO",
+     "widget": {
+      "name": "image"
+     },
+     "link": null
+    },
+    {
+     "localized_name": "choose file to upload",
+     "name": "upload",
+     "type": "IMAGEUPLOAD",
+     "widget": {
+      "name": "upload"
+     },
+     "link": null
+    }
+   ],
+   "outputs": [
+    {
+     "localized_name": "IMAGE",
+     "name": "IMAGE",
+     "type": "IMAGE",
+     "links": [
+      17
+     ]
+    },
+    {
+     "localized_name": "MASK",
+     "name": "MASK",
+     "type": "MASK",
+     "links": []
+    }
+   ],
+   "title": "REF pose (a pose a copiar)",
+   "properties": {
+    "cnr_id": "comfy-core",
+    "ver": "0.25.0",
+    "Node name for S&R": "LoadImage"
+   },
+   "widgets_values": [
+    "example.png",
+    "image"
+   ]
+  },
+  {
+   "id": 16,
+   "type": "ImageResizeKJ",
+   "pos": [
+    3360,
+    320
+   ],
+   "size": [
+    280,
+    218
+   ],
+   "flags": {},
+   "order": 0,
+   "mode": 4,
+   "inputs": [
+    {
+     "localized_name": "image",
+     "name": "image",
+     "type": "IMAGE",
+     "link": 17
+    },
+    {
+     "localized_name": "get_image_size",
+     "name": "get_image_size",
+     "type": "IMAGE",
+     "shape": 7,
+     "link": 18
+    },
+    {
+     "localized_name": "width",
+     "name": "width",
+     "type": "INT",
+     "widget": {
+      "name": "width"
+     },
+     "link": null
+    },
+    {
+     "localized_name": "height",
+     "name": "height",
+     "type": "INT",
+     "widget": {
+      "name": "height"
+     },
+     "link": null
+    },
+    {
+     "localized_name": "upscale_method",
+     "name": "upscale_method",
+     "type": "COMBO",
+     "widget": {
+      "name": "upscale_method"
+     },
+     "link": null
+    },
+    {
+     "localized_name": "keep_proportion",
+     "name": "keep_proportion",
+     "type": "BOOLEAN",
+     "widget": {
+      "name": "keep_proportion"
+     },
+     "link": null
+    },
+    {
+     "localized_name": "divisible_by",
+     "name": "divisible_by",
+     "type": "INT",
+     "widget": {
+      "name": "divisible_by"
+     },
+     "link": null
+    },
+    {
+     "localized_name": "crop",
+     "name": "crop",
+     "type": "COMBO",
+     "shape": 7,
+     "widget": {
+      "name": "crop"
+     },
+     "link": null
+    }
+   ],
+   "outputs": [
+    {
+     "localized_name": "IMAGE",
+     "name": "IMAGE",
+     "type": "IMAGE",
+     "links": [
+      20
+     ]
+    },
+    {
+     "localized_name": "width",
+     "name": "width",
+     "type": "INT",
+     "links": []
+    },
+    {
+     "localized_name": "height",
+     "name": "height",
+     "type": "INT",
+     "links": []
+    }
+   ],
+   "title": "Resize ref",
+   "properties": {
+    "cnr_id": "comfyui-kjnodes",
+    "ver": "450dc91069e28496bbd67bd657f820ef0cb8d5ba",
+    "Node name for S&R": "ImageResizeKJ"
+   },
+   "widgets_values": [
+    1024,
+    1024,
+    "lanczos",
+    true,
+    2,
+    "center"
+   ]
+  },
+  {
+   "id": 17,
+   "type": "NanoBananaPro_fal",
+   "pos": [
+    3700,
+    60
+   ],
+   "size": [
+    380,
+    240
+   ],
+   "flags": {},
+   "order": 0,
+   "mode": 0,
+   "inputs": [
+    {
+     "localized_name": "images",
+     "name": "images",
+     "type": "IMAGE",
+     "shape": 7,
+     "link": 21
+    },
+    {
+     "localized_name": "prompt",
+     "name": "prompt",
+     "type": "STRING",
+     "widget": {
+      "name": "prompt"
+     },
+     "link": null
+    },
+    {
+     "localized_name": "num_images",
+     "name": "num_images",
+     "type": "INT",
+     "shape": 7,
+     "widget": {
+      "name": "num_images"
+     },
+     "link": null
+    },
+    {
+     "localized_name": "aspect_ratio",
+     "name": "aspect_ratio",
+     "type": "COMBO",
+     "shape": 7,
+     "widget": {
+      "name": "aspect_ratio"
+     },
+     "link": null
+    },
+    {
+     "localized_name": "output_format",
+     "name": "output_format",
+     "type": "COMBO",
+     "shape": 7,
+     "widget": {
+      "name": "output_format"
+     },
+     "link": null
+    },
+    {
+     "localized_name": "resolution",
+     "name": "resolution",
+     "type": "COMBO",
+     "shape": 7,
+     "widget": {
+      "name": "resolution"
+     },
+     "link": null
+    },
+    {
+     "localized_name": "sync_mode",
+     "name": "sync_mode",
+     "type": "BOOLEAN",
+     "shape": 7,
+     "widget": {
+      "name": "sync_mode"
+     },
+     "link": null
+    }
+   ],
+   "outputs": [
+    {
+     "localized_name": "IMAGE",
+     "name": "IMAGE",
+     "type": "IMAGE",
+     "links": [
+      22
+     ]
+    }
+   ],
+   "title": "Nano Banana Pro — POSE",
+   "properties": {
+    "cnr_id": "fal-api",
+    "ver": "1b14ab3164a6c654a47080bd39c9944a23c254c3",
+    "Node name for S&R": "NanoBananaPro_fal"
+   },
+   "widgets_values": [
+    "Change the body pose of the person in this image to: <DESCREVA A POSE — ex.: standing upright, weight on the right leg, arms crossed over the chest, head turned slightly to the left, looking at the camera>. Keep the identity, face, hairstyle, clothing, colors, lighting and background exactly the same. Change ONLY the pose and limb positions. Photorealistic, natural anatomy, correct proportions, seamless, high detail.",
+    1,
+    "auto",
+    "png",
+    "2K",
+    false
+   ]
+  },
+  {
+   "id": 18,
+   "type": "SaveImage",
+   "pos": [
+    4380,
+    60
+   ],
+   "size": [
+    320,
+    300
+   ],
+   "flags": {},
+   "order": 0,
+   "mode": 0,
+   "inputs": [
+    {
+     "localized_name": "images",
+     "name": "images",
+     "type": "IMAGE",
+     "link": 22
+    },
+    {
+     "localized_name": "filename_prefix",
+     "name": "filename_prefix",
+     "type": "STRING",
+     "widget": {
+      "name": "filename_prefix"
+     },
+     "link": null
+    }
+   ],
+   "outputs": [],
+   "title": "Salvar (resultado final)",
+   "properties": {
+    "cnr_id": "comfy-core",
+    "ver": "0.25.0",
+    "Node name for S&R": "SaveImage"
+   },
+   "widgets_values": [
+    "replace-pipeline_nb"
+   ]
+  }
+ ],
+ "links": [
+  [
+   1,
+   2,
+   0,
+   3,
+   0,
+   "IMAGE"
+  ],
+  [
+   2,
+   2,
+   0,
+   3,
+   1,
+   "IMAGE"
+  ],
+  [
+   3,
+   5,
+   0,
+   6,
+   0,
+   "IMAGE"
+  ],
+  [
+   4,
+   2,
+   0,
+   6,
+   1,
+   "IMAGE"
+  ],
+  [
+   5,
+   3,
+   0,
+   4,
+   0,
+   "IMAGE"
+  ],
+  [
+   6,
+   6,
+   0,
+   4,
+   1,
+   "IMAGE"
+  ],
+  [
+   7,
+   4,
+   0,
+   7,
+   0,
+   "IMAGE"
+  ],
+  [
+   8,
+   7,
+   0,
+   8,
+   0,
+   "IMAGE"
+  ],
+  [
+   9,
+   7,
+   0,
+   8,
+   1,
+   "IMAGE"
+  ],
+  [
+   10,
+   10,
+   0,
+   11,
+   0,
+   "IMAGE"
+  ],
+  [
+   11,
+   7,
+   0,
+   11,
+   1,
+   "IMAGE"
+  ],
+  [
+   12,
+   8,
+   0,
+   9,
+   0,
+   "IMAGE"
+  ],
+  [
+   13,
+   11,
+   0,
+   9,
+   1,
+   "IMAGE"
+  ],
+  [
+   14,
+   9,
+   0,
+   12,
+   0,
+   "IMAGE"
+  ],
+  [
+   15,
+   12,
+   0,
+   13,
+   0,
+   "IMAGE"
+  ],
+  [
+   16,
+   12,
+   0,
+   13,
+   1,
+   "IMAGE"
+  ],
+  [
+   17,
+   15,
+   0,
+   16,
+   0,
+   "IMAGE"
+  ],
+  [
+   18,
+   12,
+   0,
+   16,
+   1,
+   "IMAGE"
+  ],
+  [
+   19,
+   13,
+   0,
+   14,
+   0,
+   "IMAGE"
+  ],
+  [
+   20,
+   16,
+   0,
+   14,
+   1,
+   "IMAGE"
+  ],
+  [
+   21,
+   14,
+   0,
+   17,
+   0,
+   "IMAGE"
+  ],
+  [
+   22,
+   17,
+   0,
+   18,
+   0,
+   "IMAGE"
+  ]
+ ],
+ "groups": [
+  {
+   "id": 1,
+   "title": "ETAPA 1: ROUPA",
+   "bounding": [
+    342,
+    0,
+    1076,
+    652
+   ],
+   "color": "#3f789e",
+   "font_size": 20,
+   "flags": {}
+  },
+  {
+   "id": 2,
+   "title": "Ref ROUPA: bypass = TEXTO · Ctrl+B = FOTO",
+   "bounding": [
+    350,
+    16,
+    620,
+    628
+   ],
+   "color": "#597a3f",
+   "font_size": 16,
+   "flags": {}
+  },
+  {
+   "id": 3,
+   "title": "ETAPA 2: FUNDO",
+   "bounding": [
+    1682,
+    0,
+    1076,
+    652
+   ],
+   "color": "#9e6b3f",
+   "font_size": 20,
+   "flags": {}
+  },
+  {
+   "id": 4,
+   "title": "Ref FUNDO: bypass = TEXTO · Ctrl+B = FOTO",
+   "bounding": [
+    1690,
+    16,
+    620,
+    628
+   ],
+   "color": "#597a3f",
+   "font_size": 16,
+   "flags": {}
+  },
+  {
+   "id": 5,
+   "title": "ETAPA 3: POSE",
+   "bounding": [
+    3022,
+    0,
+    1076,
+    652
+   ],
+   "color": "#3f9e6b",
+   "font_size": 20,
+   "flags": {}
+  },
+  {
+   "id": 6,
+   "title": "Ref POSE: bypass = TEXTO · Ctrl+B = FOTO",
+   "bounding": [
+    3030,
+    16,
+    620,
+    628
+   ],
+   "color": "#597a3f",
+   "font_size": 16,
+   "flags": {}
+  }
+ ],
+ "config": {},
+ "extra": {},
+ "version": 0.4
+}

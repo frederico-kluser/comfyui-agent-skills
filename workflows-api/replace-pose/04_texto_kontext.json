@@ -1,0 +1,324 @@
+{
+ "last_node_id": 4,
+ "last_link_id": 3,
+ "nodes": [
+  {
+   "id": 1,
+   "type": "MarkdownNote",
+   "pos": [
+    0,
+    -300
+   ],
+   "size": [
+    840,
+    240
+   ],
+   "flags": {},
+   "order": 0,
+   "mode": 0,
+   "inputs": [],
+   "outputs": [],
+   "title": "🟢 Pose por texto — Flux Pro Kontext Multi",
+   "properties": {},
+   "widgets_values": [
+    "BASE = a pessoa. No prompt, DESCREVA a pose desejada (troque <DESCREVA A POSE>). Mantém rosto, roupa e fundo. Sem pronomes; nunca 'transform'.\n\n⚠️ Kontext: seed=0 + control 'fixed' (seed>0 TRAVA). max_quality=true melhora."
+   ],
+   "color": "#432",
+   "bgcolor": "#653"
+  },
+  {
+   "id": 2,
+   "type": "LoadImage",
+   "pos": [
+    40,
+    80
+   ],
+   "size": [
+    250,
+    314
+   ],
+   "flags": {},
+   "order": 0,
+   "mode": 0,
+   "inputs": [
+    {
+     "localized_name": "image",
+     "name": "image",
+     "type": "COMBO",
+     "widget": {
+      "name": "image"
+     },
+     "link": null
+    },
+    {
+     "localized_name": "choose file to upload",
+     "name": "upload",
+     "type": "IMAGEUPLOAD",
+     "widget": {
+      "name": "upload"
+     },
+     "link": null
+    }
+   ],
+   "outputs": [
+    {
+     "localized_name": "IMAGE",
+     "name": "IMAGE",
+     "type": "IMAGE",
+     "links": [
+      1,
+      2
+     ]
+    },
+    {
+     "localized_name": "MASK",
+     "name": "MASK",
+     "type": "MASK",
+     "links": []
+    }
+   ],
+   "title": "BASE = a pessoa = image_1 e image_2",
+   "properties": {
+    "cnr_id": "comfy-core",
+    "ver": "0.25.0",
+    "Node name for S&R": "LoadImage"
+   },
+   "widgets_values": [
+    "example.png",
+    "image"
+   ]
+  },
+  {
+   "id": 3,
+   "type": "FluxProKontextMulti_fal",
+   "pos": [
+    420,
+    80
+   ],
+   "size": [
+    380,
+    320
+   ],
+   "flags": {},
+   "order": 0,
+   "mode": 0,
+   "inputs": [
+    {
+     "localized_name": "image_1",
+     "name": "image_1",
+     "type": "IMAGE",
+     "link": 1
+    },
+    {
+     "localized_name": "image_2",
+     "name": "image_2",
+     "type": "IMAGE",
+     "link": 2
+    },
+    {
+     "localized_name": "image_3",
+     "name": "image_3",
+     "type": "IMAGE",
+     "shape": 7,
+     "link": null
+    },
+    {
+     "localized_name": "image_4",
+     "name": "image_4",
+     "type": "IMAGE",
+     "shape": 7,
+     "link": null
+    },
+    {
+     "localized_name": "prompt",
+     "name": "prompt",
+     "type": "STRING",
+     "widget": {
+      "name": "prompt"
+     },
+     "link": null
+    },
+    {
+     "localized_name": "aspect_ratio",
+     "name": "aspect_ratio",
+     "type": "COMBO",
+     "shape": 7,
+     "widget": {
+      "name": "aspect_ratio"
+     },
+     "link": null
+    },
+    {
+     "localized_name": "max_quality",
+     "name": "max_quality",
+     "type": "BOOLEAN",
+     "shape": 7,
+     "widget": {
+      "name": "max_quality"
+     },
+     "link": null
+    },
+    {
+     "localized_name": "guidance_scale",
+     "name": "guidance_scale",
+     "type": "FLOAT",
+     "shape": 7,
+     "widget": {
+      "name": "guidance_scale"
+     },
+     "link": null
+    },
+    {
+     "localized_name": "num_images",
+     "name": "num_images",
+     "type": "INT",
+     "shape": 7,
+     "widget": {
+      "name": "num_images"
+     },
+     "link": null
+    },
+    {
+     "localized_name": "safety_tolerance",
+     "name": "safety_tolerance",
+     "type": "COMBO",
+     "shape": 7,
+     "widget": {
+      "name": "safety_tolerance"
+     },
+     "link": null
+    },
+    {
+     "localized_name": "output_format",
+     "name": "output_format",
+     "type": "COMBO",
+     "shape": 7,
+     "widget": {
+      "name": "output_format"
+     },
+     "link": null
+    },
+    {
+     "localized_name": "sync_mode",
+     "name": "sync_mode",
+     "type": "BOOLEAN",
+     "shape": 7,
+     "widget": {
+      "name": "sync_mode"
+     },
+     "link": null
+    },
+    {
+     "localized_name": "seed",
+     "name": "seed",
+     "type": "INT",
+     "shape": 7,
+     "widget": {
+      "name": "seed"
+     },
+     "link": null
+    }
+   ],
+   "outputs": [
+    {
+     "localized_name": "IMAGE",
+     "name": "IMAGE",
+     "type": "IMAGE",
+     "links": [
+      3
+     ]
+    }
+   ],
+   "title": "Flux Pro Kontext Multi (fal) — seed=0",
+   "properties": {
+    "cnr_id": "fal-api",
+    "ver": "1b14ab3164a6c654a47080bd39c9944a23c254c3",
+    "Node name for S&R": "FluxProKontextMulti_fal"
+   },
+   "widgets_values": [
+    "Change the body pose of the person in this image to: <DESCREVA A POSE — ex.: standing upright, weight on the right leg, arms crossed over the chest, head turned slightly to the left, looking at the camera>. Keep the identity, face, hairstyle, clothing, colors, lighting and background exactly the same. Change ONLY the pose and limb positions. Photorealistic, natural anatomy, correct proportions, seamless, high detail.",
+    null,
+    false,
+    3.5,
+    1,
+    "2",
+    "png",
+    false,
+    0,
+    "fixed"
+   ]
+  },
+  {
+   "id": 4,
+   "type": "SaveImage",
+   "pos": [
+    860,
+    80
+   ],
+   "size": [
+    320,
+    300
+   ],
+   "flags": {},
+   "order": 0,
+   "mode": 0,
+   "inputs": [
+    {
+     "localized_name": "images",
+     "name": "images",
+     "type": "IMAGE",
+     "link": 3
+    },
+    {
+     "localized_name": "filename_prefix",
+     "name": "filename_prefix",
+     "type": "STRING",
+     "widget": {
+      "name": "filename_prefix"
+     },
+     "link": null
+    }
+   ],
+   "outputs": [],
+   "title": "Salvar",
+   "properties": {
+    "cnr_id": "comfy-core",
+    "ver": "0.25.0",
+    "Node name for S&R": "SaveImage"
+   },
+   "widgets_values": [
+    "replace-pose_txt_kontext"
+   ]
+  }
+ ],
+ "links": [
+  [
+   1,
+   2,
+   0,
+   3,
+   0,
+   "IMAGE"
+  ],
+  [
+   2,
+   2,
+   0,
+   3,
+   1,
+   "IMAGE"
+  ],
+  [
+   3,
+   3,
+   0,
+   4,
+   0,
+   "IMAGE"
+  ]
+ ],
+ "groups": [],
+ "config": {},
+ "extra": {},
+ "version": 0.4
+}

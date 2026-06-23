@@ -58,5 +58,7 @@
 | "animar uma imagem por API (I2V: Veo/Kling/Seedance/Grok)" | `knowledge-comfyui-api-nodes` (bundle `workflows-api/image-to-video-api/`) |
 | "transformar/animar um vídeo por API (V2V: restyle Runway Aleph · motion-transfer Wan 2.2 Animate · extend)" | `knowledge-comfyui-api-nodes` (bundle `workflows-api/video-to-video-api/`) |
 | "editar imagem na nuvem / fal / sem GPU" | `task-edit-image` → `knowledge-comfyui-api-nodes` + `knowledge-image-editing`/`knowledge-image-masking` (bundle `workflows-api/mask-edit-cloud/`) |
+| "trocar a POSE de uma pessoa por API (foto-guia ou texto)" | `knowledge-comfyui-api-nodes` (bundle `workflows-api/replace-pose/`) |
+| "combinar roupa+fundo+pose por API (1 por vez **ou** tudo numa run)" | `knowledge-comfyui-api-nodes` (bundles `workflows-api/replace-suite/` · `replace-pipeline/`) |
 | "upscale / outpaint / relight / tirar fundo" | `knowledge-image-enhance` |
 | nenhuma skill cobre | `meta-evolution` (propor skill nova) |

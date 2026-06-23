@@ -1,0 +1,35 @@
+{
+ "last_node_id": 1,
+ "last_link_id": 0,
+ "nodes": [
+  {
+   "id": 1,
+   "type": "MarkdownNote",
+   "pos": [
+    0,
+    0
+   ],
+   "size": [
+    920,
+    900
+   ],
+   "flags": {},
+   "order": 0,
+   "mode": 0,
+   "inputs": [],
+   "outputs": [],
+   "title": "🤸 COMECE AQUI — replace-pose",
+   "properties": {},
+   "widgets_values": [
+    "# 🤸 replace-pose — Trocar a POSE de uma pessoa, por API\n\nMantém rosto, roupa e fundo; muda só a **pose**. Duas formas: por **FOTO de referência** (copia a pose de outra foto) ou por **TEXTO** (você descreve a pose).\n\n## 🗂️ ARQUIVOS\n- `01_referencia_nanobanana` 🟢 — pose copiada de uma FOTO (Nano Banana Pro / Gemini 3). Comece aqui.\n- `02_referencia_kontext`    🟢 — idem, Flux Pro Kontext Multi (seed=0).\n- `03_texto_nanobanana`      🟢 — pose por DESCRIÇÃO de texto (Nano Banana Pro).\n- `04_texto_kontext`         🟢 — pose por texto, Kontext (image_2 = cópia da BASE; seed=0).\n\n## 📥 ENTRADA\nReferência: **BASE** (a pessoa) + **REFERÊNCIA** (a foto cuja pose copiar). Texto: só a **BASE** + descreva a pose no prompt (troque `<DESCREVA A POSE>`).\n\n## ✍️ REGRAS DO PROMPT\nMude só a pose; mantenha identidade/rosto/roupa/fundo. **Não** copie rosto/roupa/fundo da referência (use-a só como guia de pose). Sem pronomes; nunca 'transform'.\n\n## 🧱 REQUER\n`ComfyUI-fal-API` + `FAL_KEY` · `ComfyUI-KJNodes`. Roda em 8GB (sem GPU).\nCombinar com troca de roupa/fundo → `workflows-api/replace-suite/` (1 por vez) ou `replace-pipeline/` (tudo numa run)."
+   ],
+   "color": "#234",
+   "bgcolor": "#345"
+  }
+ ],
+ "links": [],
+ "groups": [],
+ "config": {},
+ "extra": {},
+ "version": 0.4
+}

@@ -1,0 +1,35 @@
+{
+ "last_node_id": 1,
+ "last_link_id": 0,
+ "nodes": [
+  {
+   "id": 1,
+   "type": "MarkdownNote",
+   "pos": [
+    0,
+    0
+   ],
+   "size": [
+    920,
+    900
+   ],
+   "flags": {},
+   "order": 0,
+   "mode": 0,
+   "inputs": [],
+   "outputs": [],
+   "title": "🧩 COMECE AQUI — replace-suite",
+   "properties": {},
+   "widgets_values": [
+    "# 🧩 replace-suite — roupa + fundo + pose num arquivo só (rode 1 por vez)\n\nJunta os 3 'replace' (roupa/fundo/pose) num único workflow, como **blocos independentes**. Você roda **um processo por vez** e encadeia manualmente (saída de um vira a BASE do próximo).\n\n## 🗂️ ARQUIVOS\n- `10_modular_nanobanana` 🟢 — Nano Banana Pro (Gemini 3). Comece aqui.\n- `11_modular_kontext` 🟡 — Flux Pro Kontext Multi (seed=0).\n\n## ▶️ COMO RODAR UM POR VEZ\nCada bloco tem **BASE** + **Salvar** próprios. O 'Salvar' liga/desliga o bloco (Ctrl+B). Deixe ATIVO só o processo que vai rodar; rode; pegue a saída e suba na BASE do próximo bloco.\n\n## ✍️ TEXTO **ou** FOTO (por etapa)\nCada etapa tem um grupo **Referência** em **bypass** (= modo TEXTO: descreva no prompt). Para usar uma FOTO de referência: selecione os 3 nós do grupo + **Ctrl+B** (ativa) e suba a foto. Sem seed (reprodutível por âncora: a 1ª imagem). Nunca 'transform'; sem pronomes.\n\nKontext: Kontext exige 2 imagens. Por padrão `image_2` = **cópia da entrada** (= modo TEXTO). Para usar uma FOTO de referência numa etapa, arraste o **IMAGE** do nó REF para o `image_2` daquela etapa. ⚠️ Mantenha **seed=0** e control **'fixed'** (seed>0 TRAVA o nó). Para texto puro encadeado, a variante Nano é mais direta.\n\n## 🧱 REQUER\n`ComfyUI-fal-API` + `FAL_KEY` · `ComfyUI-KJNodes`. 8GB, sem GPU.\nTudo em 1 run automático → veja `workflows-api/replace-pipeline/`."
+   ],
+   "color": "#234",
+   "bgcolor": "#345"
+  }
+ ],
+ "links": [],
+ "groups": [],
+ "config": {},
+ "extra": {},
+ "version": 0.4
+}

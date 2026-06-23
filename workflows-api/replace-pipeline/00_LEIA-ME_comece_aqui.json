@@ -1,0 +1,35 @@
+{
+ "last_node_id": 1,
+ "last_link_id": 0,
+ "nodes": [
+  {
+   "id": 1,
+   "type": "MarkdownNote",
+   "pos": [
+    0,
+    0
+   ],
+   "size": [
+    920,
+    900
+   ],
+   "flags": {},
+   "order": 0,
+   "mode": 0,
+   "inputs": [],
+   "outputs": [],
+   "title": "⛓️ COMECE AQUI — replace-pipeline",
+   "properties": {},
+   "widgets_values": [
+    "# ⛓️ replace-pipeline — roupa + fundo + pose numa ÚNICA run\n\nEncadeia as 3 edições: **BASE → ROUPA → FUNDO → POSE → Salvar**. Uma run faz tudo.\n\n## 🗂️ ARQUIVOS\n- `10_pipeline_nanobanana` 🟢 — Nano Banana Pro. Comece aqui.\n- `11_pipeline_kontext` 🟡 — Flux Pro Kontext Multi (seed=0).\n\n## ✍️ TEXTO **ou** FOTO (por etapa)\nCada etapa tem um grupo **Referência** em **bypass** (= modo TEXTO: descreva no prompt). Para usar uma FOTO de referência: selecione os 3 nós do grupo + **Ctrl+B** (ativa) e suba a foto. Sem seed (reprodutível por âncora: a 1ª imagem). Nunca 'transform'; sem pronomes.\n\nKontext: Kontext exige 2 imagens. Por padrão `image_2` = **cópia da entrada** (= modo TEXTO). Para usar uma FOTO de referência numa etapa, arraste o **IMAGE** do nó REF para o `image_2` daquela etapa. ⚠️ Mantenha **seed=0** e control **'fixed'** (seed>0 TRAVA o nó). Para texto puro encadeado, a variante Nano é mais direta.\n\n## ⚠️ CUSTO\n3 chamadas fal por run. Itere barato (1K), finalize alto (2K/4K). Sem âncora de seed no Nano (reprodutível repetindo prompt+imagens).\n\n## 🧱 REQUER\n`ComfyUI-fal-API` + `FAL_KEY` · `ComfyUI-KJNodes`. 8GB, sem GPU.\nRodar etapa por etapa com controle → `workflows-api/replace-suite/`."
+   ],
+   "color": "#234",
+   "bgcolor": "#345"
+  }
+ ],
+ "links": [],
+ "groups": [],
+ "config": {},
+ "extra": {},
+ "version": 0.4
+}

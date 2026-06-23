@@ -34,6 +34,9 @@ para a nuvem (modelo **melhor e mais rápido**), e a GPU local só faz máscara/
 | [`outfit-swap-api/`](outfit-swap-api/) | Troca a roupa/look mantendo pose, rosto e fundo | `FluxVTONode` (partner) · `NanoBananaPro_fal` | Comfy credits **ou** fal |
 | [`replace-object/`](replace-object/) | Troca um objeto pela imagem de um objeto novo (prompt nomeia o alvo); seleção de área opcional | `NanoBananaPro_fal` · `FluxProKontextMulti_fal` | fal |
 | [`replace-environment/`](replace-environment/) | Troca o ambiente/fundo mantendo e reiluminando o sujeito; seleção de área opcional | `NanoBananaPro_fal` · `FluxProKontextMulti_fal` | fal |
+| [`replace-pose/`](replace-pose/) | Troca a POSE da pessoa (mantém rosto/roupa/fundo); por foto de referência **ou** por texto | `NanoBananaPro_fal` · `FluxProKontextMulti_fal` | fal |
+| [`replace-suite/`](replace-suite/) | Roupa + fundo + pose num arquivo só; rode **1 por vez** (texto **ou** foto por etapa) | `NanoBananaPro_fal` · `FluxProKontextMulti_fal` | fal |
+| [`replace-pipeline/`](replace-pipeline/) | Roupa + fundo + pose **numa única run** encadeada (texto **ou** foto por etapa) | `NanoBananaPro_fal` · `FluxProKontextMulti_fal` | fal |
 | [`image-to-video-api/`](image-to-video-api/) | Anima **1 imagem** + descrição → vídeo (8 modelos, um por arquivo) | Veo 3.1 · Seedance 1.0/1.5/Pro · Kling 2.5/2.6 · Grok | fal **e/ou** Comfy login |
 | [`video-to-video-api/`](video-to-video-api/) | Transforma **1 vídeo** + descrição: restyle · motion-transfer · extend | Runway Aleph · **Wan 2.2 Animate** · Kling Omni/V3/Extend · Grok · Vidu | fal **e/ou** Comfy login |
 
