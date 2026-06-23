@@ -1,0 +1,45 @@
+{
+ "id": "6f77c005-3602-578b-90b6-ab01774eb71e",
+ "revision": 0,
+ "last_node_id": 1,
+ "last_link_id": 0,
+ "nodes": [
+  {
+   "id": 1,
+   "type": "MarkdownNote",
+   "pos": [
+    0,
+    0
+   ],
+   "size": [
+    760,
+    900
+   ],
+   "flags": {},
+   "order": 0,
+   "mode": 0,
+   "inputs": [],
+   "outputs": [],
+   "title": "📂 IMAGE → VIDEO (por API) — comece aqui",
+   "properties": {},
+   "widgets_values": [
+    "# 📂 image-to-video-api — anima UMA imagem + descrição → vídeo (por API)\n\n**O que é:** workflows prontos, **um por modelo**, que pegam uma imagem + um prompt de movimento e\ngeram um clipe. Tudo roda **no provedor** (sem GPU local). Escolha o arquivo pelo que precisa:\n\n| Arquivo | Modelo | Quando usar |\n|---|---|---|\n| `10_veo31_premium` | Veo 3.1 (fal) | Herói/comercial: melhor movimento + **áudio**, 1080p |\n| `11_veo31_fast` | Veo 3.1 Fast (fal) | **Iterar barato** antes do premium |\n| `12_seedance_rascunho_480p` | Seedance (fal) | Rascunho **bem barato** (480p) |\n| `13_seedance15_1080p_audio` | Seedance 1.5 Pro (partner) | 1080p **com áudio** |\n| `14_seedance_pro_morph` | Seedance Pro (fal) | **Morph** entre 2 imagens (início→fim) |\n| `15_kling25_movimento` | Kling 2.5 Turbo (fal) | Ação com **muito movimento** |\n| `16_kling26_audio` | Kling 2.6 Pro (fal) | Animar **com áudio** |\n| `18_grok_imagine` | Grok Imagine (partner) | Alternativa **barata** |\n\n## 🔌 Dois tipos de nó (importam para a saída e o billing)\n- **fal** (`*_fal`): lê a `FAL_KEY` (de `~/ComfyUI/secrets.env`). Saída = **URL** → cadeia\n  `LoadVideoURL → CreateVideo → SaveVideo` (⚠️ perde o áudio; baixe a URL p/ manter áudio).\n- **partner** (Kling/Grok/ByteDance): **login comfy.org** (créditos). Saída = **VIDEO** direto no\n  `SaveVideo` (áudio preservado).\n\n## ▶️ Como rodar\n`FAL_KEY=... bash setup.sh` (uma vez) → reinicie o ComfyUI → abra um workflow → **Load Image** →\najuste o **prompt** → **Run**. Detalhes de cada nó: `API_REFERENCE_image-to-video.md`.\n"
+   ],
+   "color": "#234",
+   "bgcolor": "#345"
+  }
+ ],
+ "links": [],
+ "groups": [],
+ "config": {},
+ "extra": {
+  "ds": {
+   "scale": 0.6,
+   "offset": [
+    400,
+    300
+   ]
+  }
+ },
+ "version": 0.4
+}

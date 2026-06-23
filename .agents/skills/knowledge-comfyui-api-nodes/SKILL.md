@@ -49,14 +49,18 @@ Cada nó trata "seed aleatória" diferente; o gate está no código do nó.
 | `SeedanceImageToVideo_fal` / `SeedanceProImageToVideo_fal` | `-1` (tem seed) | reprodutível p/ vídeo |
 | `Veo31_fal` · `NanoBananaPro_fal` · `NanoBananaEdit_fal` | **sem seed** | trava por **âncora**; p/ repro use `Veo3FirstLastFrameNode` / `SeedanceProImageToVideo_fal` / `GrokVideoExtendNode` |
 | Pixverse `*_fal` | — | **1-indexed** (`keyframe_id=1`; 0 é rejeitado) |
-| Wan 2.2 Animate `*_fal` | precisa slot `"fixed"` após o seed | senão `"high"` cai no `shift` (INT) → erro; saída é **LIST** → `variations=1` |
+| `Wan2214b_animate_{move,replace}_character_fal` | `seed` INT (def **24**) + `shift` INT (def **8**) — campos próprios | (live `/object_info`) sem slot `"fixed"`; saída é **URL** (`video_url`+`frames_zip_url`) → padrão A; `variations`=nº de saídas |
 
 ## Catálogo de nós (nome EXATO → o que é → rota/verdict)
 **Vídeo (I2V/T2V/extend):**
 - `Veo31_fal` — Veo 3.1, máx. qualidade, **24 fps**, durações 4/6/8s, 720p/1080p, **sem campo negative** (negativos em prosa).
 - `SeedanceImageToVideo_fal` / `SeedanceProImageToVideo_fal` — Seedance; 480p = **rascunho barato**; Pro tem `end_image` + negative + seed.
 - `KlingImage2VideoNode` / `KlingTextToVideoNode` / `KlingVideoExtendNode` / `KlingCameraControlI2VNode`+`KlingCameraControls` (partner) — Kling v2.x; câmera = **só 1 eixo ≠ 0** (range −10..+10); `KlingVideoExtendNode` encadeia `video_id`.
-- `Kling*_fal` (`Kling25TurboPro_fal`, `KlingV3Pro_fal`…), `MiniMax*`/`MinimaxHailuoVideoNode`, `LumaVideoNode`, `OpenAIVideoSora2`, `LtxvApi*`, `PixverseImageToVideoNode`, `GrokVideo*`, `Wan2214b_animate_{move,replace}_character_fal` (substituto de SCAIL-2 em 8 GB).
+- `Kling*_fal` (`Kling25TurboPro_fal`, `Kling26Pro_fal`, `KlingO3Pro_fal`…), `MiniMax*`/`MinimaxHailuoVideoNode`, `LumaVideoNode`, `OpenAIVideoSora2`, `LtxvApi*`, `PixverseImageToVideoNode`, `GrokVideoNode`, `ByteDanceImageToVideoNode` (Seedance partner — `seedance-1-5-pro` tem 1080p+`generate_audio`).
+**Vídeo→Vídeo (transformar um vídeo existente — entra por core `LoadVideo` → input `video`):**
+- **Restyle/edit:** `RunwayAleph2VideoToVideoNode` (🏆 restyle in-context, vídeo 2–30s, partner) · `GrokVideoEditNode` (clipe ≤8.7s/50MB, partner) · `KlingOmniVideoToVideoEdit_fal` (edit + inserir elementos por referência).
+- **Motion-transfer / animar personagem (substituto-API do SCAIL-2):** `Wan2214b_animate_{move,replace}_character_fal` (imagem do sujeito + vídeo-guia) · `KlingV3ProMotionControl_fal`/`KlingV3StandardMotionControl_fal`.
+- **Extend:** `GrokVideoExtendNode` (arquivo 2–15s, partner) · `KlingVideoExtendNode` (só `video_id`, **não** arquivo; encadeia) · `ViduExtendVideoNode` (arquivo, partner) · método Veo-handoff (`GetImageRangeFromBatch(-1)`).
 **Imagem (gerar):** `NanoBananaPro_fal` (Gemini 3, **sem seed**, multi-img via `ImageBatch`) · `GeminiNanoBanana2` (partner, **tem seed**) · `FluxUltra_fal` (Flux 1.1 Pro Ultra) · `ByteDanceSeedream*`/Seedream V4.5 (slots `image_1..10`, 4K, tem seed) · `Ideogram*` · `Recraft*` · `OpenAIDalle3`/`OpenAIGPTImage1`.
 **Editar (instrução/inpaint):** `FluxProKontext_fal`/`FluxProKontextMulti_fal` (Kontext Max, face-swap/repose) · `FluxPro1Fill_fal` (inpaint) · `FluxEraseNode` (erase, partner, sem prompt) · `FluxVTONode`/`KlingVirtualTryOnNode` (try-on) · `QwenImageEditPlusLoRA_fal` (🏆 manter rosto+roupa; guidance 4.0, steps 32; **cold-start ~8 min**) · ⚠️ `NanoBananaEdit_fal` = Gemini 2.5 = **fraco** ("devolve a foto") → use Kontext Max ou Nano Banana **Pro**.
 **Upscale:** `Upscaler_fal` (Clarity, redesenha → `creativity≈0.2` p/ retrato) · `Seedvr_Upscaler_fal` (SeedVR2, fidelidade sem perder identidade) · `TopazImageEnhance` · local grátis = `4x-UltraSharp` (ESRGAN).
@@ -65,7 +69,7 @@ Cada nó trata "seed aleatória" diferente; o gate está no código do nó.
 
 ## Gotchas dos nós fal
 - **Bloqueiam sem barra de progresso** (`handler.get()` faz polling). Cold-start fica **minutos em `IN_QUEUE`** e ainda COMPLETA — não é travamento. Diagnóstico: `comfyui logs` → request_id → `curl -H "Authorization: Key $FAL_KEY" https://queue.fal.run/<endpoint>/requests/<id>/status`. `/interrupt` **não** mata o nó; só **reiniciar o servidor** mata. Itere em endpoints **warm** (Nano Banana Pro / Seedream / Kontext, ~30–60 s).
-- **Vídeo:** os nós fal fazem upload do VIDEO sozinhos; saída `video_url (STRING)` → `LoadVideoURL` → `CreateVideo` → `SaveVideo`. ⚠️ essa cadeia extrai **só frames** → **perde o áudio nativo** (baixe a URL original p/ manter). Erro "Failed to upload video" só aparece no **console do servidor**.
+- **Vídeo — 2 padrões de saída (decide a fiação e o áudio):** **(A) nós fal `*_fal`** devolvem `video_url (STRING)` → `LoadVideoURL` → `CreateVideo` → `SaveVideo`. ⚠️ essa cadeia extrai **só frames** → **perde o áudio nativo** (baixe a URL original p/ manter). **(B) nós partner** (Veo/Kling/Grok/Runway/ByteDance/Vidu via comfy.org) devolvem **`VIDEO`** nativo → vai **direto no `SaveVideo`** (áudio preservado). Entrada de vídeo (V2V) = core **`LoadVideo`** (saída `VIDEO`); `LoadVideoURL`/`VHS_LoadVideo` dão frames IMAGE, não servem. Erro "Failed to upload video" só aparece no **console do servidor**.
 - **Stub trap:** `/object_info/<Node>` devolve **200 com corpo vazio** p/ nós que o Manager conhece mas **não estão carregados** → "aparece na busca" ≠ instalado (confira `python_module` não-nulo). Liste reais: `curl -s :8188/object_info | jq 'keys'`.
 
 ## Chaves & segredos (regra do projeto)
@@ -74,7 +78,7 @@ Cada nó trata "seed aleatória" diferente; o gate está no código do nó.
 - `HF_TOKEN` p/ baixar os modelos **locais** de apoio (SAM/DINO/ESRGAN). Os `setup.sh` de `workflows-api/` **leem a chave do ambiente** e gravam o `config.ini` — nunca embutem segredo.
 
 ## Referências
-- Bundles que aplicam isto: `workflows-api/commercial-ondokai/` (Veo+Nano Banana+Kling+Seedance), `workflows-api/mask-edit-cloud/` (`FluxPro1Fill_fal`), `workflows-api/outfit-swap-api/`.
+- Bundles que aplicam isto: `workflows-api/commercial-ondokai/` (Veo+Nano Banana+Kling+Seedance), `workflows-api/mask-edit-cloud/` (`FluxPro1Fill_fal`), `workflows-api/outfit-swap-api/`, `workflows-api/image-to-video-api/` (8 modelos I2V), `workflows-api/video-to-video-api/` (restyle/motion-transfer/extend).
 - Procedimento do comercial: `task-create-commercial-api`. Editar imagem: `task-edit-image` + `knowledge-image-editing`/`knowledge-image-masking`.
 - API HTTP do ComfyUI (automação): `knowledge-comfyui-api`. GPU/custo self-hosted: `knowledge-runpod-infra`.
 - Fonte de pesquisa: `config/06-ai-agents/comfyui-cloud-first.md` (+ `comfyui-edicao-por-mascara.md`).

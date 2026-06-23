@@ -1,0 +1,683 @@
+{
+ "last_node_id": 8,
+ "last_link_id": 9,
+ "nodes": [
+  {
+   "id": 1,
+   "type": "MarkdownNote",
+   "pos": [
+    0,
+    -360
+   ],
+   "size": [
+    980,
+    300
+   ],
+   "flags": {},
+   "order": 0,
+   "mode": 0,
+   "inputs": [],
+   "outputs": [],
+   "title": "🟡 Área (opcional) — Flux Pro Kontext Multi",
+   "properties": {},
+   "widgets_values": [
+    "BASE = a cena. REFERÊNCIA = o objeto novo. No prompt, diga QUAL objeto da BASE trocar (troque <OBJETO A TROCAR>). Sem pronomes; nunca 'transform'.\n\nÁREA (opcional): o grupo 'Seleção de área' vem DESATIVADO (edita tudo, = 01/02). Para limitar à região: selecione os 3 nós do grupo + Ctrl+B e pinte o OBJETO no MaskEditor da BASE.\n\n⚠️ Kontext: mantenha seed=0 e control 'fixed' (seed>0 TRAVA o nó). max_quality=true melhora (custa mais)."
+   ],
+   "color": "#234",
+   "bgcolor": "#345"
+  },
+  {
+   "id": 2,
+   "type": "LoadImage",
+   "pos": [
+    40,
+    60
+   ],
+   "size": [
+    250,
+    314
+   ],
+   "flags": {},
+   "order": 0,
+   "mode": 0,
+   "inputs": [
+    {
+     "localized_name": "image",
+     "name": "image",
+     "type": "COMBO",
+     "widget": {
+      "name": "image"
+     },
+     "link": null
+    },
+    {
+     "localized_name": "choose file to upload",
+     "name": "upload",
+     "type": "IMAGEUPLOAD",
+     "widget": {
+      "name": "upload"
+     },
+     "link": null
+    }
+   ],
+   "outputs": [
+    {
+     "localized_name": "IMAGE",
+     "name": "IMAGE",
+     "type": "IMAGE",
+     "links": [
+      1,
+      4,
+      7
+     ]
+    },
+    {
+     "localized_name": "MASK",
+     "name": "MASK",
+     "type": "MASK",
+     "links": [
+      5
+     ]
+    }
+   ],
+   "title": "BASE = image_1",
+   "properties": {
+    "cnr_id": "comfy-core",
+    "ver": "0.25.0",
+    "Node name for S&R": "LoadImage"
+   },
+   "widgets_values": [
+    "example.png",
+    "image"
+   ]
+  },
+  {
+   "id": 3,
+   "type": "LoadImage",
+   "pos": [
+    40,
+    400
+   ],
+   "size": [
+    250,
+    314
+   ],
+   "flags": {},
+   "order": 0,
+   "mode": 0,
+   "inputs": [
+    {
+     "localized_name": "image",
+     "name": "image",
+     "type": "COMBO",
+     "widget": {
+      "name": "image"
+     },
+     "link": null
+    },
+    {
+     "localized_name": "choose file to upload",
+     "name": "upload",
+     "type": "IMAGEUPLOAD",
+     "widget": {
+      "name": "upload"
+     },
+     "link": null
+    }
+   ],
+   "outputs": [
+    {
+     "localized_name": "IMAGE",
+     "name": "IMAGE",
+     "type": "IMAGE",
+     "links": [
+      2
+     ]
+    },
+    {
+     "localized_name": "MASK",
+     "name": "MASK",
+     "type": "MASK",
+     "links": []
+    }
+   ],
+   "title": "REFERÊNCIA (o novo) = image_2",
+   "properties": {
+    "cnr_id": "comfy-core",
+    "ver": "0.25.0",
+    "Node name for S&R": "LoadImage"
+   },
+   "widgets_values": [
+    "example.png",
+    "image"
+   ]
+  },
+  {
+   "id": 4,
+   "type": "FluxProKontextMulti_fal",
+   "pos": [
+    420,
+    80
+   ],
+   "size": [
+    380,
+    320
+   ],
+   "flags": {},
+   "order": 0,
+   "mode": 0,
+   "inputs": [
+    {
+     "localized_name": "image_1",
+     "name": "image_1",
+     "type": "IMAGE",
+     "link": 1
+    },
+    {
+     "localized_name": "image_2",
+     "name": "image_2",
+     "type": "IMAGE",
+     "link": 2
+    },
+    {
+     "localized_name": "image_3",
+     "name": "image_3",
+     "type": "IMAGE",
+     "shape": 7,
+     "link": null
+    },
+    {
+     "localized_name": "image_4",
+     "name": "image_4",
+     "type": "IMAGE",
+     "shape": 7,
+     "link": null
+    },
+    {
+     "localized_name": "prompt",
+     "name": "prompt",
+     "type": "STRING",
+     "widget": {
+      "name": "prompt"
+     },
+     "link": null
+    },
+    {
+     "localized_name": "aspect_ratio",
+     "name": "aspect_ratio",
+     "type": "COMBO",
+     "shape": 7,
+     "widget": {
+      "name": "aspect_ratio"
+     },
+     "link": null
+    },
+    {
+     "localized_name": "max_quality",
+     "name": "max_quality",
+     "type": "BOOLEAN",
+     "shape": 7,
+     "widget": {
+      "name": "max_quality"
+     },
+     "link": null
+    },
+    {
+     "localized_name": "guidance_scale",
+     "name": "guidance_scale",
+     "type": "FLOAT",
+     "shape": 7,
+     "widget": {
+      "name": "guidance_scale"
+     },
+     "link": null
+    },
+    {
+     "localized_name": "num_images",
+     "name": "num_images",
+     "type": "INT",
+     "shape": 7,
+     "widget": {
+      "name": "num_images"
+     },
+     "link": null
+    },
+    {
+     "localized_name": "safety_tolerance",
+     "name": "safety_tolerance",
+     "type": "COMBO",
+     "shape": 7,
+     "widget": {
+      "name": "safety_tolerance"
+     },
+     "link": null
+    },
+    {
+     "localized_name": "output_format",
+     "name": "output_format",
+     "type": "COMBO",
+     "shape": 7,
+     "widget": {
+      "name": "output_format"
+     },
+     "link": null
+    },
+    {
+     "localized_name": "sync_mode",
+     "name": "sync_mode",
+     "type": "BOOLEAN",
+     "shape": 7,
+     "widget": {
+      "name": "sync_mode"
+     },
+     "link": null
+    },
+    {
+     "localized_name": "seed",
+     "name": "seed",
+     "type": "INT",
+     "shape": 7,
+     "widget": {
+      "name": "seed"
+     },
+     "link": null
+    }
+   ],
+   "outputs": [
+    {
+     "localized_name": "IMAGE",
+     "name": "IMAGE",
+     "type": "IMAGE",
+     "links": [
+      3
+     ]
+    }
+   ],
+   "title": "Flux Pro Kontext Multi (fal) — seed=0",
+   "properties": {
+    "cnr_id": "fal-api",
+    "ver": "1b14ab3164a6c654a47080bd39c9944a23c254c3",
+    "Node name for S&R": "FluxProKontextMulti_fal"
+   },
+   "widgets_values": [
+    "Replace the <OBJETO A TROCAR — ex.: the table lamp> in the first image with the object shown in the second image. Keep everything else — background, people, lighting, camera angle and perspective — exactly the same. Match the new object's scale, perspective and orientation to the scene, with correct contact shadows, reflections and occlusion so it sits naturally. Photorealistic, seamless, high detail.",
+    null,
+    false,
+    3.5,
+    1,
+    "2",
+    "png",
+    false,
+    0,
+    "fixed"
+   ]
+  },
+  {
+   "id": 5,
+   "type": "ImageResizeKJ",
+   "pos": [
+    860,
+    40
+   ],
+   "size": [
+    280,
+    218
+   ],
+   "flags": {},
+   "order": 0,
+   "mode": 4,
+   "inputs": [
+    {
+     "localized_name": "image",
+     "name": "image",
+     "type": "IMAGE",
+     "link": 3
+    },
+    {
+     "localized_name": "get_image_size",
+     "name": "get_image_size",
+     "type": "IMAGE",
+     "shape": 7,
+     "link": 4
+    },
+    {
+     "localized_name": "width",
+     "name": "width",
+     "type": "INT",
+     "widget": {
+      "name": "width"
+     },
+     "link": null
+    },
+    {
+     "localized_name": "height",
+     "name": "height",
+     "type": "INT",
+     "widget": {
+      "name": "height"
+     },
+     "link": null
+    },
+    {
+     "localized_name": "upscale_method",
+     "name": "upscale_method",
+     "type": "COMBO",
+     "widget": {
+      "name": "upscale_method"
+     },
+     "link": null
+    },
+    {
+     "localized_name": "keep_proportion",
+     "name": "keep_proportion",
+     "type": "BOOLEAN",
+     "widget": {
+      "name": "keep_proportion"
+     },
+     "link": null
+    },
+    {
+     "localized_name": "divisible_by",
+     "name": "divisible_by",
+     "type": "INT",
+     "widget": {
+      "name": "divisible_by"
+     },
+     "link": null
+    },
+    {
+     "localized_name": "crop",
+     "name": "crop",
+     "type": "COMBO",
+     "shape": 7,
+     "widget": {
+      "name": "crop"
+     },
+     "link": null
+    }
+   ],
+   "outputs": [
+    {
+     "localized_name": "IMAGE",
+     "name": "IMAGE",
+     "type": "IMAGE",
+     "links": [
+      6
+     ]
+    },
+    {
+     "localized_name": "width",
+     "name": "width",
+     "type": "INT",
+     "links": []
+    },
+    {
+     "localized_name": "height",
+     "name": "height",
+     "type": "INT",
+     "links": []
+    }
+   ],
+   "title": "Conforma ao tamanho da base",
+   "properties": {
+    "cnr_id": "comfyui-kjnodes",
+    "ver": "450dc91069e28496bbd67bd657f820ef0cb8d5ba",
+    "Node name for S&R": "ImageResizeKJ"
+   },
+   "widgets_values": [
+    1024,
+    1024,
+    "lanczos",
+    false,
+    1,
+    "disabled"
+   ]
+  },
+  {
+   "id": 6,
+   "type": "GrowMaskWithBlur",
+   "pos": [
+    860,
+    320
+   ],
+   "size": [
+    300,
+    240
+   ],
+   "flags": {},
+   "order": 0,
+   "mode": 4,
+   "inputs": [
+    {
+     "localized_name": "mask",
+     "name": "mask",
+     "type": "MASK",
+     "link": 5
+    }
+   ],
+   "outputs": [
+    {
+     "localized_name": "mask",
+     "name": "mask",
+     "type": "MASK",
+     "links": []
+    },
+    {
+     "localized_name": "mask_inverted",
+     "name": "mask_inverted",
+     "type": "MASK",
+     "links": [
+      8
+     ]
+    }
+   ],
+   "title": "Expande+borra a máscara",
+   "properties": {
+    "cnr_id": "comfyui-kjnodes",
+    "ver": "450dc91069e28496bbd67bd657f820ef0cb8d5ba",
+    "Node name for S&R": "GrowMaskWithBlur"
+   },
+   "widgets_values": [
+    6,
+    0.0,
+    true,
+    false,
+    4.0,
+    1.0,
+    1.0,
+    true
+   ]
+  },
+  {
+   "id": 7,
+   "type": "ImageCompositeMasked",
+   "pos": [
+    1200,
+    120
+   ],
+   "size": [
+    300,
+    150
+   ],
+   "flags": {},
+   "order": 0,
+   "mode": 4,
+   "inputs": [
+    {
+     "localized_name": "destination",
+     "name": "destination",
+     "type": "IMAGE",
+     "link": 6
+    },
+    {
+     "localized_name": "source",
+     "name": "source",
+     "type": "IMAGE",
+     "link": 7
+    },
+    {
+     "localized_name": "mask",
+     "name": "mask",
+     "type": "MASK",
+     "shape": 7,
+     "link": 8
+    }
+   ],
+   "outputs": [
+    {
+     "localized_name": "IMAGE",
+     "name": "IMAGE",
+     "type": "IMAGE",
+     "links": [
+      9
+     ]
+    }
+   ],
+   "title": "COLAR só a região (resto = original)",
+   "properties": {
+    "cnr_id": "comfy-core",
+    "ver": "0.25.0",
+    "Node name for S&R": "ImageCompositeMasked"
+   },
+   "widgets_values": [
+    0,
+    0,
+    true
+   ]
+  },
+  {
+   "id": 8,
+   "type": "SaveImage",
+   "pos": [
+    1540,
+    60
+   ],
+   "size": [
+    320,
+    300
+   ],
+   "flags": {},
+   "order": 0,
+   "mode": 0,
+   "inputs": [
+    {
+     "localized_name": "images",
+     "name": "images",
+     "type": "IMAGE",
+     "link": 9
+    },
+    {
+     "localized_name": "filename_prefix",
+     "name": "filename_prefix",
+     "type": "STRING",
+     "widget": {
+      "name": "filename_prefix"
+     },
+     "link": null
+    }
+   ],
+   "outputs": [],
+   "title": "Salvar",
+   "properties": {
+    "cnr_id": "comfy-core",
+    "ver": "0.25.0",
+    "Node name for S&R": "SaveImage"
+   },
+   "widgets_values": [
+    "replace-object_area_kontext"
+   ]
+  }
+ ],
+ "links": [
+  [
+   1,
+   2,
+   0,
+   4,
+   0,
+   "IMAGE"
+  ],
+  [
+   2,
+   3,
+   0,
+   4,
+   1,
+   "IMAGE"
+  ],
+  [
+   3,
+   4,
+   0,
+   5,
+   0,
+   "IMAGE"
+  ],
+  [
+   4,
+   2,
+   0,
+   5,
+   1,
+   "IMAGE"
+  ],
+  [
+   5,
+   2,
+   1,
+   6,
+   0,
+   "MASK"
+  ],
+  [
+   6,
+   5,
+   0,
+   7,
+   0,
+   "IMAGE"
+  ],
+  [
+   7,
+   2,
+   0,
+   7,
+   1,
+   "IMAGE"
+  ],
+  [
+   8,
+   6,
+   1,
+   7,
+   2,
+   "MASK"
+  ],
+  [
+   9,
+   7,
+   0,
+   8,
+   0,
+   "IMAGE"
+  ]
+ ],
+ "groups": [
+  {
+   "id": 1,
+   "title": "Seleção de área (opcional) — ATIVE (selecione os 3 nós + Ctrl+B) e pinte a máscara; desativada = imagem inteira",
+   "bounding": [
+    840,
+    -20,
+    700,
+    520
+   ],
+   "color": "#3f789e",
+   "font_size": 22,
+   "flags": {}
+  }
+ ],
+ "config": {},
+ "extra": {},
+ "version": 0.4
+}

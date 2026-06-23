@@ -1,0 +1,243 @@
+{
+ "id": "e7517bca-b151-53b2-98a9-ceebddc4af08",
+ "revision": 0,
+ "last_node_id": 900,
+ "last_link_id": 2,
+ "nodes": [
+  {
+   "id": 1,
+   "type": "MarkdownNote",
+   "pos": [
+    -760,
+    -500
+   ],
+   "size": [
+    560,
+    640
+   ],
+   "flags": {},
+   "order": 0,
+   "mode": 0,
+   "inputs": [],
+   "outputs": [],
+   "title": "GROK VIDEO EDIT — editar clipe curto (partner)",
+   "properties": {},
+   "widgets_values": [
+    "# 🎬 Grok Video Edit — edita um clipe curto por prompt\nEdição rápida por texto para clipes **≤ 8.7s / 50MB** (nó partner).\n\n## 📝 Passo a passo\n1. **Login** comfy.org.\n2. **Load Video** (curto).\n3. **prompt** com a mudança.\n4. **Run**.\n\n## ⚙️ Configs principais\n- Limite duro: **8.7s e 50MB**.  **seed**: só decide re-rodar.\n- Para vídeos maiores, corte antes ou use Runway Aleph.\n\n## 💾 Saída\nEste nó é **partner** (créditos comfy.org) → devolve **VIDEO** direto no `SaveVideo` (`~/ComfyUI/output/`). O **áudio é preservado** (não passa por extração de frames).\n"
+   ],
+   "color": "#234",
+   "bgcolor": "#345"
+  },
+  {
+   "id": 2,
+   "type": "LoadVideo",
+   "pos": [
+    -470,
+    240
+   ],
+   "size": [
+    280,
+    120
+   ],
+   "flags": {},
+   "order": 1,
+   "mode": 0,
+   "inputs": [
+    {
+     "localized_name": "file",
+     "name": "file",
+     "type": "COMBO",
+     "widget": {
+      "name": "file"
+     },
+     "link": null
+    }
+   ],
+   "outputs": [
+    {
+     "localized_name": "VIDEO",
+     "name": "VIDEO",
+     "type": "VIDEO",
+     "slot_index": 0,
+     "links": [
+      1
+     ]
+    }
+   ],
+   "title": "Load Video (seu vídeo)",
+   "properties": {
+    "cnr_id": "comfy-core",
+    "ver": "0.25.0",
+    "Node name for S&R": "LoadVideo"
+   },
+   "widgets_values": [
+    "input.mp4"
+   ]
+  },
+  {
+   "id": 3,
+   "type": "GrokVideoEditNode",
+   "pos": [
+    40,
+    0
+   ],
+   "size": [
+    360,
+    220
+   ],
+   "flags": {},
+   "order": 2,
+   "mode": 0,
+   "inputs": [
+    {
+     "localized_name": "model",
+     "name": "model",
+     "type": "COMBO",
+     "widget": {
+      "name": "model"
+     },
+     "link": null
+    },
+    {
+     "localized_name": "prompt",
+     "name": "prompt",
+     "type": "STRING",
+     "widget": {
+      "name": "prompt"
+     },
+     "link": null
+    },
+    {
+     "localized_name": "video",
+     "name": "video",
+     "type": "VIDEO",
+     "link": 1
+    },
+    {
+     "localized_name": "seed",
+     "name": "seed",
+     "type": "INT",
+     "widget": {
+      "name": "seed"
+     },
+     "link": null
+    }
+   ],
+   "outputs": [
+    {
+     "localized_name": "VIDEO",
+     "name": "VIDEO",
+     "type": "VIDEO",
+     "slot_index": 0,
+     "links": [
+      2
+     ]
+    }
+   ],
+   "title": "Grok Video Edit (clipes curtos)",
+   "properties": {
+    "cnr_id": "comfy-core",
+    "ver": "0.25.0",
+    "Node name for S&R": "GrokVideoEditNode"
+   },
+   "widgets_values": [
+    "grok-imagine-video",
+    "<<descreva a transformação do vídeo>>",
+    0,
+    "fixed"
+   ]
+  },
+  {
+   "id": 900,
+   "type": "SaveVideo",
+   "pos": [
+    1300,
+    0
+   ],
+   "size": [
+    280,
+    160
+   ],
+   "flags": {},
+   "order": 8,
+   "mode": 0,
+   "inputs": [
+    {
+     "localized_name": "video",
+     "name": "video",
+     "type": "VIDEO",
+     "link": 2
+    },
+    {
+     "localized_name": "filename_prefix",
+     "name": "filename_prefix",
+     "type": "STRING",
+     "widget": {
+      "name": "filename_prefix"
+     },
+     "link": null
+    },
+    {
+     "localized_name": "format",
+     "name": "format",
+     "type": "COMBO",
+     "widget": {
+      "name": "format"
+     },
+     "link": null
+    },
+    {
+     "localized_name": "codec",
+     "name": "codec",
+     "type": "COMBO",
+     "widget": {
+      "name": "codec"
+     },
+     "link": null
+    }
+   ],
+   "outputs": [],
+   "title": "Salva (output/)",
+   "properties": {
+    "cnr_id": "comfy-core",
+    "ver": "0.25.0",
+    "Node name for S&R": "SaveVideo"
+   },
+   "widgets_values": [
+    "11_edit_grok",
+    "auto",
+    "auto"
+   ]
+  }
+ ],
+ "links": [
+  [
+   1,
+   2,
+   0,
+   3,
+   2,
+   "VIDEO"
+  ],
+  [
+   2,
+   3,
+   0,
+   900,
+   0,
+   "VIDEO"
+  ]
+ ],
+ "groups": [],
+ "config": {},
+ "extra": {
+  "ds": {
+   "scale": 0.6,
+   "offset": [
+    400,
+    300
+   ]
+  }
+ },
+ "version": 0.4
+}

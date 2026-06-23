@@ -1,0 +1,505 @@
+{
+ "id": "fcdec17b-ea23-5403-96f9-88e8a3df2de8",
+ "revision": 0,
+ "last_node_id": 903,
+ "last_link_id": 4,
+ "nodes": [
+  {
+   "id": 1,
+   "type": "MarkdownNote",
+   "pos": [
+    -760,
+    -500
+   ],
+   "size": [
+    560,
+    640
+   ],
+   "flags": {},
+   "order": 0,
+   "mode": 0,
+   "inputs": [],
+   "outputs": [],
+   "title": "KLING 2.5 TURBO PRO — movimento forte",
+   "properties": {},
+   "widgets_values": [
+    "# 🎬 Kling 2.5 Turbo Pro — movimento muito fluido\nÓtimo quando a ação tem **muito movimento**. `tail_image` opcional define o último frame (encadeia/estende).\n\n## 📝 Passo a passo\n1. **Load Image**.\n2. **prompt** com a ação.\n3. (opcional) ligue uma `tail_image`.\n4. **Run**.\n\n## ⚙️ Configs principais\n- **duration**: `5`/`10`s.  **negative_prompt** já vem preenchido.\n- **cfg_scale**: 0–1 (peso do prompt).  **tail_image**: último frame.\n\n## 💾 Saída\nEste nó é **fal** → devolve uma **URL (texto)**. A cadeia `LoadVideoURL → CreateVideo → SaveVideo` baixa os **frames** e grava em `~/ComfyUI/output/`. ⚠️ Essa cadeia **perde o áudio** nativo — para manter o áudio, baixe a URL que o nó retorna (clique no texto de saída).\n"
+   ],
+   "color": "#234",
+   "bgcolor": "#345"
+  },
+  {
+   "id": 2,
+   "type": "LoadImage",
+   "pos": [
+    -470,
+    240
+   ],
+   "size": [
+    280,
+    314
+   ],
+   "flags": {},
+   "order": 1,
+   "mode": 0,
+   "inputs": [
+    {
+     "localized_name": "image",
+     "name": "image",
+     "type": "COMBO",
+     "widget": {
+      "name": "image"
+     },
+     "link": null
+    },
+    {
+     "localized_name": "choose file to upload",
+     "name": "upload",
+     "type": "IMAGEUPLOAD",
+     "widget": {
+      "name": "upload"
+     },
+     "link": null
+    }
+   ],
+   "outputs": [
+    {
+     "localized_name": "IMAGE",
+     "name": "IMAGE",
+     "type": "IMAGE",
+     "slot_index": 0,
+     "links": [
+      1
+     ]
+    },
+    {
+     "localized_name": "MASK",
+     "name": "MASK",
+     "type": "MASK",
+     "slot_index": 1,
+     "links": []
+    }
+   ],
+   "title": "Load Image",
+   "properties": {
+    "cnr_id": "comfy-core",
+    "ver": "0.25.0",
+    "Node name for S&R": "LoadImage"
+   },
+   "widgets_values": [
+    "example.png",
+    "image"
+   ]
+  },
+  {
+   "id": 3,
+   "type": "Kling25TurboPro_fal",
+   "pos": [
+    40,
+    0
+   ],
+   "size": [
+    360,
+    220
+   ],
+   "flags": {},
+   "order": 2,
+   "mode": 0,
+   "inputs": [
+    {
+     "localized_name": "prompt",
+     "name": "prompt",
+     "type": "STRING",
+     "widget": {
+      "name": "prompt"
+     },
+     "link": null
+    },
+    {
+     "localized_name": "image",
+     "name": "image",
+     "type": "IMAGE",
+     "link": 1
+    },
+    {
+     "localized_name": "duration",
+     "name": "duration",
+     "type": "COMBO",
+     "widget": {
+      "name": "duration"
+     },
+     "link": null
+    },
+    {
+     "localized_name": "negative_prompt",
+     "name": "negative_prompt",
+     "type": "STRING",
+     "widget": {
+      "name": "negative_prompt"
+     },
+     "link": null,
+     "shape": 7
+    },
+    {
+     "localized_name": "cfg_scale",
+     "name": "cfg_scale",
+     "type": "FLOAT",
+     "widget": {
+      "name": "cfg_scale"
+     },
+     "link": null,
+     "shape": 7
+    },
+    {
+     "localized_name": "tail_image",
+     "name": "tail_image",
+     "type": "IMAGE",
+     "link": null,
+     "shape": 7
+    },
+    {
+     "localized_name": "variations",
+     "name": "variations",
+     "type": "INT",
+     "widget": {
+      "name": "variations"
+     },
+     "link": null,
+     "shape": 7
+    }
+   ],
+   "outputs": [
+    {
+     "localized_name": "STRING",
+     "name": "STRING",
+     "type": "STRING",
+     "slot_index": 0,
+     "links": [
+      2
+     ]
+    }
+   ],
+   "title": "Kling 2.5 Turbo (movimento forte)",
+   "properties": {
+    "cnr_id": "fal-api",
+    "ver": "1b14ab3164a6c654a47080bd39c9944a23c254c3",
+    "Node name for S&R": "Kling25TurboPro_fal"
+   },
+   "widgets_values": [
+    "Medium shot, slow dolly-in, 35mm. Subject: <<PERSONAGEM — descreva igual em todo prompt>> <<ação principal, ex: caminhando devagar e olhando para a câmera>>. Setting: <<cenário>>. Lighting: <<luz, ex: golden hour quente>>. Style: <<estilo, ex: filme cinematográfico, grão fino>>. Audio: <<diálogo/SFX/ambiente — ou 'none'>>. Avoid: no morphing, no distorted hands, no flicker, no identity drift, no camera shake.",
+    "5",
+    "blur, distort, and low quality",
+    0.5,
+    1
+   ]
+  },
+  {
+   "id": 901,
+   "type": "LoadVideoURL",
+   "pos": [
+    1240,
+    0
+   ],
+   "size": [
+    280,
+    266
+   ],
+   "flags": {},
+   "order": 8,
+   "mode": 0,
+   "inputs": [
+    {
+     "localized_name": "url",
+     "name": "url",
+     "type": "STRING",
+     "widget": {
+      "name": "url"
+     },
+     "link": 2
+    },
+    {
+     "localized_name": "force_rate",
+     "name": "force_rate",
+     "type": "INT",
+     "widget": {
+      "name": "force_rate"
+     },
+     "link": null
+    },
+    {
+     "localized_name": "force_size",
+     "name": "force_size",
+     "type": "COMBO",
+     "widget": {
+      "name": "force_size"
+     },
+     "link": null
+    },
+    {
+     "localized_name": "custom_width",
+     "name": "custom_width",
+     "type": "INT",
+     "widget": {
+      "name": "custom_width"
+     },
+     "link": null
+    },
+    {
+     "localized_name": "custom_height",
+     "name": "custom_height",
+     "type": "INT",
+     "widget": {
+      "name": "custom_height"
+     },
+     "link": null
+    },
+    {
+     "localized_name": "frame_load_cap",
+     "name": "frame_load_cap",
+     "type": "INT",
+     "widget": {
+      "name": "frame_load_cap"
+     },
+     "link": null
+    },
+    {
+     "localized_name": "skip_first_frames",
+     "name": "skip_first_frames",
+     "type": "INT",
+     "widget": {
+      "name": "skip_first_frames"
+     },
+     "link": null
+    },
+    {
+     "localized_name": "select_every_nth",
+     "name": "select_every_nth",
+     "type": "INT",
+     "widget": {
+      "name": "select_every_nth"
+     },
+     "link": null
+    }
+   ],
+   "outputs": [
+    {
+     "localized_name": "frames",
+     "name": "frames",
+     "type": "IMAGE",
+     "slot_index": 0,
+     "links": [
+      3
+     ]
+    },
+    {
+     "localized_name": "frame_count",
+     "name": "frame_count",
+     "type": "INT",
+     "slot_index": 1,
+     "links": []
+    },
+    {
+     "localized_name": "video_info",
+     "name": "video_info",
+     "type": "VHS_VIDEOINFO",
+     "slot_index": 2,
+     "links": []
+    }
+   ],
+   "title": "Baixa o clipe (frames)",
+   "properties": {
+    "cnr_id": "fal-api",
+    "ver": "1b14ab3164a6c654a47080bd39c9944a23c254c3",
+    "Node name for S&R": "LoadVideoURL"
+   },
+   "widgets_values": [
+    "https://example.com/video.mp4",
+    0,
+    "Disabled",
+    512,
+    512,
+    0,
+    0,
+    1
+   ]
+  },
+  {
+   "id": 902,
+   "type": "CreateVideo",
+   "pos": [
+    1560,
+    0
+   ],
+   "size": [
+    220,
+    110
+   ],
+   "flags": {},
+   "order": 9,
+   "mode": 0,
+   "inputs": [
+    {
+     "localized_name": "images",
+     "name": "images",
+     "type": "IMAGE",
+     "link": 3
+    },
+    {
+     "localized_name": "audio",
+     "name": "audio",
+     "shape": 7,
+     "type": "AUDIO",
+     "link": null
+    },
+    {
+     "localized_name": "fps",
+     "name": "fps",
+     "type": "FLOAT",
+     "widget": {
+      "name": "fps"
+     },
+     "link": null
+    },
+    {
+     "localized_name": "bit_depth",
+     "name": "bit_depth",
+     "shape": 7,
+     "type": "INT",
+     "widget": {
+      "name": "bit_depth"
+     },
+     "link": null
+    }
+   ],
+   "outputs": [
+    {
+     "localized_name": "VIDEO",
+     "name": "VIDEO",
+     "type": "VIDEO",
+     "slot_index": 0,
+     "links": [
+      4
+     ]
+    }
+   ],
+   "title": "Monta vídeo",
+   "properties": {
+    "cnr_id": "comfy-core",
+    "ver": "0.25.0",
+    "Node name for S&R": "CreateVideo"
+   },
+   "widgets_values": [
+    24,
+    8
+   ]
+  },
+  {
+   "id": 903,
+   "type": "SaveVideo",
+   "pos": [
+    1820,
+    0
+   ],
+   "size": [
+    280,
+    160
+   ],
+   "flags": {},
+   "order": 10,
+   "mode": 0,
+   "inputs": [
+    {
+     "localized_name": "video",
+     "name": "video",
+     "type": "VIDEO",
+     "link": 4
+    },
+    {
+     "localized_name": "filename_prefix",
+     "name": "filename_prefix",
+     "type": "STRING",
+     "widget": {
+      "name": "filename_prefix"
+     },
+     "link": null
+    },
+    {
+     "localized_name": "format",
+     "name": "format",
+     "type": "COMBO",
+     "widget": {
+      "name": "format"
+     },
+     "link": null
+    },
+    {
+     "localized_name": "codec",
+     "name": "codec",
+     "type": "COMBO",
+     "widget": {
+      "name": "codec"
+     },
+     "link": null
+    }
+   ],
+   "outputs": [],
+   "title": "Salva (output/)",
+   "properties": {
+    "cnr_id": "comfy-core",
+    "ver": "0.25.0",
+    "Node name for S&R": "SaveVideo"
+   },
+   "widgets_values": [
+    "kling25",
+    "auto",
+    "auto"
+   ]
+  }
+ ],
+ "links": [
+  [
+   1,
+   2,
+   0,
+   3,
+   1,
+   "IMAGE"
+  ],
+  [
+   2,
+   3,
+   0,
+   901,
+   0,
+   "STRING"
+  ],
+  [
+   3,
+   901,
+   0,
+   902,
+   0,
+   "IMAGE"
+  ],
+  [
+   4,
+   902,
+   0,
+   903,
+   0,
+   "VIDEO"
+  ]
+ ],
+ "groups": [],
+ "config": {},
+ "extra": {
+  "ds": {
+   "scale": 0.6,
+   "offset": [
+    400,
+    300
+   ]
+  }
+ },
+ "version": 0.4
+}

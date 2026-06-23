@@ -1,0 +1,45 @@
+{
+ "id": "d674b9ea-5c91-5b82-9f56-ee39a0318a95",
+ "revision": 0,
+ "last_node_id": 1,
+ "last_link_id": 0,
+ "nodes": [
+  {
+   "id": 1,
+   "type": "MarkdownNote",
+   "pos": [
+    0,
+    0
+   ],
+   "size": [
+    760,
+    900
+   ],
+   "flags": {},
+   "order": 0,
+   "mode": 0,
+   "inputs": [],
+   "outputs": [],
+   "title": "📝 Gramática de prompt + seed gates",
+   "properties": {},
+   "widgets_values": [
+    "# 📝 Como escrever o prompt de MOVIMENTO (e os seed gates)\n\n## Gramática (cinematografia primeiro)\n`plano + câmera + lente → sujeito → ação → cenário → luz → áudio`\n> *Medium shot, slow dolly-in, 35mm. Subject: a 30yo person... walking slowly. Setting: night street.\n> Lighting: warm neon. Style: cinematic film grain. Audio: ambient city hum.*\n\n- **Uma** ação/câmera por clipe. Mantenha a descrição do personagem **idêntica** entre shots.\n- **Negativos em prosa** (Veo/Seedance não têm campo negative): *\"Avoid: no morphing, no extra fingers...\"*\n\n## Seed gates (errar TRAVA ou muda o comportamento)\n| Nó | seed | nota |\n|---|---|---|\n| `Veo31_fal` / `Veo31Fast_fal` / `Kling*_fal` / `Kling26Pro_fal` | **sem seed** | identidade = imagem de entrada |\n| `SeedanceImageToVideo_fal` | **-1** = aleatório | tem seed (reproduzível) |\n| `ByteDance` / `GrokVideoNode` (partner) | tem seed | só decide **re-rodar** (resultado não-determinístico) |\n\n## Custo (regra prática)\nItere em `12_seedance_rascunho_480p` ou `11_veo31_fast` (centavos) → finalize no `10_veo31_premium`.\nMais resolução/duração/áudio = mais crédito.\n"
+   ],
+   "color": "#234",
+   "bgcolor": "#345"
+  }
+ ],
+ "links": [],
+ "groups": [],
+ "config": {},
+ "extra": {
+  "ds": {
+   "scale": 0.6,
+   "offset": [
+    400,
+    300
+   ]
+  }
+ },
+ "version": 0.4
+}

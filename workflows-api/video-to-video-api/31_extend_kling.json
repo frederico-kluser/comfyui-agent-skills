@@ -1,0 +1,407 @@
+{
+ "id": "3e960370-c729-5396-b4e4-8c88ce28ba30",
+ "revision": 0,
+ "last_node_id": 5,
+ "last_link_id": 3,
+ "nodes": [
+  {
+   "id": 1,
+   "type": "MarkdownNote",
+   "pos": [
+    -760,
+    -500
+   ],
+   "size": [
+    560,
+    640
+   ],
+   "flags": {},
+   "order": 0,
+   "mode": 0,
+   "inputs": [],
+   "outputs": [],
+   "title": "KLING EXTEND — encadear por video_id (partner)",
+   "properties": {},
+   "widgets_values": [
+    "# 🎬 Kling Extend — gera um vídeo base e o estende por video_id\nO `KlingVideoExtendNode` **não** aceita arquivo: ele encadeia pelo **video_id** de uma geração Kling. Por isso este workflow tem 2 nós: gera o base e estende.\n\n## 📝 Passo a passo\n1. **Login** comfy.org.\n2. **Load Image** (1º frame do base).\n3. Ajuste os prompts dos **dois** nós.\n4. **Run** (gera base → estende → salva).\n\n## ⚙️ Configs principais\n- Encadeia automaticamente: `KlingImage2VideoNode.video_id → KlingVideoExtendNode.video_id`.\n- Máx **3min** no total. Para estender de novo, ligue o `video_id` da SAÍDA do extend em outro extend.\n\n## 💾 Saída\nEste nó é **partner** (créditos comfy.org) → devolve **VIDEO** direto no `SaveVideo` (`~/ComfyUI/output/`). O **áudio é preservado** (não passa por extração de frames).\n"
+   ],
+   "color": "#234",
+   "bgcolor": "#345"
+  },
+  {
+   "id": 2,
+   "type": "LoadImage",
+   "pos": [
+    -470,
+    240
+   ],
+   "size": [
+    280,
+    314
+   ],
+   "flags": {},
+   "order": 1,
+   "mode": 0,
+   "inputs": [
+    {
+     "localized_name": "image",
+     "name": "image",
+     "type": "COMBO",
+     "widget": {
+      "name": "image"
+     },
+     "link": null
+    },
+    {
+     "localized_name": "choose file to upload",
+     "name": "upload",
+     "type": "IMAGEUPLOAD",
+     "widget": {
+      "name": "upload"
+     },
+     "link": null
+    }
+   ],
+   "outputs": [
+    {
+     "localized_name": "IMAGE",
+     "name": "IMAGE",
+     "type": "IMAGE",
+     "slot_index": 0,
+     "links": [
+      1
+     ]
+    },
+    {
+     "localized_name": "MASK",
+     "name": "MASK",
+     "type": "MASK",
+     "slot_index": 1,
+     "links": []
+    }
+   ],
+   "title": "Load Image",
+   "properties": {
+    "cnr_id": "comfy-core",
+    "ver": "0.25.0",
+    "Node name for S&R": "LoadImage"
+   },
+   "widgets_values": [
+    "example.png",
+    "image"
+   ]
+  },
+  {
+   "id": 3,
+   "type": "KlingImage2VideoNode",
+   "pos": [
+    40,
+    0
+   ],
+   "size": [
+    360,
+    220
+   ],
+   "flags": {},
+   "order": 2,
+   "mode": 0,
+   "inputs": [
+    {
+     "localized_name": "start_frame",
+     "name": "start_frame",
+     "type": "IMAGE",
+     "link": 1
+    },
+    {
+     "localized_name": "prompt",
+     "name": "prompt",
+     "type": "STRING",
+     "widget": {
+      "name": "prompt"
+     },
+     "link": null
+    },
+    {
+     "localized_name": "negative_prompt",
+     "name": "negative_prompt",
+     "type": "STRING",
+     "widget": {
+      "name": "negative_prompt"
+     },
+     "link": null
+    },
+    {
+     "localized_name": "model_name",
+     "name": "model_name",
+     "type": "COMBO",
+     "widget": {
+      "name": "model_name"
+     },
+     "link": null
+    },
+    {
+     "localized_name": "cfg_scale",
+     "name": "cfg_scale",
+     "type": "FLOAT",
+     "widget": {
+      "name": "cfg_scale"
+     },
+     "link": null
+    },
+    {
+     "localized_name": "mode",
+     "name": "mode",
+     "type": "COMBO",
+     "widget": {
+      "name": "mode"
+     },
+     "link": null
+    },
+    {
+     "localized_name": "aspect_ratio",
+     "name": "aspect_ratio",
+     "type": "COMBO",
+     "widget": {
+      "name": "aspect_ratio"
+     },
+     "link": null
+    },
+    {
+     "localized_name": "duration",
+     "name": "duration",
+     "type": "COMBO",
+     "widget": {
+      "name": "duration"
+     },
+     "link": null
+    }
+   ],
+   "outputs": [
+    {
+     "localized_name": "VIDEO",
+     "name": "VIDEO",
+     "type": "VIDEO",
+     "slot_index": 0,
+     "links": []
+    },
+    {
+     "localized_name": "video_id",
+     "name": "video_id",
+     "type": "STRING",
+     "slot_index": 1,
+     "links": [
+      2
+     ]
+    },
+    {
+     "localized_name": "duration",
+     "name": "duration",
+     "type": "STRING",
+     "slot_index": 2,
+     "links": []
+    }
+   ],
+   "title": "1) Gera o vídeo base (Kling)",
+   "properties": {
+    "cnr_id": "comfy-core",
+    "ver": "0.25.0",
+    "Node name for S&R": "KlingImage2VideoNode"
+   },
+   "widgets_values": [
+    "<<descreva a cena inicial>>",
+    "",
+    "kling-v2-5-turbo",
+    0.8,
+    "pro",
+    "16:9",
+    "5"
+   ]
+  },
+  {
+   "id": 4,
+   "type": "KlingVideoExtendNode",
+   "pos": [
+    460,
+    0
+   ],
+   "size": [
+    360,
+    220
+   ],
+   "flags": {},
+   "order": 3,
+   "mode": 0,
+   "inputs": [
+    {
+     "localized_name": "prompt",
+     "name": "prompt",
+     "type": "STRING",
+     "widget": {
+      "name": "prompt"
+     },
+     "link": null
+    },
+    {
+     "localized_name": "negative_prompt",
+     "name": "negative_prompt",
+     "type": "STRING",
+     "widget": {
+      "name": "negative_prompt"
+     },
+     "link": null
+    },
+    {
+     "localized_name": "cfg_scale",
+     "name": "cfg_scale",
+     "type": "FLOAT",
+     "widget": {
+      "name": "cfg_scale"
+     },
+     "link": null
+    },
+    {
+     "localized_name": "video_id",
+     "name": "video_id",
+     "type": "STRING",
+     "link": 2
+    }
+   ],
+   "outputs": [
+    {
+     "localized_name": "VIDEO",
+     "name": "VIDEO",
+     "type": "VIDEO",
+     "slot_index": 0,
+     "links": [
+      3
+     ]
+    },
+    {
+     "localized_name": "video_id",
+     "name": "video_id",
+     "type": "STRING",
+     "slot_index": 1,
+     "links": []
+    },
+    {
+     "localized_name": "duration",
+     "name": "duration",
+     "type": "STRING",
+     "slot_index": 2,
+     "links": []
+    }
+   ],
+   "title": "2) Estende por video_id",
+   "properties": {
+    "cnr_id": "comfy-core",
+    "ver": "0.25.0",
+    "Node name for S&R": "KlingVideoExtendNode"
+   },
+   "widgets_values": [
+    "<<o que acontece em seguida>>",
+    "blur, distort, low quality",
+    0.5
+   ]
+  },
+  {
+   "id": 5,
+   "type": "SaveVideo",
+   "pos": [
+    880,
+    0
+   ],
+   "size": [
+    280,
+    160
+   ],
+   "flags": {},
+   "order": 4,
+   "mode": 0,
+   "inputs": [
+    {
+     "localized_name": "video",
+     "name": "video",
+     "type": "VIDEO",
+     "link": 3
+    },
+    {
+     "localized_name": "filename_prefix",
+     "name": "filename_prefix",
+     "type": "STRING",
+     "widget": {
+      "name": "filename_prefix"
+     },
+     "link": null
+    },
+    {
+     "localized_name": "format",
+     "name": "format",
+     "type": "COMBO",
+     "widget": {
+      "name": "format"
+     },
+     "link": null
+    },
+    {
+     "localized_name": "codec",
+     "name": "codec",
+     "type": "COMBO",
+     "widget": {
+      "name": "codec"
+     },
+     "link": null
+    }
+   ],
+   "outputs": [],
+   "title": "Salva (output/)",
+   "properties": {
+    "cnr_id": "comfy-core",
+    "ver": "0.25.0",
+    "Node name for S&R": "SaveVideo"
+   },
+   "widgets_values": [
+    "kling_extend",
+    "auto",
+    "auto"
+   ]
+  }
+ ],
+ "links": [
+  [
+   1,
+   2,
+   0,
+   3,
+   0,
+   "IMAGE"
+  ],
+  [
+   2,
+   3,
+   1,
+   4,
+   3,
+   "STRING"
+  ],
+  [
+   3,
+   4,
+   0,
+   5,
+   0,
+   "VIDEO"
+  ]
+ ],
+ "groups": [],
+ "config": {},
+ "extra": {
+  "ds": {
+   "scale": 0.6,
+   "offset": [
+    400,
+    300
+   ]
+  }
+ },
+ "version": 0.4
+}

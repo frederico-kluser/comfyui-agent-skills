@@ -35,7 +35,8 @@ docs/                     # relatórios de pesquisa (a fonte: SCAIL-2, workflows
   task-*/                 #   tarefas (create-commercial, create-commercial-api, build-workflow, launch-pod,
                           #            debug, package-workflow-project, edit-image)
   meta-*/                 #   evolução e consolidação
-workflows-api/            # bundles que rodam por API online, sem GPU (commercial-ondokai, mask-edit-cloud, outfit-swap-api)
+workflows-api/            # bundles que rodam por API online, sem GPU (commercial-ondokai, mask-edit-cloud,
+                          #   outfit-swap-api, replace-object, replace-environment, image-to-video-api, video-to-video-api)
 workflows-cloud/          # bundles self-hosted em GPU RunPod (person-swap, scail2-native, inpaint, kontext, qwen, outpaint, remove-bg)
 AGENTS.md  ·  CLAUDE.md   # always-on (symlink)
 ```
@@ -68,6 +69,10 @@ nó fal + grava a `FAL_KEY` (de `~/ComfyUI/secrets.env`) + baixa os `.json`; fa�
 | [`commercial-ondokai`](workflows-api/commercial-ondokai/) | Comercial de ~30s (9 cenas) com protagonista sintético consistente | Nano Banana Pro + Veo 3.1 + Kling + Seedance | fal + Comfy | 🟡 |
 | [`mask-edit-cloud`](workflows-api/mask-edit-cloud/) | Edita uma região (máscara) na nuvem **ou** local e recola sem tocar o resto | `FluxPro1Fill_fal` + SAM/DINO local | fal / local | 🟡 |
 | [`outfit-swap-api`](workflows-api/outfit-swap-api/) | Troca a roupa/look mantendo pose, rosto e fundo | `FluxVTONode` · `NanoBananaPro_fal` | Comfy / fal | 🟡 |
+| [`replace-object`](workflows-api/replace-object/) | Troca um objeto pela imagem de um objeto novo (prompt nomeia o alvo); área opcional | `NanoBananaPro_fal` · `FluxProKontextMulti_fal` | fal | 🟡 |
+| [`replace-environment`](workflows-api/replace-environment/) | Troca o ambiente/fundo mantendo e reiluminando o sujeito; área opcional | `NanoBananaPro_fal` · `FluxProKontextMulti_fal` | fal | 🟡 |
+| [`image-to-video-api`](workflows-api/image-to-video-api/) | Anima **1 imagem** + descrição → vídeo (8 modelos) | Veo 3.1 · Seedance · Kling · Grok | fal / Comfy | 🟡 |
+| [`video-to-video-api`](workflows-api/video-to-video-api/) | Transforma **1 vídeo** (restyle · motion-transfer · extend) | Runway Aleph · **Wan 2.2 Animate** · Kling · Grok · Vidu | fal / Comfy | 🟡 |
 
 ## 🖥️ Self-hosted em GPU — `workflows-cloud/` (RunPod)
 

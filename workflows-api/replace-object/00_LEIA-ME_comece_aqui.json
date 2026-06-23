@@ -1,0 +1,35 @@
+{
+ "last_node_id": 1,
+ "last_link_id": 0,
+ "nodes": [
+  {
+   "id": 1,
+   "type": "MarkdownNote",
+   "pos": [
+    0,
+    0
+   ],
+   "size": [
+    860,
+    900
+   ],
+   "flags": {},
+   "order": 0,
+   "mode": 0,
+   "inputs": [],
+   "outputs": [],
+   "title": "✂️ COMECE AQUI",
+   "properties": {},
+   "widgets_values": [
+    "# 🔁 replace-object — Trocar um OBJETO da foto por outro (que você fornece) — por API\n\nVocê dá **2 fotos** — a **BASE** (a cena) e a **REFERÊNCIA** (o objeto novo) — e escreve no **prompt**\nQUAL objeto trocar. O resto da cena é preservado.\n\n## 🗂️ OS WORKFLOWS\n- `01_prompt_nanobanana` 🟢 — troca pela melhor qualidade (Nano Banana Pro / Gemini 3). Comece aqui.\n- `02_prompt_kontext`    🟢 — troca com Flux Pro Kontext Multi (2 referências, `seed=0`).\n- `03_area_nanobanana`   🟡 — igual ao 01, **+ opção de pintar a área** do objeto (MaskEditor). Por padrão (grupo desativado) = igual ao 01.\n- `04_area_kontext`      🟡 — igual ao 02, **+ opção de pintar a área**. Por padrão = igual ao 02.\n\n## ✍️ O PROMPT (o que você edita)\nNo nó do modelo, troque `<OBJETO A TROCAR>` pelo objeto da BASE que sai (ex.: *\"the old wooden chair\"*).\nRegras: **sem pronomes** (diga *\"the object in the second image\"*), **nunca** \"transform\", **nomeie** o objeto.\n\n## 🎯 SELECIONAR A ÁREA (só 03/04, opcional)\nPor padrão o grupo \"Seleção de área\" vem **DESATIVADO** → edita a imagem inteira (= 01/02).\nPara limitar a troca a uma região: selecione os 3 nós do grupo → **Ctrl+B** (ativa) e, no **BASE**,\nbotão direito → **Open in MaskEditor** → pinte o objeto (com uma folga) → Save to node.\nPintou a área a TROCAR → o resto fica **pixel-idêntico** ao original.\n\n## 🧱 REQUER\n`ComfyUI-fal-API` + `FAL_KEY` (Nano Banana e Kontext) · `ComfyUI-KJNodes`. Roda em 8GB (sem GPU).\nPara inpaint por **texto** (descrever o objeto sem foto de referência) veja `workflows-api/mask-edit-cloud/`.\n"
+   ],
+   "color": "#234",
+   "bgcolor": "#345"
+  }
+ ],
+ "links": [],
+ "groups": [],
+ "config": {},
+ "extra": {},
+ "version": 0.4
+}

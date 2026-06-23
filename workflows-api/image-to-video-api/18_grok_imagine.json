@@ -1,0 +1,291 @@
+{
+ "id": "3b2ad052-c5aa-56ab-a64a-9a00d3910191",
+ "revision": 0,
+ "last_node_id": 900,
+ "last_link_id": 2,
+ "nodes": [
+  {
+   "id": 1,
+   "type": "MarkdownNote",
+   "pos": [
+    -760,
+    -500
+   ],
+   "size": [
+    560,
+    640
+   ],
+   "flags": {},
+   "order": 0,
+   "mode": 0,
+   "inputs": [],
+   "outputs": [],
+   "title": "GROK IMAGINE — animar barato (partner)",
+   "properties": {},
+   "widgets_values": [
+    "# 🎬 Grok Imagine — animação rápida e barata (nó partner)\nAlternativa econômica pela via partner. O modelo 1.5 **exige** imagem de entrada.\n\n## 📝 Passo a passo\n1. **Login** comfy.org.\n2. **Load Image** (obrigatória no 1.5).\n3. **Run**.\n\n## ⚙️ Configs principais\n- **model**: `grok-imagine-video-1.5` (precisa de imagem).\n- **resolution**: `480p`/`720p`.  **duration**: 1–15s.\n- **seed**: só decide re-rodar (resultado é não-determinístico).\n\n## 💾 Saída\nEste nó é **partner** (créditos comfy.org) → devolve **VIDEO** direto no `SaveVideo` (`~/ComfyUI/output/`). O **áudio é preservado** (não passa por extração de frames).\n"
+   ],
+   "color": "#234",
+   "bgcolor": "#345"
+  },
+  {
+   "id": 2,
+   "type": "LoadImage",
+   "pos": [
+    -470,
+    240
+   ],
+   "size": [
+    280,
+    314
+   ],
+   "flags": {},
+   "order": 1,
+   "mode": 0,
+   "inputs": [
+    {
+     "localized_name": "image",
+     "name": "image",
+     "type": "COMBO",
+     "widget": {
+      "name": "image"
+     },
+     "link": null
+    },
+    {
+     "localized_name": "choose file to upload",
+     "name": "upload",
+     "type": "IMAGEUPLOAD",
+     "widget": {
+      "name": "upload"
+     },
+     "link": null
+    }
+   ],
+   "outputs": [
+    {
+     "localized_name": "IMAGE",
+     "name": "IMAGE",
+     "type": "IMAGE",
+     "slot_index": 0,
+     "links": [
+      1
+     ]
+    },
+    {
+     "localized_name": "MASK",
+     "name": "MASK",
+     "type": "MASK",
+     "slot_index": 1,
+     "links": []
+    }
+   ],
+   "title": "Load Image",
+   "properties": {
+    "cnr_id": "comfy-core",
+    "ver": "0.25.0",
+    "Node name for S&R": "LoadImage"
+   },
+   "widgets_values": [
+    "example.png",
+    "image"
+   ]
+  },
+  {
+   "id": 3,
+   "type": "GrokVideoNode",
+   "pos": [
+    40,
+    0
+   ],
+   "size": [
+    360,
+    220
+   ],
+   "flags": {},
+   "order": 2,
+   "mode": 0,
+   "inputs": [
+    {
+     "localized_name": "model",
+     "name": "model",
+     "type": "COMBO",
+     "widget": {
+      "name": "model"
+     },
+     "link": null
+    },
+    {
+     "localized_name": "prompt",
+     "name": "prompt",
+     "type": "STRING",
+     "widget": {
+      "name": "prompt"
+     },
+     "link": null
+    },
+    {
+     "localized_name": "resolution",
+     "name": "resolution",
+     "type": "COMBO",
+     "widget": {
+      "name": "resolution"
+     },
+     "link": null
+    },
+    {
+     "localized_name": "aspect_ratio",
+     "name": "aspect_ratio",
+     "type": "COMBO",
+     "widget": {
+      "name": "aspect_ratio"
+     },
+     "link": null
+    },
+    {
+     "localized_name": "duration",
+     "name": "duration",
+     "type": "INT",
+     "widget": {
+      "name": "duration"
+     },
+     "link": null
+    },
+    {
+     "localized_name": "seed",
+     "name": "seed",
+     "type": "INT",
+     "widget": {
+      "name": "seed"
+     },
+     "link": null
+    },
+    {
+     "localized_name": "image",
+     "name": "image",
+     "type": "IMAGE",
+     "link": 1,
+     "shape": 7
+    }
+   ],
+   "outputs": [
+    {
+     "localized_name": "VIDEO",
+     "name": "VIDEO",
+     "type": "VIDEO",
+     "slot_index": 0,
+     "links": [
+      2
+     ]
+    }
+   ],
+   "title": "Grok Imagine (barato, partner)",
+   "properties": {
+    "cnr_id": "comfy-core",
+    "ver": "0.25.0",
+    "Node name for S&R": "GrokVideoNode"
+   },
+   "widgets_values": [
+    "grok-imagine-video-1.5",
+    "Medium shot, slow dolly-in, 35mm. Subject: <<PERSONAGEM — descreva igual em todo prompt>> <<ação principal, ex: caminhando devagar e olhando para a câmera>>. Setting: <<cenário>>. Lighting: <<luz, ex: golden hour quente>>. Style: <<estilo, ex: filme cinematográfico, grão fino>>. Audio: <<diálogo/SFX/ambiente — ou 'none'>>. Avoid: no morphing, no distorted hands, no flicker, no identity drift, no camera shake.",
+    "720p",
+    "16:9",
+    6,
+    0,
+    "fixed"
+   ]
+  },
+  {
+   "id": 900,
+   "type": "SaveVideo",
+   "pos": [
+    1300,
+    0
+   ],
+   "size": [
+    280,
+    160
+   ],
+   "flags": {},
+   "order": 8,
+   "mode": 0,
+   "inputs": [
+    {
+     "localized_name": "video",
+     "name": "video",
+     "type": "VIDEO",
+     "link": 2
+    },
+    {
+     "localized_name": "filename_prefix",
+     "name": "filename_prefix",
+     "type": "STRING",
+     "widget": {
+      "name": "filename_prefix"
+     },
+     "link": null
+    },
+    {
+     "localized_name": "format",
+     "name": "format",
+     "type": "COMBO",
+     "widget": {
+      "name": "format"
+     },
+     "link": null
+    },
+    {
+     "localized_name": "codec",
+     "name": "codec",
+     "type": "COMBO",
+     "widget": {
+      "name": "codec"
+     },
+     "link": null
+    }
+   ],
+   "outputs": [],
+   "title": "Salva (output/)",
+   "properties": {
+    "cnr_id": "comfy-core",
+    "ver": "0.25.0",
+    "Node name for S&R": "SaveVideo"
+   },
+   "widgets_values": [
+    "grok_imagine",
+    "auto",
+    "auto"
+   ]
+  }
+ ],
+ "links": [
+  [
+   1,
+   2,
+   0,
+   3,
+   6,
+   "IMAGE"
+  ],
+  [
+   2,
+   3,
+   0,
+   900,
+   0,
+   "VIDEO"
+  ]
+ ],
+ "groups": [],
+ "config": {},
+ "extra": {
+  "ds": {
+   "scale": 0.6,
+   "offset": [
+    400,
+    300
+   ]
+  }
+ },
+ "version": 0.4
+}

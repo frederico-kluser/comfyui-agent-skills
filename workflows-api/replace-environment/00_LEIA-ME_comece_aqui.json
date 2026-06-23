@@ -1,0 +1,35 @@
+{
+ "last_node_id": 1,
+ "last_link_id": 0,
+ "nodes": [
+  {
+   "id": 1,
+   "type": "MarkdownNote",
+   "pos": [
+    0,
+    0
+   ],
+   "size": [
+    860,
+    900
+   ],
+   "flags": {},
+   "order": 0,
+   "mode": 0,
+   "inputs": [],
+   "outputs": [],
+   "title": "✂️ COMECE AQUI",
+   "properties": {},
+   "widgets_values": [
+    "# 🌄 replace-environment — Trocar o AMBIENTE/FUNDO (mantendo o sujeito) — por API\n\nVocê dá **2 fotos** — a **BASE** (o sujeito) e a **REFERÊNCIA** (o ambiente novo). O sujeito é preservado;\no fundo vira o novo ambiente, com o sujeito reiluminado para casar.\n\n## 🗂️ OS WORKFLOWS\n- `01_prompt_nanobanana` 🟢 — melhor qualidade (Nano Banana Pro / Gemini 3). Comece aqui.\n- `02_prompt_kontext`    🟢 — Flux Pro Kontext Multi (2 referências, `seed=0`).\n- `03_area_nanobanana`   🟡 — igual ao 01, **+ opção de pintar o FUNDO** (MaskEditor). Por padrão = igual ao 01.\n- `04_area_kontext`      🟡 — igual ao 02, **+ opção de pintar o FUNDO**. Por padrão = igual ao 02.\n\n## ✍️ O PROMPT (o que você edita)\nO prompt já mantém o sujeito e troca só o cenário pelo da 2ª imagem. Ajuste detalhes do ambiente se quiser.\nRegras: **sem pronomes**, **nunca** \"transform\", descreva a luz do novo cenário.\n\n## 🎯 SELECIONAR A ÁREA (só 03/04, opcional)\nPor padrão o grupo \"Seleção de área\" vem **DESATIVADO** → edita a imagem inteira (= 01/02).\nPara forçar o sujeito a ficar 100% intacto: ative o grupo (3 nós → **Ctrl+B**) e, no **BASE**,\npinte **o FUNDO** (a área que muda) no MaskEditor. O sujeito (fora da máscara) fica **pixel-idêntico**.\n\n## 🧱 REQUER\n`ComfyUI-fal-API` + `FAL_KEY` · `ComfyUI-KJNodes`. Roda em 8GB (sem GPU).\n"
+   ],
+   "color": "#234",
+   "bgcolor": "#345"
+  }
+ ],
+ "links": [],
+ "groups": [],
+ "config": {},
+ "extra": {},
+ "version": 0.4
+}

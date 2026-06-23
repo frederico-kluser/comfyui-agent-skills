@@ -1,0 +1,45 @@
+{
+ "id": "4f5fd188-5ebb-502d-9415-fa78b2fa9bc3",
+ "revision": 0,
+ "last_node_id": 1,
+ "last_link_id": 0,
+ "nodes": [
+  {
+   "id": 1,
+   "type": "MarkdownNote",
+   "pos": [
+    0,
+    0
+   ],
+   "size": [
+    760,
+    900
+   ],
+   "flags": {},
+   "order": 0,
+   "mode": 0,
+   "inputs": [],
+   "outputs": [],
+   "title": "🧭 3 modos + limites de cada nó",
+   "properties": {},
+   "widgets_values": [
+    "# 🧭 Qual modo usar + limites por nó\n\n## Escolha o modo\n- **Quero o MESMO vídeo com outro visual** → 🅰️ restyle (`10_restyle_runway_aleph`).\n- **Quero um personagem se mexendo como num vídeo** → 🅱️ motion-transfer (`20_animate_wan_move`).\n- **Quero TROCAR a pessoa do vídeo** → 🅱️ `21_animate_wan_replace`.\n- **Quero o vídeo MAIS LONGO** → 🅲 extend (`30`/`31`/`32`).\n\n## Limites/observações (do schema real dos nós)\n| Nó | Entrada | Limite | Saída |\n|---|---|---|---|\n| `RunwayAleph2VideoToVideoNode` | VIDEO | 2–30s, ≤30fps | VIDEO (áudio ok) |\n| `GrokVideoEditNode` | VIDEO | **≤8.7s / 50MB** | VIDEO |\n| `KlingOmniVideoToVideoEdit_fal` | VIDEO (+refs) | — | URL (fal) |\n| `Wan2214b_animate_move/replace_fal` | IMAGE + VIDEO | até 720p | URL (fal) |\n| `GrokVideoExtendNode` | VIDEO | 2–15s | VIDEO |\n| `KlingVideoExtendNode` | **video_id** (não arquivo) | total ≤3min | VIDEO |\n| `ViduExtendVideoNode` | VIDEO | extensão 1–7s | VIDEO |\n\n## Áudio\nNós **fal** perdem o áudio na cadeia de frames — baixe a URL para manter. Nós **partner** preservam.\n`KlingOmniVideoToVideoEdit_fal` tem `keep_audio`; `KlingV3ProMotionControl_fal` tem `keep_original_sound`.\n"
+   ],
+   "color": "#234",
+   "bgcolor": "#345"
+  }
+ ],
+ "links": [],
+ "groups": [],
+ "config": {},
+ "extra": {
+  "ds": {
+   "scale": 0.6,
+   "offset": [
+    400,
+    300
+   ]
+  }
+ },
+ "version": 0.4
+}

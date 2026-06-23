@@ -1,0 +1,45 @@
+{
+ "id": "e9572c80-a382-52ea-b488-a7f33eb5206c",
+ "revision": 0,
+ "last_node_id": 1,
+ "last_link_id": 0,
+ "nodes": [
+  {
+   "id": 1,
+   "type": "MarkdownNote",
+   "pos": [
+    0,
+    0
+   ],
+   "size": [
+    760,
+    900
+   ],
+   "flags": {},
+   "order": 0,
+   "mode": 0,
+   "inputs": [],
+   "outputs": [],
+   "title": "📂 VIDEO → VIDEO (por API) — comece aqui",
+   "properties": {},
+   "widgets_values": [
+    "# 📂 video-to-video-api — transforma UM vídeo + descrição → vídeo (por API)\n\n**O que é:** workflows prontos para pegar **o seu vídeo** + um prompt e transformá-lo. Três famílias:\n\n## 🅰️ Restyle / editar (mantém o movimento, muda o look)\n| Arquivo | Modelo | Quando |\n|---|---|---|\n| `10_restyle_runway_aleph` | Runway Aleph (partner) | **Melhor** restyle: muda estilo/luz/estação, remove/insere objeto |\n| `11_edit_grok` | Grok Edit (partner) | Clipe **curto** (≤8.7s) |\n| `12_edit_kling_omni` | Kling Omni (fal) | Editar + **inserir elementos** por referência |\n\n## 🅱️ Motion-transfer / animar personagem (segue um vídeo-guia) — *substituto-API do SCAIL-2*\n| Arquivo | Modelo | Quando |\n|---|---|---|\n| `20_animate_wan_move` | Wan 2.2 Animate (fal) | Animar um **personagem** (imagem) p/ seguir o vídeo |\n| `21_animate_wan_replace` | Wan 2.2 Animate (fal) | **Trocar** a pessoa do vídeo por outra |\n| `22_motion_kling_v3` | Kling V3 Motion (fal) | Alternativa de motion-control |\n\n## 🅲 Estender / continuar (mais duração)\n| Arquivo | Modelo | Quando |\n|---|---|---|\n| `30_extend_grok` | Grok Extend (partner) | Continuar **um arquivo** de vídeo (2–15s) |\n| `31_extend_kling` | Kling Extend (partner) | Encadear por `video_id` (gera base + estende) |\n| `32_extend_vidu` | Vidu Extend (partner) | Continuar um arquivo (+ `end_frame` opcional) |\n\n## ▶️ Entrada e saída\n- Seu vídeo entra pelo nó **`LoadVideo`** (botão de upload). Personagem (modos 🅱️) entra por **`LoadImage`**.\n- **fal** = URL → `LoadVideoURL → CreateVideo → SaveVideo` (⚠️ perde áudio). **partner** = VIDEO direto (áudio ok).\n- Rode `FAL_KEY=... bash setup.sh`, reinicie, faça **login comfy.org** p/ os nós partner. Detalhes:\n  `API_REFERENCE_video-to-video.md`.\n"
+   ],
+   "color": "#234",
+   "bgcolor": "#345"
+  }
+ ],
+ "links": [],
+ "groups": [],
+ "config": {},
+ "extra": {
+  "ds": {
+   "scale": 0.6,
+   "offset": [
+    400,
+    300
+   ]
+  }
+ },
+ "version": 0.4
+}

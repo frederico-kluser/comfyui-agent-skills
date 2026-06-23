@@ -32,6 +32,7 @@ carregá-las ANTES de agir, para não reler docs nem escanear o repo.
 ## Cadeias típicas (resumo — ver `catalog.md`)
 - Criar comercial → `task-create-commercial` (orquestra `knowledge-scail2` + `knowledge-comfyui-workflows` + provisioning).
 - Criar comercial **por API / sem GPU** → `task-create-commercial-api` + `knowledge-comfyui-api-nodes` (bundle `workflows-api/commercial-ondokai/`).
+- Animar **imagem→vídeo** ou transformar **vídeo→vídeo** por API (Veo/Kling/Seedance/Wan 2.2 Animate/Runway Aleph) → `knowledge-comfyui-api-nodes` (bundles `workflows-api/image-to-video-api/` · `video-to-video-api/`).
 - Subir pod / baixar modelos → `task-launch-runpod-pod` + `knowledge-runpod-provisioning` + `knowledge-runpod-infra`.
 - Montar/adaptar workflow → `task-build-workflow` + `knowledge-comfyui-workflows` (+ `knowledge-scail2`).
 - Debug de geração → `task-debug-generation` + `knowledge-comfyui-workflows`.
