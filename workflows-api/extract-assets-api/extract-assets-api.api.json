@@ -1,0 +1,54 @@
+{
+ "10": {
+  "class_type": "LoadImage",
+  "inputs": {
+   "image": "example.png"
+  },
+  "_meta": {
+   "title": "Interface"
+  }
+ },
+ "20": {
+  "class_type": "NanoBananaPro_fal",
+  "inputs": {
+   "images": [
+    "10",
+    0
+   ],
+   "prompt": "Extract ONLY <NOMEIE O ELEMENTO AQUI — ex.: the blue 'Sign in' button> from this user-interface image. Render it alone, centered, at its original scale, on a plain solid WHITE background, with nothing else in the frame. Preserve its exact shape, colors, text, icons, corners and styling; if any part is occluded or cropped behind another element, reconstruct it cleanly. Flat, front-facing, product-style cutout — no drop shadow, no reflection, no surrounding UI.",
+   "num_images": 1,
+   "aspect_ratio": "auto",
+   "output_format": "png",
+   "resolution": "2K",
+   "sync_mode": false
+  },
+  "_meta": {
+   "title": "Isola o elemento"
+  }
+ },
+ "30": {
+  "class_type": "RecraftRemoveBackgroundNode",
+  "inputs": {
+   "image": [
+    "20",
+    0
+   ]
+  },
+  "_meta": {
+   "title": "Remove fundo (alpha)"
+  }
+ },
+ "40": {
+  "class_type": "SaveImage",
+  "inputs": {
+   "images": [
+    "30",
+    0
+   ],
+   "filename_prefix": "assets/asset"
+  },
+  "_meta": {
+   "title": "Salva PNG"
+  }
+ }
+}

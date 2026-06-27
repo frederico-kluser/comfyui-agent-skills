@@ -1,0 +1,1257 @@
+{
+ "last_node_id": 24,
+ "last_link_id": 15,
+ "nodes": [
+  {
+   "id": 1,
+   "type": "MarkdownNote",
+   "pos": [
+    40,
+    -360
+   ],
+   "size": [
+    1400,
+    300
+   ],
+   "flags": {},
+   "order": 0,
+   "mode": 0,
+   "inputs": [],
+   "outputs": [],
+   "title": "🟢 LEIA — como extrair cada asset",
+   "properties": {},
+   "widgets_values": [
+    "## 🧩 Extrair assets de uma UI gerada por IA → PNG transparente\n\n**Pipeline (por lane):** `LoadImage` → **Nano Banana Pro** (isola o elemento que você nomear) → **Recraft Remove Background** (recorta com alpha) → `SaveImage` (PNG transparente).\n\n**Como usar:**\n1. Anexe a imagem da interface no **único** `LoadImage` (à esquerda).\n2. Para **cada elemento** que quer extrair: pegue **uma lane**, **desmute** os 3 nós dela (selecione → `Ctrl+M`), e no nó **Nano Banana Pro** troque `<NOMEIE O ELEMENTO AQUI — ex.: the blue 'Sign in' button>` pelo elemento (ex.: *the user avatar in the top-right*). Ajuste o `filename_prefix` do `SaveImage` (ex.: `assets/avatar`).\n3. A **Lane 1** já vem ativa como exemplo; as Lanes 2–5 vêm **mutadas** (não gastam crédito até você desmutar).\n4. `Run`. Cada lane ativa gera 1 PNG transparente em `ComfyUI/output/assets/`.\n\n**Precisa de > 5 elementos ou lote automático?** Use o script `extract_assets.py` (N ilimitado) — veja o README.\n\n⚠️ Nano Banana Pro **não tem seed** e os nós de API **bloqueiam sem barra de progresso** (cold-start pode levar minutos em `IN_QUEUE` e MESMO ASSIM concluir — não é travamento). Custo por elemento ≈ 1 chamada fal (Nano Banana Pro) + 1 crédito Comfy (Recraft ~US$0.01)."
+   ],
+   "color": "#432",
+   "bgcolor": "#653"
+  },
+  {
+   "id": 2,
+   "type": "LoadImage",
+   "pos": [
+    40,
+    40
+   ],
+   "size": [
+    260,
+    320
+   ],
+   "flags": {},
+   "order": 0,
+   "mode": 0,
+   "inputs": [
+    {
+     "localized_name": "image",
+     "name": "image",
+     "type": "COMBO",
+     "widget": {
+      "name": "image"
+     },
+     "link": null
+    },
+    {
+     "localized_name": "choose file to upload",
+     "name": "upload",
+     "type": "IMAGEUPLOAD",
+     "widget": {
+      "name": "upload"
+     },
+     "link": null
+    }
+   ],
+   "outputs": [
+    {
+     "localized_name": "IMAGE",
+     "name": "IMAGE",
+     "type": "IMAGE",
+     "links": [
+      1,
+      4,
+      7,
+      10,
+      13
+     ]
+    },
+    {
+     "localized_name": "MASK",
+     "name": "MASK",
+     "type": "MASK",
+     "links": []
+    }
+   ],
+   "title": "Interface (a imagem de entrada)",
+   "properties": {
+    "cnr_id": "comfy-core",
+    "ver": "0.25.0",
+    "Node name for S&R": "LoadImage"
+   },
+   "widgets_values": [
+    "example.png",
+    "image"
+   ]
+  },
+  {
+   "id": 10,
+   "type": "NanoBananaPro_fal",
+   "pos": [
+    360,
+    60
+   ],
+   "size": [
+    380,
+    240
+   ],
+   "flags": {},
+   "order": 0,
+   "mode": 0,
+   "inputs": [
+    {
+     "localized_name": "images",
+     "name": "images",
+     "type": "IMAGE",
+     "shape": 7,
+     "link": 1
+    },
+    {
+     "localized_name": "prompt",
+     "name": "prompt",
+     "type": "STRING",
+     "widget": {
+      "name": "prompt"
+     },
+     "link": null
+    },
+    {
+     "localized_name": "num_images",
+     "name": "num_images",
+     "type": "INT",
+     "shape": 7,
+     "widget": {
+      "name": "num_images"
+     },
+     "link": null
+    },
+    {
+     "localized_name": "aspect_ratio",
+     "name": "aspect_ratio",
+     "type": "COMBO",
+     "shape": 7,
+     "widget": {
+      "name": "aspect_ratio"
+     },
+     "link": null
+    },
+    {
+     "localized_name": "output_format",
+     "name": "output_format",
+     "type": "COMBO",
+     "shape": 7,
+     "widget": {
+      "name": "output_format"
+     },
+     "link": null
+    },
+    {
+     "localized_name": "resolution",
+     "name": "resolution",
+     "type": "COMBO",
+     "shape": 7,
+     "widget": {
+      "name": "resolution"
+     },
+     "link": null
+    },
+    {
+     "localized_name": "sync_mode",
+     "name": "sync_mode",
+     "type": "BOOLEAN",
+     "shape": 7,
+     "widget": {
+      "name": "sync_mode"
+     },
+     "link": null
+    }
+   ],
+   "outputs": [
+    {
+     "localized_name": "IMAGE",
+     "name": "IMAGE",
+     "type": "IMAGE",
+     "links": [
+      2
+     ]
+    }
+   ],
+   "title": "Lane 1 · Nano Banana Pro — ISOLA o elemento",
+   "properties": {
+    "cnr_id": "fal-api",
+    "ver": "1b14ab3164a6c654a47080bd39c9944a23c254c3",
+    "Node name for S&R": "NanoBananaPro_fal"
+   },
+   "widgets_values": [
+    "Extract ONLY <NOMEIE O ELEMENTO AQUI — ex.: the blue 'Sign in' button> from this user-interface image. Render it alone, centered, at its original scale, on a plain solid WHITE background, with nothing else in the frame. Preserve its exact shape, colors, text, icons, corners and styling; if any part is occluded or cropped behind another element, reconstruct it cleanly. Flat, front-facing, product-style cutout — no drop shadow, no reflection, no surrounding UI.",
+    1,
+    "auto",
+    "png",
+    "2K",
+    false
+   ]
+  },
+  {
+   "id": 11,
+   "type": "RecraftRemoveBackgroundNode",
+   "pos": [
+    780,
+    60
+   ],
+   "size": [
+    300,
+    130
+   ],
+   "flags": {},
+   "order": 0,
+   "mode": 0,
+   "inputs": [
+    {
+     "localized_name": "image",
+     "name": "image",
+     "type": "IMAGE",
+     "link": 2
+    }
+   ],
+   "outputs": [
+    {
+     "localized_name": "IMAGE",
+     "name": "IMAGE",
+     "type": "IMAGE",
+     "links": [
+      3
+     ]
+    },
+    {
+     "localized_name": "MASK",
+     "name": "MASK",
+     "type": "MASK",
+     "links": []
+    }
+   ],
+   "title": "Lane 1 · Recraft Remove Background — alpha",
+   "properties": {
+    "cnr_id": "comfy-core",
+    "ver": "0.25.0",
+    "Node name for S&R": "RecraftRemoveBackgroundNode"
+   },
+   "widgets_values": []
+  },
+  {
+   "id": 12,
+   "type": "SaveImage",
+   "pos": [
+    1120,
+    60
+   ],
+   "size": [
+    320,
+    270
+   ],
+   "flags": {},
+   "order": 0,
+   "mode": 0,
+   "inputs": [
+    {
+     "localized_name": "images",
+     "name": "images",
+     "type": "IMAGE",
+     "link": 3
+    },
+    {
+     "localized_name": "filename_prefix",
+     "name": "filename_prefix",
+     "type": "STRING",
+     "widget": {
+      "name": "filename_prefix"
+     },
+     "link": null
+    }
+   ],
+   "outputs": [],
+   "title": "Lane 1 · Salvar PNG transparente",
+   "properties": {
+    "cnr_id": "comfy-core",
+    "ver": "0.25.0",
+    "Node name for S&R": "SaveImage"
+   },
+   "widgets_values": [
+    "assets/asset_01"
+   ]
+  },
+  {
+   "id": 13,
+   "type": "NanoBananaPro_fal",
+   "pos": [
+    360,
+    360
+   ],
+   "size": [
+    380,
+    240
+   ],
+   "flags": {},
+   "order": 0,
+   "mode": 2,
+   "inputs": [
+    {
+     "localized_name": "images",
+     "name": "images",
+     "type": "IMAGE",
+     "shape": 7,
+     "link": 4
+    },
+    {
+     "localized_name": "prompt",
+     "name": "prompt",
+     "type": "STRING",
+     "widget": {
+      "name": "prompt"
+     },
+     "link": null
+    },
+    {
+     "localized_name": "num_images",
+     "name": "num_images",
+     "type": "INT",
+     "shape": 7,
+     "widget": {
+      "name": "num_images"
+     },
+     "link": null
+    },
+    {
+     "localized_name": "aspect_ratio",
+     "name": "aspect_ratio",
+     "type": "COMBO",
+     "shape": 7,
+     "widget": {
+      "name": "aspect_ratio"
+     },
+     "link": null
+    },
+    {
+     "localized_name": "output_format",
+     "name": "output_format",
+     "type": "COMBO",
+     "shape": 7,
+     "widget": {
+      "name": "output_format"
+     },
+     "link": null
+    },
+    {
+     "localized_name": "resolution",
+     "name": "resolution",
+     "type": "COMBO",
+     "shape": 7,
+     "widget": {
+      "name": "resolution"
+     },
+     "link": null
+    },
+    {
+     "localized_name": "sync_mode",
+     "name": "sync_mode",
+     "type": "BOOLEAN",
+     "shape": 7,
+     "widget": {
+      "name": "sync_mode"
+     },
+     "link": null
+    }
+   ],
+   "outputs": [
+    {
+     "localized_name": "IMAGE",
+     "name": "IMAGE",
+     "type": "IMAGE",
+     "links": [
+      5
+     ]
+    }
+   ],
+   "title": "Lane 2 · Nano Banana Pro — ISOLA o elemento",
+   "properties": {
+    "cnr_id": "fal-api",
+    "ver": "1b14ab3164a6c654a47080bd39c9944a23c254c3",
+    "Node name for S&R": "NanoBananaPro_fal"
+   },
+   "widgets_values": [
+    "Extract ONLY <NOMEIE O ELEMENTO AQUI — ex.: the blue 'Sign in' button> from this user-interface image. Render it alone, centered, at its original scale, on a plain solid WHITE background, with nothing else in the frame. Preserve its exact shape, colors, text, icons, corners and styling; if any part is occluded or cropped behind another element, reconstruct it cleanly. Flat, front-facing, product-style cutout — no drop shadow, no reflection, no surrounding UI.",
+    1,
+    "auto",
+    "png",
+    "2K",
+    false
+   ]
+  },
+  {
+   "id": 14,
+   "type": "RecraftRemoveBackgroundNode",
+   "pos": [
+    780,
+    360
+   ],
+   "size": [
+    300,
+    130
+   ],
+   "flags": {},
+   "order": 0,
+   "mode": 2,
+   "inputs": [
+    {
+     "localized_name": "image",
+     "name": "image",
+     "type": "IMAGE",
+     "link": 5
+    }
+   ],
+   "outputs": [
+    {
+     "localized_name": "IMAGE",
+     "name": "IMAGE",
+     "type": "IMAGE",
+     "links": [
+      6
+     ]
+    },
+    {
+     "localized_name": "MASK",
+     "name": "MASK",
+     "type": "MASK",
+     "links": []
+    }
+   ],
+   "title": "Lane 2 · Recraft Remove Background — alpha",
+   "properties": {
+    "cnr_id": "comfy-core",
+    "ver": "0.25.0",
+    "Node name for S&R": "RecraftRemoveBackgroundNode"
+   },
+   "widgets_values": []
+  },
+  {
+   "id": 15,
+   "type": "SaveImage",
+   "pos": [
+    1120,
+    360
+   ],
+   "size": [
+    320,
+    270
+   ],
+   "flags": {},
+   "order": 0,
+   "mode": 2,
+   "inputs": [
+    {
+     "localized_name": "images",
+     "name": "images",
+     "type": "IMAGE",
+     "link": 6
+    },
+    {
+     "localized_name": "filename_prefix",
+     "name": "filename_prefix",
+     "type": "STRING",
+     "widget": {
+      "name": "filename_prefix"
+     },
+     "link": null
+    }
+   ],
+   "outputs": [],
+   "title": "Lane 2 · Salvar PNG transparente",
+   "properties": {
+    "cnr_id": "comfy-core",
+    "ver": "0.25.0",
+    "Node name for S&R": "SaveImage"
+   },
+   "widgets_values": [
+    "assets/asset_02"
+   ]
+  },
+  {
+   "id": 16,
+   "type": "NanoBananaPro_fal",
+   "pos": [
+    360,
+    660
+   ],
+   "size": [
+    380,
+    240
+   ],
+   "flags": {},
+   "order": 0,
+   "mode": 2,
+   "inputs": [
+    {
+     "localized_name": "images",
+     "name": "images",
+     "type": "IMAGE",
+     "shape": 7,
+     "link": 7
+    },
+    {
+     "localized_name": "prompt",
+     "name": "prompt",
+     "type": "STRING",
+     "widget": {
+      "name": "prompt"
+     },
+     "link": null
+    },
+    {
+     "localized_name": "num_images",
+     "name": "num_images",
+     "type": "INT",
+     "shape": 7,
+     "widget": {
+      "name": "num_images"
+     },
+     "link": null
+    },
+    {
+     "localized_name": "aspect_ratio",
+     "name": "aspect_ratio",
+     "type": "COMBO",
+     "shape": 7,
+     "widget": {
+      "name": "aspect_ratio"
+     },
+     "link": null
+    },
+    {
+     "localized_name": "output_format",
+     "name": "output_format",
+     "type": "COMBO",
+     "shape": 7,
+     "widget": {
+      "name": "output_format"
+     },
+     "link": null
+    },
+    {
+     "localized_name": "resolution",
+     "name": "resolution",
+     "type": "COMBO",
+     "shape": 7,
+     "widget": {
+      "name": "resolution"
+     },
+     "link": null
+    },
+    {
+     "localized_name": "sync_mode",
+     "name": "sync_mode",
+     "type": "BOOLEAN",
+     "shape": 7,
+     "widget": {
+      "name": "sync_mode"
+     },
+     "link": null
+    }
+   ],
+   "outputs": [
+    {
+     "localized_name": "IMAGE",
+     "name": "IMAGE",
+     "type": "IMAGE",
+     "links": [
+      8
+     ]
+    }
+   ],
+   "title": "Lane 3 · Nano Banana Pro — ISOLA o elemento",
+   "properties": {
+    "cnr_id": "fal-api",
+    "ver": "1b14ab3164a6c654a47080bd39c9944a23c254c3",
+    "Node name for S&R": "NanoBananaPro_fal"
+   },
+   "widgets_values": [
+    "Extract ONLY <NOMEIE O ELEMENTO AQUI — ex.: the blue 'Sign in' button> from this user-interface image. Render it alone, centered, at its original scale, on a plain solid WHITE background, with nothing else in the frame. Preserve its exact shape, colors, text, icons, corners and styling; if any part is occluded or cropped behind another element, reconstruct it cleanly. Flat, front-facing, product-style cutout — no drop shadow, no reflection, no surrounding UI.",
+    1,
+    "auto",
+    "png",
+    "2K",
+    false
+   ]
+  },
+  {
+   "id": 17,
+   "type": "RecraftRemoveBackgroundNode",
+   "pos": [
+    780,
+    660
+   ],
+   "size": [
+    300,
+    130
+   ],
+   "flags": {},
+   "order": 0,
+   "mode": 2,
+   "inputs": [
+    {
+     "localized_name": "image",
+     "name": "image",
+     "type": "IMAGE",
+     "link": 8
+    }
+   ],
+   "outputs": [
+    {
+     "localized_name": "IMAGE",
+     "name": "IMAGE",
+     "type": "IMAGE",
+     "links": [
+      9
+     ]
+    },
+    {
+     "localized_name": "MASK",
+     "name": "MASK",
+     "type": "MASK",
+     "links": []
+    }
+   ],
+   "title": "Lane 3 · Recraft Remove Background — alpha",
+   "properties": {
+    "cnr_id": "comfy-core",
+    "ver": "0.25.0",
+    "Node name for S&R": "RecraftRemoveBackgroundNode"
+   },
+   "widgets_values": []
+  },
+  {
+   "id": 18,
+   "type": "SaveImage",
+   "pos": [
+    1120,
+    660
+   ],
+   "size": [
+    320,
+    270
+   ],
+   "flags": {},
+   "order": 0,
+   "mode": 2,
+   "inputs": [
+    {
+     "localized_name": "images",
+     "name": "images",
+     "type": "IMAGE",
+     "link": 9
+    },
+    {
+     "localized_name": "filename_prefix",
+     "name": "filename_prefix",
+     "type": "STRING",
+     "widget": {
+      "name": "filename_prefix"
+     },
+     "link": null
+    }
+   ],
+   "outputs": [],
+   "title": "Lane 3 · Salvar PNG transparente",
+   "properties": {
+    "cnr_id": "comfy-core",
+    "ver": "0.25.0",
+    "Node name for S&R": "SaveImage"
+   },
+   "widgets_values": [
+    "assets/asset_03"
+   ]
+  },
+  {
+   "id": 19,
+   "type": "NanoBananaPro_fal",
+   "pos": [
+    360,
+    960
+   ],
+   "size": [
+    380,
+    240
+   ],
+   "flags": {},
+   "order": 0,
+   "mode": 2,
+   "inputs": [
+    {
+     "localized_name": "images",
+     "name": "images",
+     "type": "IMAGE",
+     "shape": 7,
+     "link": 10
+    },
+    {
+     "localized_name": "prompt",
+     "name": "prompt",
+     "type": "STRING",
+     "widget": {
+      "name": "prompt"
+     },
+     "link": null
+    },
+    {
+     "localized_name": "num_images",
+     "name": "num_images",
+     "type": "INT",
+     "shape": 7,
+     "widget": {
+      "name": "num_images"
+     },
+     "link": null
+    },
+    {
+     "localized_name": "aspect_ratio",
+     "name": "aspect_ratio",
+     "type": "COMBO",
+     "shape": 7,
+     "widget": {
+      "name": "aspect_ratio"
+     },
+     "link": null
+    },
+    {
+     "localized_name": "output_format",
+     "name": "output_format",
+     "type": "COMBO",
+     "shape": 7,
+     "widget": {
+      "name": "output_format"
+     },
+     "link": null
+    },
+    {
+     "localized_name": "resolution",
+     "name": "resolution",
+     "type": "COMBO",
+     "shape": 7,
+     "widget": {
+      "name": "resolution"
+     },
+     "link": null
+    },
+    {
+     "localized_name": "sync_mode",
+     "name": "sync_mode",
+     "type": "BOOLEAN",
+     "shape": 7,
+     "widget": {
+      "name": "sync_mode"
+     },
+     "link": null
+    }
+   ],
+   "outputs": [
+    {
+     "localized_name": "IMAGE",
+     "name": "IMAGE",
+     "type": "IMAGE",
+     "links": [
+      11
+     ]
+    }
+   ],
+   "title": "Lane 4 · Nano Banana Pro — ISOLA o elemento",
+   "properties": {
+    "cnr_id": "fal-api",
+    "ver": "1b14ab3164a6c654a47080bd39c9944a23c254c3",
+    "Node name for S&R": "NanoBananaPro_fal"
+   },
+   "widgets_values": [
+    "Extract ONLY <NOMEIE O ELEMENTO AQUI — ex.: the blue 'Sign in' button> from this user-interface image. Render it alone, centered, at its original scale, on a plain solid WHITE background, with nothing else in the frame. Preserve its exact shape, colors, text, icons, corners and styling; if any part is occluded or cropped behind another element, reconstruct it cleanly. Flat, front-facing, product-style cutout — no drop shadow, no reflection, no surrounding UI.",
+    1,
+    "auto",
+    "png",
+    "2K",
+    false
+   ]
+  },
+  {
+   "id": 20,
+   "type": "RecraftRemoveBackgroundNode",
+   "pos": [
+    780,
+    960
+   ],
+   "size": [
+    300,
+    130
+   ],
+   "flags": {},
+   "order": 0,
+   "mode": 2,
+   "inputs": [
+    {
+     "localized_name": "image",
+     "name": "image",
+     "type": "IMAGE",
+     "link": 11
+    }
+   ],
+   "outputs": [
+    {
+     "localized_name": "IMAGE",
+     "name": "IMAGE",
+     "type": "IMAGE",
+     "links": [
+      12
+     ]
+    },
+    {
+     "localized_name": "MASK",
+     "name": "MASK",
+     "type": "MASK",
+     "links": []
+    }
+   ],
+   "title": "Lane 4 · Recraft Remove Background — alpha",
+   "properties": {
+    "cnr_id": "comfy-core",
+    "ver": "0.25.0",
+    "Node name for S&R": "RecraftRemoveBackgroundNode"
+   },
+   "widgets_values": []
+  },
+  {
+   "id": 21,
+   "type": "SaveImage",
+   "pos": [
+    1120,
+    960
+   ],
+   "size": [
+    320,
+    270
+   ],
+   "flags": {},
+   "order": 0,
+   "mode": 2,
+   "inputs": [
+    {
+     "localized_name": "images",
+     "name": "images",
+     "type": "IMAGE",
+     "link": 12
+    },
+    {
+     "localized_name": "filename_prefix",
+     "name": "filename_prefix",
+     "type": "STRING",
+     "widget": {
+      "name": "filename_prefix"
+     },
+     "link": null
+    }
+   ],
+   "outputs": [],
+   "title": "Lane 4 · Salvar PNG transparente",
+   "properties": {
+    "cnr_id": "comfy-core",
+    "ver": "0.25.0",
+    "Node name for S&R": "SaveImage"
+   },
+   "widgets_values": [
+    "assets/asset_04"
+   ]
+  },
+  {
+   "id": 22,
+   "type": "NanoBananaPro_fal",
+   "pos": [
+    360,
+    1260
+   ],
+   "size": [
+    380,
+    240
+   ],
+   "flags": {},
+   "order": 0,
+   "mode": 2,
+   "inputs": [
+    {
+     "localized_name": "images",
+     "name": "images",
+     "type": "IMAGE",
+     "shape": 7,
+     "link": 13
+    },
+    {
+     "localized_name": "prompt",
+     "name": "prompt",
+     "type": "STRING",
+     "widget": {
+      "name": "prompt"
+     },
+     "link": null
+    },
+    {
+     "localized_name": "num_images",
+     "name": "num_images",
+     "type": "INT",
+     "shape": 7,
+     "widget": {
+      "name": "num_images"
+     },
+     "link": null
+    },
+    {
+     "localized_name": "aspect_ratio",
+     "name": "aspect_ratio",
+     "type": "COMBO",
+     "shape": 7,
+     "widget": {
+      "name": "aspect_ratio"
+     },
+     "link": null
+    },
+    {
+     "localized_name": "output_format",
+     "name": "output_format",
+     "type": "COMBO",
+     "shape": 7,
+     "widget": {
+      "name": "output_format"
+     },
+     "link": null
+    },
+    {
+     "localized_name": "resolution",
+     "name": "resolution",
+     "type": "COMBO",
+     "shape": 7,
+     "widget": {
+      "name": "resolution"
+     },
+     "link": null
+    },
+    {
+     "localized_name": "sync_mode",
+     "name": "sync_mode",
+     "type": "BOOLEAN",
+     "shape": 7,
+     "widget": {
+      "name": "sync_mode"
+     },
+     "link": null
+    }
+   ],
+   "outputs": [
+    {
+     "localized_name": "IMAGE",
+     "name": "IMAGE",
+     "type": "IMAGE",
+     "links": [
+      14
+     ]
+    }
+   ],
+   "title": "Lane 5 · Nano Banana Pro — ISOLA o elemento",
+   "properties": {
+    "cnr_id": "fal-api",
+    "ver": "1b14ab3164a6c654a47080bd39c9944a23c254c3",
+    "Node name for S&R": "NanoBananaPro_fal"
+   },
+   "widgets_values": [
+    "Extract ONLY <NOMEIE O ELEMENTO AQUI — ex.: the blue 'Sign in' button> from this user-interface image. Render it alone, centered, at its original scale, on a plain solid WHITE background, with nothing else in the frame. Preserve its exact shape, colors, text, icons, corners and styling; if any part is occluded or cropped behind another element, reconstruct it cleanly. Flat, front-facing, product-style cutout — no drop shadow, no reflection, no surrounding UI.",
+    1,
+    "auto",
+    "png",
+    "2K",
+    false
+   ]
+  },
+  {
+   "id": 23,
+   "type": "RecraftRemoveBackgroundNode",
+   "pos": [
+    780,
+    1260
+   ],
+   "size": [
+    300,
+    130
+   ],
+   "flags": {},
+   "order": 0,
+   "mode": 2,
+   "inputs": [
+    {
+     "localized_name": "image",
+     "name": "image",
+     "type": "IMAGE",
+     "link": 14
+    }
+   ],
+   "outputs": [
+    {
+     "localized_name": "IMAGE",
+     "name": "IMAGE",
+     "type": "IMAGE",
+     "links": [
+      15
+     ]
+    },
+    {
+     "localized_name": "MASK",
+     "name": "MASK",
+     "type": "MASK",
+     "links": []
+    }
+   ],
+   "title": "Lane 5 · Recraft Remove Background — alpha",
+   "properties": {
+    "cnr_id": "comfy-core",
+    "ver": "0.25.0",
+    "Node name for S&R": "RecraftRemoveBackgroundNode"
+   },
+   "widgets_values": []
+  },
+  {
+   "id": 24,
+   "type": "SaveImage",
+   "pos": [
+    1120,
+    1260
+   ],
+   "size": [
+    320,
+    270
+   ],
+   "flags": {},
+   "order": 0,
+   "mode": 2,
+   "inputs": [
+    {
+     "localized_name": "images",
+     "name": "images",
+     "type": "IMAGE",
+     "link": 15
+    },
+    {
+     "localized_name": "filename_prefix",
+     "name": "filename_prefix",
+     "type": "STRING",
+     "widget": {
+      "name": "filename_prefix"
+     },
+     "link": null
+    }
+   ],
+   "outputs": [],
+   "title": "Lane 5 · Salvar PNG transparente",
+   "properties": {
+    "cnr_id": "comfy-core",
+    "ver": "0.25.0",
+    "Node name for S&R": "SaveImage"
+   },
+   "widgets_values": [
+    "assets/asset_05"
+   ]
+  }
+ ],
+ "links": [
+  [
+   1,
+   2,
+   0,
+   10,
+   0,
+   "IMAGE"
+  ],
+  [
+   2,
+   10,
+   0,
+   11,
+   0,
+   "IMAGE"
+  ],
+  [
+   3,
+   11,
+   0,
+   12,
+   0,
+   "IMAGE"
+  ],
+  [
+   4,
+   2,
+   0,
+   13,
+   0,
+   "IMAGE"
+  ],
+  [
+   5,
+   13,
+   0,
+   14,
+   0,
+   "IMAGE"
+  ],
+  [
+   6,
+   14,
+   0,
+   15,
+   0,
+   "IMAGE"
+  ],
+  [
+   7,
+   2,
+   0,
+   16,
+   0,
+   "IMAGE"
+  ],
+  [
+   8,
+   16,
+   0,
+   17,
+   0,
+   "IMAGE"
+  ],
+  [
+   9,
+   17,
+   0,
+   18,
+   0,
+   "IMAGE"
+  ],
+  [
+   10,
+   2,
+   0,
+   19,
+   0,
+   "IMAGE"
+  ],
+  [
+   11,
+   19,
+   0,
+   20,
+   0,
+   "IMAGE"
+  ],
+  [
+   12,
+   20,
+   0,
+   21,
+   0,
+   "IMAGE"
+  ],
+  [
+   13,
+   2,
+   0,
+   22,
+   0,
+   "IMAGE"
+  ],
+  [
+   14,
+   22,
+   0,
+   23,
+   0,
+   "IMAGE"
+  ],
+  [
+   15,
+   23,
+   0,
+   24,
+   0,
+   "IMAGE"
+  ]
+ ],
+ "groups": [
+  {
+   "title": "Elemento 1 → asset  (ATIVA — exemplo)",
+   "bounding": [
+    340,
+    16,
+    1120,
+    300
+   ],
+   "color": "#3f789e",
+   "font_size": 22,
+   "flags": {}
+  },
+  {
+   "title": "Elemento 2 → asset  (mutada: Ctrl+M p/ ativar)",
+   "bounding": [
+    340,
+    316,
+    1120,
+    300
+   ],
+   "color": "#444",
+   "font_size": 22,
+   "flags": {}
+  },
+  {
+   "title": "Elemento 3 → asset  (mutada: Ctrl+M p/ ativar)",
+   "bounding": [
+    340,
+    616,
+    1120,
+    300
+   ],
+   "color": "#444",
+   "font_size": 22,
+   "flags": {}
+  },
+  {
+   "title": "Elemento 4 → asset  (mutada: Ctrl+M p/ ativar)",
+   "bounding": [
+    340,
+    916,
+    1120,
+    300
+   ],
+   "color": "#444",
+   "font_size": 22,
+   "flags": {}
+  },
+  {
+   "title": "Elemento 5 → asset  (mutada: Ctrl+M p/ ativar)",
+   "bounding": [
+    340,
+    1216,
+    1120,
+    300
+   ],
+   "color": "#444",
+   "font_size": 22,
+   "flags": {}
+  }
+ ],
+ "config": {},
+ "extra": {},
+ "version": 0.4
+}
