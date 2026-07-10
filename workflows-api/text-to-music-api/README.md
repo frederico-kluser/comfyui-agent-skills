@@ -62,11 +62,11 @@ Cada faixa vira `output/<preset>_<seed>.wav`. Rode um loop grande à noite e aco
 
 ### B) Local — ComfyUI (US$0/faixa, licença mais limpa)
 1. `DOWNLOAD_CHECKPOINT=1 bash setup.sh` (uma vez).
-2. Reinicie o ComfyUI, abra **`text-to-music-local.json`**.
+2. Reinicie o ComfyUI, abra **`text-to-music-local.json`** — no painel *Workflows* do ComfyUI aparece **só esse `.json`** (a sidebar filtra `.json`); os demais arquivos da pasta são o script CLI e docs, **não são workflows** e não abrem tela.
 3. Ajuste as **tags** (nó *Text Encode ACE Step Audio*) e **Run**. Sai `.flac` lossless em `ComfyUI/output/audio/`.
 
 ## Presets (estética hacker / cyberpunk / Mr. Robot)
-Editáveis em **`presets.json`** (campo `tags` vale para fal e Replicate).
+Editáveis em **`presets.mjs`** (campo `tags` vale para fal e Replicate).
 
 | `id` | Uso no jogo | Estilo (tags) |
 |---|---|---|

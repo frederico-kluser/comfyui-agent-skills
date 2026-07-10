@@ -22,7 +22,7 @@ SECRETS="$COMFY/secrets.env"
 # arquivos de runtime do bundle (script de lote + presets + workflow LOCAL do ComfyUI)
 FILES=(
   "gerar_trilhas.mjs"
-  "presets.json"
+  "presets.mjs"
   "text-to-music-local.json"
 )
 

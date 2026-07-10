@@ -119,7 +119,7 @@ async function main() {
   const gerar = PROVEDORES[args.provider];
   if (!gerar) { console.error(`Provider invalido: ${args.provider} (use fal ou replicate)`); process.exit(1); }
 
-  const cfg = JSON.parse(await fs.readFile(path.join(AQUI, "presets.json"), "utf8"));
+  const { default: cfg } = await import(new URL("./presets.mjs", import.meta.url));
   let presets = cfg.presets;
   if (args.preset !== "all") {
     presets = presets.filter((p) => p.id === args.preset);
