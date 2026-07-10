@@ -37,7 +37,7 @@ docs/                     # relatórios de pesquisa (a fonte: SCAIL-2, workflows
   meta-*/                 #   evolução e consolidação
 workflows-api/            # bundles que rodam por API online, sem GPU (commercial-ondokai, mask-edit-cloud,
                           #   outfit-swap-api, replace-object, replace-environment, image-to-video-api, video-to-video-api,
-                          #   extract-assets-api)
+                          #   extract-assets-api, text-to-music-api)
 workflows-cloud/          # bundles self-hosted em GPU RunPod (person-swap, scail2-native, inpaint, kontext, qwen, outpaint, remove-bg)
 AGENTS.md  ·  CLAUDE.md   # always-on (symlink)
 ```
@@ -78,6 +78,7 @@ nó fal + grava a `FAL_KEY` (de `~/ComfyUI/secrets.env`) + baixa os `.json`; fa�
 | [`image-to-video-api`](workflows-api/image-to-video-api/) | Anima **1 imagem** + descrição → vídeo (8 modelos) | Veo 3.1 · Seedance · Kling · Grok | fal / Comfy | 🟡 |
 | [`video-to-video-api`](workflows-api/video-to-video-api/) | Transforma **1 vídeo** (restyle · motion-transfer · extend) | Runway Aleph · **Wan 2.2 Animate** · Kling · Grok · Vidu | fal / Comfy | 🟡 |
 | [`extract-assets-api`](workflows-api/extract-assets-api/) | Separa **assets de uma UI** gerada por IA: nomeie cada elemento em texto → **PNG transparente** | `NanoBananaPro_fal` · `RecraftRemoveBackgroundNode` | fal + Comfy | 🟡 |
+| [`text-to-music-api`](workflows-api/text-to-music-api/) | Gera **trilha instrumental/ambient** (loopável) por API — comercializável **para sempre** (ACE-Step MIT/Apache) | `fishaudio/ace-step-1.5` (Replicate) · `fal-ai/ace-step` · core local | Replicate / fal / local | 🟡 |
 
 ## 🖥️ Self-hosted em GPU — `workflows-cloud/` (RunPod)
 
