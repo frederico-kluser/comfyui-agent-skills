@@ -24,6 +24,7 @@ FILES=(
   "gerar_trilhas.mjs"
   "presets.mjs"
   "text-to-music-local.json"
+  "text-to-music-cloud.json"
 )
 
 get_files(){
