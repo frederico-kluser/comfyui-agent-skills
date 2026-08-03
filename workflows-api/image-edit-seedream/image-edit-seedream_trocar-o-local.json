@@ -65,7 +65,7 @@
       ],
       "flags": {},
       "order": 27,
-      "mode": 4,
+      "mode": 0,
       "inputs": [],
       "outputs": [
         {
@@ -105,7 +105,7 @@
       ],
       "flags": {},
       "order": 28,
-      "mode": 4,
+      "mode": 0,
       "inputs": [],
       "outputs": [
         {
@@ -145,7 +145,7 @@
       ],
       "flags": {},
       "order": 29,
-      "mode": 4,
+      "mode": 0,
       "inputs": [
         {
           "label": "image0",
@@ -197,7 +197,7 @@
       ],
       "flags": {},
       "order": 30,
-      "mode": 4,
+      "mode": 0,
       "inputs": [
         {
           "name": "image",
@@ -248,7 +248,7 @@
       ],
       "flags": {},
       "order": 31,
-      "mode": 4,
+      "mode": 0,
       "inputs": [
         {
           "name": "images",
