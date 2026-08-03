@@ -58,7 +58,7 @@ else
   # -L: seguir symlinks. Sem isso o find NAO entra em workflows/api quando ele
   # e um symlink para o repo — e o script acabaria copiando o .json para dentro
   # do proprio repo (poluindo workflows-api/ com um json solto na raiz).
-  FOUND="$(find -L "$WF_DIR" -name "${BUNDLE}.json" 2>/dev/null | head -1 || true)"
+  FOUND="$(find -L "$WF_DIR" -path "*/${BUNDLE}/*.json" 2>/dev/null | head -1 || true)"
   if [ -n "$FOUND" ]; then
     ok "ja aparece em: ${FOUND/#$HOME/\~}"
   elif [ ! -e "${WF_DIR}/api" ]; then
@@ -66,7 +66,7 @@ else
     ok "symlink criado: ${WF_DIR/#$HOME/\~}/api -> ${BUNDLES_DIR/#$HOME/\~}"
     ok "todos os bundles de workflows-api/ passam a aparecer no painel"
   else
-    warn "${WF_DIR}/api existe mas nao contem ${BUNDLE}.json."
+    warn "${WF_DIR}/api existe mas nao contem ${BUNDLE}/."
     warn "aponte-o para o repo (assim editar aqui reflete la na hora):"
     printf '        rm -rf "%s/api" && ln -s "%s" "%s/api"\n' "$WF_DIR" "$BUNDLES_DIR" "$WF_DIR"
   fi
@@ -79,7 +79,7 @@ cat <<EOF
     1. Logar em platform.comfy.org pela interface do ComfyUI (menu do usuario).
        Os nos partner cobram em CREDITOS COMFY.ORG e NAO usam chave de API.
     2. Conferir o saldo de creditos.
-    3. Abrir o workflow "${BUNDLE}" no painel Workflows e ler o no "LEIA PRIMEIRO".
+    3. Abrir qualquer um dos 6 .json de "${BUNDLE}" no painel Workflows e ler o no "LEIA PRIMEIRO".
 
   Nenhum custom node foi instalado — este bundle nao precisa de nenhum.
   Nenhum segredo foi gravado em disco.

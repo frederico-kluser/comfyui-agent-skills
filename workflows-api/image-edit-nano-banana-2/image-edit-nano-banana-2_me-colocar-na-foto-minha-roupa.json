@@ -1,0 +1,331 @@
+{
+  "id": "45f6e2db-733f-4174-a91e-5b89e94f2394",
+  "revision": 0,
+  "last_node_id": 27,
+  "last_link_id": 20,
+  "nodes": [
+    {
+      "id": 1,
+      "type": "MarkdownNote",
+      "pos": [
+        -40,
+        -4440
+      ],
+      "size": [
+        720,
+        700
+      ],
+      "flags": {},
+      "order": 0,
+      "mode": 0,
+      "color": "#223",
+      "bgcolor": "#653",
+      "inputs": [],
+      "outputs": [],
+      "properties": {},
+      "widgets_values": [
+        "# 🎛️ Como usar este arquivo\n\n**Processo único: 5 · ME COLOCAR NA FOTO — com a MINHA ROUPA e a MINHA POSE**\n\nInsere você na cena, mantendo a SUA roupa e a SUA pose. Sobe a cena de destino como BASE e a sua foto de corpo inteiro como REF.\n\n## O que você precisa\n- **BASE** (`LoadImage` à esquerda): a cena de destino.\n- **REF** (`LoadImage` à direita): minha foto de corpo inteiro (obrigatória).\n\n## O prompt\nEstá em **inglês** de propósito — o modelo segue instrução em inglês com bem mais fidelidade.\nOnde houver `<DESCREVA AQUI ...>`, **troque pelo seu texto**.\n\n## A cláusula de realismo\nO prompt termina com um bloco que resolve **iluminação, sombras, lente e grão** — é ele que faz o\nresultado \"casar\" com a foto original. **Não apague.** Se o resultado ficar plástico ou com borda de\nrecorte, é sinal de que essa parte foi perdida.\n\n## Encadear com outros processos\nA saída deste processo (em `output/`) pode virar a **BASE** do próximo: baixe o PNG gerado e suba no\n`LoadImage` da BASE do processo seguinte."
+      ],
+      "title": "LEIA PRIMEIRO"
+    },
+    {
+      "id": 2,
+      "type": "MarkdownNote",
+      "pos": [
+        700,
+        -4440
+      ],
+      "size": [
+        520,
+        700
+      ],
+      "flags": {},
+      "order": 1,
+      "mode": 0,
+      "color": "#233",
+      "bgcolor": "#653",
+      "inputs": [],
+      "outputs": [],
+      "properties": {},
+      "widgets_values": [
+        "# Nano Banana 2 · Gemini 3.1 Flash Image\n\n**Nó:** `GeminiNanoBanana2` — `partner/image/Gemini`\n**Billing:** créditos **comfy.org** (login em `platform.comfy.org`, sem chave de API)\n\n## Ajustes que importam\n| Widget | Vem como | O que fazer |\n|---|---|---|\n| `thinking_level` | `HIGH` | Deixe **HIGH** para trocar pessoa / casar luz. `MINIMAL` é mais rápido e barato, mas erra perspectiva e sombra. |\n| `resolution` | `2K` | `4K` só na finalização (upscaler nativo do Gemini). |\n| `aspect_ratio` | `auto` | `auto` mantém o formato da BASE. Só mude se quiser reenquadrar. |\n| `seed` | `randomize` | Achou um resultado bom? Troque para **fixed** e guarde o número. |\n| `system_prompt` | preenchido | Já está calibrado para **fotorrealismo/compositing**. Não apague. |\n\n## Ordem das imagens = ordem do prompt\nO `Empilha as imagens` define quem é **Image 1** (a BASE, `image0`) e quem é **Image 2** (a REF, `image1`). Inverter a ordem inverte o significado do prompt.\n\nAceita até **14** imagens de referência — é só ligar mais `LoadImage` nos slots livres do `Empilha as imagens` e citar `Image 3`, `Image 4`… no prompt.\n\n## Saídas do nó\n`IMAGE` (use esta) · `STRING` (texto, se `response_modalities=IMAGE+TEXT`) · `thought_image` (rascunho do raciocínio — útil para depurar por que ele errou)."
+      ],
+      "title": "O modelo"
+    },
+    {
+      "id": 23,
+      "type": "LoadImage",
+      "pos": [
+        0,
+        60
+      ],
+      "size": [
+        260,
+        340
+      ],
+      "flags": {},
+      "order": 22,
+      "mode": 4,
+      "inputs": [],
+      "outputs": [
+        {
+          "name": "IMAGE",
+          "type": "IMAGE",
+          "links": [
+            17
+          ]
+        },
+        {
+          "name": "MASK",
+          "type": "MASK",
+          "links": null
+        }
+      ],
+      "properties": {
+        "cnr_id": "comfy-core",
+        "ver": "0.20.1",
+        "Node name for S&R": "LoadImage"
+      },
+      "widgets_values": [
+        "example.png",
+        "image"
+      ],
+      "title": "BASE — a cena/foto de destino"
+    },
+    {
+      "id": 24,
+      "type": "LoadImage",
+      "pos": [
+        0,
+        440
+      ],
+      "size": [
+        260,
+        340
+      ],
+      "flags": {},
+      "order": 23,
+      "mode": 4,
+      "inputs": [],
+      "outputs": [
+        {
+          "name": "IMAGE",
+          "type": "IMAGE",
+          "links": [
+            18
+          ]
+        },
+        {
+          "name": "MASK",
+          "type": "MASK",
+          "links": null
+        }
+      ],
+      "properties": {
+        "cnr_id": "comfy-core",
+        "ver": "0.20.1",
+        "Node name for S&R": "LoadImage"
+      },
+      "widgets_values": [
+        "example.png",
+        "image"
+      ],
+      "title": "REF — a MINHA foto de corpo inteiro (a roupa e a pose a manter)"
+    },
+    {
+      "id": 25,
+      "type": "BatchImagesNode",
+      "pos": [
+        330,
+        60
+      ],
+      "size": [
+        240,
+        152
+      ],
+      "flags": {},
+      "order": 24,
+      "mode": 4,
+      "inputs": [
+        {
+          "label": "image0",
+          "name": "images.image0",
+          "type": "IMAGE",
+          "link": 17
+        },
+        {
+          "label": "image1",
+          "name": "images.image1",
+          "type": "IMAGE",
+          "link": 18
+        },
+        {
+          "label": "image2",
+          "name": "images.image2",
+          "shape": 7,
+          "type": "IMAGE",
+          "link": null
+        }
+      ],
+      "outputs": [
+        {
+          "name": "IMAGE",
+          "type": "IMAGE",
+          "links": [
+            19
+          ]
+        }
+      ],
+      "properties": {
+        "cnr_id": "comfy-core",
+        "ver": "0.14.1",
+        "Node name for S&R": "BatchImagesNode"
+      },
+      "widgets_values": [],
+      "title": "Empilha as imagens"
+    },
+    {
+      "id": 26,
+      "type": "GeminiNanoBanana2",
+      "pos": [
+        620,
+        60
+      ],
+      "size": [
+        420,
+        560
+      ],
+      "flags": {},
+      "order": 25,
+      "mode": 4,
+      "inputs": [
+        {
+          "name": "images",
+          "shape": 7,
+          "type": "IMAGE",
+          "link": 19
+        },
+        {
+          "name": "files",
+          "shape": 7,
+          "type": "GEMINI_INPUT_FILES",
+          "link": null
+        }
+      ],
+      "outputs": [
+        {
+          "name": "IMAGE",
+          "type": "IMAGE",
+          "links": [
+            20
+          ]
+        },
+        {
+          "name": "STRING",
+          "type": "STRING",
+          "links": null
+        },
+        {
+          "name": "thought_image",
+          "type": "IMAGE",
+          "links": null
+        }
+      ],
+      "properties": {
+        "cnr_id": "comfy-core",
+        "ver": "0.20.1",
+        "Node name for S&R": "GeminiNanoBanana2"
+      },
+      "widgets_values": [
+        "Remove the person in Image 1 and put me, the person from Image 2, in their place.\nKeep from Image 2: my identity, my exact outfit with every garment detail, and my exact body pose, including limb angles, hand positions and head tilt.\nKeep from Image 1 only the environment: background, framing, camera angle, focal length, perspective, horizon line and lighting. Fully reconstruct whatever the removed person was occluding.\nIntegrate me physically into the scene: scale me to the scene's perspective, place my contact points (feet, hands, whichever touches a surface) exactly on the ground plane where the original person made contact, and respect the camera height and horizon line so I am not floating or tilted.\nRe-light every edited element to match the base photograph: light direction, colour temperature, intensity, contrast and shadow softness. Add correct cast shadows, contact shadows and bounce light from nearby surfaces. Match the base photo's lens characteristics, depth of field, motion blur, chromatic aberration, highlight roll-off and film grain. Preserve skin pores and fabric weave. Photorealistic, no visible seam, no cutout edge, no plastic or over-smoothed skin.",
+        "Nano Banana 2 (Gemini 3.1 Flash Image)",
+        42,
+        "randomize",
+        "auto",
+        "2K",
+        "IMAGE",
+        "HIGH",
+        "You are an expert photo-retouching and compositing engine. You must ALWAYS produce an image.\nTreat every instruction as a literal visual directive. Preserve photographic realism at all times: keep skin texture, pores, fabric weave, sensor noise and lens characteristics of the base photograph. Never switch to an illustrated, plastic or over-smoothed look. When compositing a subject into a scene, always solve light direction, colour temperature, contrast, cast shadows, contact shadows and bounce light before anything else."
+      ],
+      "title": "Nano Banana 2 — 5 · ME COLOCAR NA FOTO — com a MINHA ROUPA e a MINHA POSE"
+    },
+    {
+      "id": 27,
+      "type": "SaveImage",
+      "pos": [
+        1090,
+        60
+      ],
+      "size": [
+        300,
+        300
+      ],
+      "flags": {},
+      "order": 26,
+      "mode": 4,
+      "inputs": [
+        {
+          "name": "images",
+          "type": "IMAGE",
+          "link": 20
+        }
+      ],
+      "outputs": [],
+      "properties": {
+        "cnr_id": "comfy-core",
+        "ver": "0.20.1",
+        "Node name for S&R": "SaveImage"
+      },
+      "widgets_values": [
+        "edit/nb2_eu_minha_roupa"
+      ],
+      "title": "Salvar — 5 · ME COLOCAR NA FOTO — com a MINHA ROUPA e a MINHA POSE"
+    }
+  ],
+  "links": [
+    [
+      17,
+      23,
+      0,
+      25,
+      0,
+      "IMAGE"
+    ],
+    [
+      18,
+      24,
+      0,
+      25,
+      1,
+      "IMAGE"
+    ],
+    [
+      19,
+      25,
+      0,
+      26,
+      0,
+      "IMAGE"
+    ],
+    [
+      20,
+      26,
+      0,
+      27,
+      0,
+      "IMAGE"
+    ]
+  ],
+  "groups": [],
+  "config": {},
+  "extra": {
+    "ds": {
+      "scale": 0.55,
+      "offset": [
+        80,
+        60
+      ]
+    }
+  },
+  "version": 0.4
+}

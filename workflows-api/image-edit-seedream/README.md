@@ -1,14 +1,14 @@
 # image-edit-seedream — as mesmas 6 edições, no Seedream 5.0/4.5 (créditos comfy.org)
 
 > Gêmeo do [`../image-edit-nano-banana-2/`](../image-edit-nano-banana-2/): **os mesmos 6 processos**,
-> no outro melhor editor disponível por crédito comfy.org. Rode os dois com a mesma entrada e fique
-> com o melhor — eles erram de formas diferentes.
+> no outro melhor editor disponível por crédito comfy.org. **6 arquivos independentes, um por processo.**
+> Rode os dois com a mesma entrada e fique com o melhor — eles erram de formas diferentes.
 
 |  |  |
 |---|---|
 | 🎯 Faz | Edita uma foto por instrução + imagem de referência: roupa, objeto, pessoa, cenário, e insere você na cena |
 | 🧠 Técnica | Edição multi-referência por **frase única** (até 14 refs no 5.0), saída até 4K, com cláusula de relight no prompt |
-| 💳 Custo/billing | **Créditos comfy.org** — 1 chamada por bloco executado. Bloco em bypass = **0 créditos** |
+| 💳 Custo/billing | **Créditos comfy.org** — 1 chamada por execução |
 | 🔌 Provedores/Nós | `ByteDanceSeedreamNode` (partner, `partner/image/ByteDance`) · `BatchImagesNode` · `LoadImage` · `SaveImage` — **tudo core, zero custom node** |
 | 📥 Entrada | A foto BASE + (quase sempre) uma foto de REFERÊNCIA |
 | 📤 Saída | Imagem editada em `output/edit/seedream_<processo>_*` (PNG no 5.0 lite) |
@@ -37,26 +37,25 @@
 ```bash
 bash setup.sh
 ```
-Confere que o servidor está no ar, que os 4 nós existem no `/object_info` e que o `.json` está no painel.
+Confere que o servidor está no ar, que os 4 nós existem no `/object_info` e que os `.json` estão no painel.
+
+## Os 6 processos — um arquivo por técnica
+
+| # | Arquivo | Processo | BASE | REF |
+|---|---------|----------|------|-----|
+| 1 | `image-edit-seedream_trocar-roupa.json` | Trocar a roupa | a pessoa | a peça (opcional) |
+| 2 | `image-edit-seedream_trocar-objetos-em-cena.json` | Trocar objetos em cena | a cena | o objeto novo (opcional) |
+| 3 | `image-edit-seedream_trocar-a-pessoa-da-foto.json` | Trocar a pessoa da foto | a cena | a pessoa nova (**obrigatória**) |
+| 4 | `image-edit-seedream_me-colocar-na-foto-roupa-da-cena.json` | **Eu na foto** — roupa e pose **da cena** | a foto onde quero entrar | a **minha** foto (**obrigatória**) |
+| 5 | `image-edit-seedream_me-colocar-na-foto-minha-roupa.json` | **Eu na foto** — **minha** roupa e **minha** pose | a cena de destino | minha foto **de corpo inteiro** (**obrigatória**) |
+| 6 | `image-edit-seedream_trocar-o-local.json` | Trocar o local (+ match de luz) | a foto a manter | o novo local (opcional) |
 
 ## Como usar (:8188)
-1. Abra **`image-edit-seedream.json`**. Leia o nó **LEIA PRIMEIRO**.
-2. **PROCESSO 1** já vem ativo; os outros 5 em bypass (roxo).
-3. Suba `BASE` (= *the first image*) e `REF` (= *the second image*). A ordem no `Empilha as imagens`
+1. Abra o `.json` do processo desejado (painel *Workflows* → `api/`).
+2. Suba `BASE` (= *the first image*) e `REF` (= *the second image*). A ordem no `Empilha as imagens`
    é o que define quem é quem no prompt.
-4. **Escolha o `size_preset` com o mesmo formato da sua BASE** — senão ele reenquadra.
-5. Edite o prompt (troque os `<DESCREVA AQUI ...>`) e **Run**.
-6. Para rodar outro bloco: `Salvar` dele → **Ctrl+B**, e o anterior de volta para bypass.
-
-### Os 6 processos
-| # | Processo | BASE | REF | Obs |
-|---|---|---|---|---|
-| 1 | Trocar a roupa | a pessoa | a peça | REF opcional |
-| 2 | Trocar objetos em cena | a cena | o objeto novo | preencha `<DESCREVA AQUI O OBJETO A SUBSTITUIR>` |
-| 3 | Trocar a pessoa da foto | a cena | a pessoa nova | REF **obrigatória** |
-| 4 | **Eu na foto** — roupa e pose **da cena** | a foto onde quero entrar | a **minha** foto | REF **obrigatória** |
-| 5 | **Eu na foto** — **minha** roupa e **minha** pose | a cena de destino | minha foto **de corpo inteiro** | REF **obrigatória** |
-| 6 | Trocar o local (+ match de luz) | a foto a manter | o novo local | REF opcional |
+3. **Escolha o `size_preset` com o mesmo formato da sua BASE** — senão ele reenquadra.
+4. Edite o prompt (troque os `<DESCREVA AQUI ...>`) e **Run**.
 
 ## Parâmetros não-óbvios
 | Onde | Parâmetro | Nota |
@@ -81,8 +80,7 @@ com a foto original. **Não apague.**
 1. Nenhum nó vermelho.
 2. `Seedream` mostra os widgets nesta ordem: model · prompt · size_preset · width · height ·
    sequential_image_generation · max_images · seed · watermark · fail_on_partial.
-3. Os 5 blocos em bypass estão roxos.
-4. Teste barato: PROCESSO 1 com `2560x1440 (16:9)` (o menor preset que passa no piso do 4.5/5.0).
+3. Teste barato: PROCESSO 1 com `2560x1440 (16:9)` (o menor preset que passa no piso do 4.5/5.0).
 
 ## Troubleshooting
 | Sintoma | Causa provável | Correção |

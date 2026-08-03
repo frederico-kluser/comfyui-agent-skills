@@ -1,0 +1,317 @@
+{
+  "id": "0c555c33-ed9b-465a-9bf9-5030583c4fcc",
+  "revision": 0,
+  "last_node_id": 17,
+  "last_link_id": 12,
+  "nodes": [
+    {
+      "id": 1,
+      "type": "MarkdownNote",
+      "pos": [
+        -40,
+        -2640
+      ],
+      "size": [
+        720,
+        700
+      ],
+      "flags": {},
+      "order": 0,
+      "mode": 0,
+      "color": "#223",
+      "bgcolor": "#653",
+      "inputs": [],
+      "outputs": [],
+      "properties": {},
+      "widgets_values": [
+        "# 🎛️ Como usar este arquivo\n\n**Processo único: 3 · TROCAR A PESSOA DA FOTO**\n\nSubstitui a pessoa na imagem BASE pela pessoa mostrada na imagem REF.\n\n## O que você precisa\n- **BASE** (`LoadImage` à esquerda): a cena.\n- **REF** (`LoadImage` à direita): a pessoa nova (obrigatória — é ela que define quem entra).\n\n## O prompt\nEstá em **inglês** de propósito — o modelo segue instrução em inglês com bem mais fidelidade.\nOnde houver `<DESCREVA AQUI ...>`, **troque pelo seu texto**.\n\n## A cláusula de realismo\nO prompt termina com um bloco que resolve **iluminação, sombras, lente e grão** — é ele que faz o\nresultado \"casar\" com a foto original. **Não apague.** Se o resultado ficar plástico ou com borda de\nrecorte, é sinal de que essa parte foi perdida.\n\n## Encadear com outros processos\nA saída deste processo (em `output/`) pode virar a **BASE** do próximo: baixe o PNG gerado e suba no\n`LoadImage` da BASE do processo seguinte."
+      ],
+      "title": "LEIA PRIMEIRO"
+    },
+    {
+      "id": 2,
+      "type": "MarkdownNote",
+      "pos": [
+        700,
+        -2640
+      ],
+      "size": [
+        520,
+        700
+      ],
+      "flags": {},
+      "order": 1,
+      "mode": 0,
+      "color": "#233",
+      "bgcolor": "#653",
+      "inputs": [],
+      "outputs": [],
+      "properties": {},
+      "widgets_values": [
+        "# Seedream 5.0 / 4.5 · ByteDance\n\n**Nó:** `ByteDanceSeedreamNode` — `partner/image/ByteDance`\n**Billing:** créditos **comfy.org** (login em `platform.comfy.org`, sem chave de API)\n\n## Ajustes que importam\n| Widget | Vem como | O que fazer |\n|---|---|---|\n| `model` | `seedream 5.0 lite` | 5.0 lite = mais novo, aceita **14** referências, saída **PNG**. `seedream-4-5-251128` = geração anterior, **10** referências — troque se o 5.0 alucinar detalhe de roupa. |\n| `size_preset` | `2560x1440 (16:9)` | **Escolha o preset com o mesmo formato da sua BASE**, senão ele reenquadra. `Custom` libera `width`/`height`. |\n| `seed` | `randomize` | Achou um bom? Troque para **fixed** e guarde o número. |\n| `max_images` | `1` | Só vale com `sequential_image_generation=auto` (variações). Cada imagem extra **custa uma geração**. |\n| `watermark` | `false` | Deixe `false`. |\n\n## Piso de resolução (erro comum)\nNo 4.5 e no 5.0 a saída precisa de **≥ 3.686.400 px** (≈ 2560×1440). Preset menor que isso → o nó **rejeita**. No 4.0 o piso é 921.600 px.\n\n## Ordem das imagens = ordem do prompt\nO `Empilha as imagens` define quem é **the first image** (a BASE, `image0`) e quem é **the second image** (a REF, `image1`).\n\n## Estilo de prompt\nO Seedream foi treinado para **edição por frase única**. Os prompts aqui são uma frase longa de propósito — evite quebrá-los em lista de tópicos."
+      ],
+      "title": "O modelo"
+    },
+    {
+      "id": 13,
+      "type": "LoadImage",
+      "pos": [
+        0,
+        60
+      ],
+      "size": [
+        260,
+        340
+      ],
+      "flags": {},
+      "order": 12,
+      "mode": 4,
+      "inputs": [],
+      "outputs": [
+        {
+          "name": "IMAGE",
+          "type": "IMAGE",
+          "links": [
+            9
+          ]
+        },
+        {
+          "name": "MASK",
+          "type": "MASK",
+          "links": null
+        }
+      ],
+      "properties": {
+        "cnr_id": "comfy-core",
+        "ver": "0.20.1",
+        "Node name for S&R": "LoadImage"
+      },
+      "widgets_values": [
+        "example.png",
+        "image"
+      ],
+      "title": "BASE — a foto/cena original"
+    },
+    {
+      "id": 14,
+      "type": "LoadImage",
+      "pos": [
+        0,
+        440
+      ],
+      "size": [
+        260,
+        340
+      ],
+      "flags": {},
+      "order": 13,
+      "mode": 4,
+      "inputs": [],
+      "outputs": [
+        {
+          "name": "IMAGE",
+          "type": "IMAGE",
+          "links": [
+            10
+          ]
+        },
+        {
+          "name": "MASK",
+          "type": "MASK",
+          "links": null
+        }
+      ],
+      "properties": {
+        "cnr_id": "comfy-core",
+        "ver": "0.20.1",
+        "Node name for S&R": "LoadImage"
+      },
+      "widgets_values": [
+        "example.png",
+        "image"
+      ],
+      "title": "REF — a pessoa nova (rosto bem visivel)"
+    },
+    {
+      "id": 15,
+      "type": "BatchImagesNode",
+      "pos": [
+        330,
+        60
+      ],
+      "size": [
+        240,
+        152
+      ],
+      "flags": {},
+      "order": 14,
+      "mode": 4,
+      "inputs": [
+        {
+          "label": "image0",
+          "name": "images.image0",
+          "type": "IMAGE",
+          "link": 9
+        },
+        {
+          "label": "image1",
+          "name": "images.image1",
+          "type": "IMAGE",
+          "link": 10
+        },
+        {
+          "label": "image2",
+          "name": "images.image2",
+          "shape": 7,
+          "type": "IMAGE",
+          "link": null
+        }
+      ],
+      "outputs": [
+        {
+          "name": "IMAGE",
+          "type": "IMAGE",
+          "links": [
+            11
+          ]
+        }
+      ],
+      "properties": {
+        "cnr_id": "comfy-core",
+        "ver": "0.14.1",
+        "Node name for S&R": "BatchImagesNode"
+      },
+      "widgets_values": [],
+      "title": "Empilha as imagens"
+    },
+    {
+      "id": 16,
+      "type": "ByteDanceSeedreamNode",
+      "pos": [
+        620,
+        60
+      ],
+      "size": [
+        420,
+        520
+      ],
+      "flags": {},
+      "order": 15,
+      "mode": 4,
+      "inputs": [
+        {
+          "name": "image",
+          "shape": 7,
+          "type": "IMAGE",
+          "link": 11
+        }
+      ],
+      "outputs": [
+        {
+          "name": "IMAGE",
+          "type": "IMAGE",
+          "links": [
+            12
+          ]
+        }
+      ],
+      "properties": {
+        "cnr_id": "comfy-core",
+        "ver": "0.20.1",
+        "Node name for S&R": "ByteDanceSeedreamNode"
+      },
+      "widgets_values": [
+        "seedream 5.0 lite",
+        "Replace the person in the first image with the person shown in the second image, reproducing their facial structure, skin tone, hair and build with high fidelity, while keeping the outfit, pose, framing, background and environment of the first image unchanged, blending skin tone continuously across face, neck and hands. Re-light every edited element to match the base photograph: light direction, colour temperature, intensity, contrast and shadow softness. Add correct cast shadows, contact shadows and bounce light from nearby surfaces. Match the base photo's lens characteristics, depth of field, motion blur, chromatic aberration, highlight roll-off and film grain. Preserve skin pores and fabric weave. Photorealistic, no visible seam, no cutout edge, no plastic or over-smoothed skin.",
+        "2560x1440 (16:9)",
+        2048,
+        2048,
+        "disabled",
+        1,
+        0,
+        "randomize",
+        false,
+        true
+      ],
+      "title": "Seedream — 3 · TROCAR A PESSOA DA FOTO"
+    },
+    {
+      "id": 17,
+      "type": "SaveImage",
+      "pos": [
+        1090,
+        60
+      ],
+      "size": [
+        300,
+        300
+      ],
+      "flags": {},
+      "order": 16,
+      "mode": 4,
+      "inputs": [
+        {
+          "name": "images",
+          "type": "IMAGE",
+          "link": 12
+        }
+      ],
+      "outputs": [],
+      "properties": {
+        "cnr_id": "comfy-core",
+        "ver": "0.20.1",
+        "Node name for S&R": "SaveImage"
+      },
+      "widgets_values": [
+        "edit/seedream_pessoa"
+      ],
+      "title": "Salvar — 3 · TROCAR A PESSOA DA FOTO"
+    }
+  ],
+  "links": [
+    [
+      9,
+      13,
+      0,
+      15,
+      0,
+      "IMAGE"
+    ],
+    [
+      10,
+      14,
+      0,
+      15,
+      1,
+      "IMAGE"
+    ],
+    [
+      11,
+      15,
+      0,
+      16,
+      0,
+      "IMAGE"
+    ],
+    [
+      12,
+      16,
+      0,
+      17,
+      0,
+      "IMAGE"
+    ]
+  ],
+  "groups": [],
+  "config": {},
+  "extra": {
+    "ds": {
+      "scale": 0.55,
+      "offset": [
+        80,
+        60
+      ]
+    }
+  },
+  "version": 0.4
+}
