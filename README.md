@@ -6,7 +6,12 @@ e empacotá-los como **bundles prontos para rodar** — por **API online** (Veo 
 
 Não é um app: o valor está (1) na pesquisa curada em `docs/`, (2) nas skills em `.agents/skills/` que
 injetam esse conhecimento sob demanda, e (3) nos **projetos de workflow** entregáveis em `workflows-api/`
-(rodam por API online, sem GPU) e `workflows-cloud/` (self-hosted em GPU RunPod).
+(rodam por API online, sem GPU).
+
+> **Estado atual (2026-08-03):** os bundles entregues são **três**, todos por API em **créditos comfy.org**
+> — dois de edição de imagem e um de troca de pessoa em vídeo. A rota **self-hosted** (`workflows-cloud/`,
+> GPU RunPod) continua **coberta pelas skills** (`knowledge-runpod-*`, `task-launch-runpod-pod`,
+> `task-package-workflow-project`), mas **não há bundle GPU versionado no momento**.
 
 > Para **agentes de código** (Claude Code, Cursor, Codex…) a porta de entrada é o `AGENTS.md` +
 > `.agents/skills/project-router`. Este README é a porta de entrada para **humanos**.
@@ -35,10 +40,8 @@ docs/                     # relatórios de pesquisa (a fonte: SCAIL-2, workflows
   task-*/                 #   tarefas (create-commercial, create-commercial-api, build-workflow, launch-pod,
                           #            debug, package-workflow-project, edit-image)
   meta-*/                 #   evolução e consolidação
-workflows-api/            # bundles que rodam por API online, sem GPU (commercial-ondokai, mask-edit-cloud,
-                          #   outfit-swap-api, replace-object, replace-environment, image-to-video-api, video-to-video-api,
-                          #   extract-assets-api, text-to-music-api)
-workflows-cloud/          # bundles self-hosted em GPU RunPod (person-swap, scail2-native, inpaint, kontext, qwen, outpaint, remove-bg)
+workflows-api/            # bundles que rodam por API online, sem GPU — todos em créditos comfy.org
+                          #   (image-edit-nano-banana-2, image-edit-seedream, video-person-swap-seedance-2)
 AGENTS.md  ·  CLAUDE.md   # always-on (symlink)
 ```
 
@@ -56,50 +59,28 @@ e segue a mesma ordem de seções.
 2. No pod, rode o `setup.sh` do projeto como root (instala nodes + baixa modelos + o `.json`).
 3. Abra o ComfyUI (porta 8188), carregue o workflow e siga o README do projeto.
 
-**Rodar um bundle por API** (sem GPU): no ComfyUI local, rode o `setup.sh` do bundle (`workflows-api/<nome>/`) — instala o
-nó fal + grava a `FAL_KEY` (de `~/ComfyUI/secrets.env`) + baixa os `.json`; faça login em comfy.org p/ os nós partner
-(Kling/FluxVTON). A geração roda no provedor. Conhecimento: `knowledge-comfyui-api-nodes`.
+**Rodar um bundle por API** (sem GPU): no ComfyUI local, rode o `setup.sh` do bundle (`workflows-api/<nome>/`).
+Os bundles atuais são **100% nós partner (core)** — o `setup.sh` não instala nada e não grava segredo: ele confere
+o servidor, verifica os nós no `/object_info` e deixa o `.json` no painel. A autenticação é o **login em
+`platform.comfy.org`**; a cobrança é em **créditos comfy.org**. Conhecimento: `knowledge-comfyui-api-nodes`.
 
 ## Projetos de workflow
-> Legenda de status: 🟢 pronto · 🟡 rascunho a validar no pod. Cada projeto abre com um **Card Informativo**
-> (faz · técnica · GPU/VRAM · entrada · saída · modelos · status) no topo do seu README.
+> Legenda de status: 🟢 validado em execução · 🟡 grafo validado estruturalmente, ainda não executado.
+> Cada projeto abre com um **Card Informativo** (faz · técnica · custo/billing · entrada · saída · modelos · status)
+> no topo do seu README.
 
-### ☁️ Por API online — `workflows-api/` (sem GPU, paga por chamada)
+### ☁️ Por API online — `workflows-api/` (sem GPU, créditos comfy.org)
 | Projeto | O que faz | Provedores/Nós | Billing | Status |
 |---|---|---|---|---|
-| [`commercial-ondokai`](workflows-api/commercial-ondokai/) | Comercial de ~30s (9 cenas) com protagonista sintético consistente | Nano Banana Pro + Veo 3.1 + Kling + Seedance | fal + Comfy | 🟡 |
-| [`mask-edit-cloud`](workflows-api/mask-edit-cloud/) | Edita uma região (máscara) na nuvem **ou** local e recola sem tocar o resto | `FluxPro1Fill_fal` + SAM/DINO local | fal / local | 🟡 |
-| [`outfit-swap-api`](workflows-api/outfit-swap-api/) | Troca a roupa/look mantendo pose, rosto e fundo | `FluxVTONode` · `NanoBananaPro_fal` | Comfy / fal | 🟡 |
-| [`replace-object`](workflows-api/replace-object/) | Troca um objeto pela imagem de um objeto novo (prompt nomeia o alvo); área opcional | `NanoBananaPro_fal` · `FluxProKontextMulti_fal` | fal | 🟡 |
-| [`replace-environment`](workflows-api/replace-environment/) | Troca o ambiente/fundo mantendo e reiluminando o sujeito; área opcional | `NanoBananaPro_fal` · `FluxProKontextMulti_fal` | fal | 🟡 |
-| [`replace-pose`](workflows-api/replace-pose/) | Troca a POSE da pessoa (mantém rosto/roupa/fundo); por foto de referência **ou** por texto | `NanoBananaPro_fal` · `FluxProKontextMulti_fal` | fal | 🟡 |
-| [`replace-suite`](workflows-api/replace-suite/) | Roupa + fundo + pose num arquivo só; rode **1 por vez** (texto **ou** foto por etapa) | `NanoBananaPro_fal` · `FluxProKontextMulti_fal` | fal | 🟡 |
-| [`replace-pipeline`](workflows-api/replace-pipeline/) | Roupa + fundo + pose **numa única run** encadeada (texto **ou** foto por etapa) | `NanoBananaPro_fal` · `FluxProKontextMulti_fal` | fal | 🟡 |
-| [`image-to-video-api`](workflows-api/image-to-video-api/) | Anima **1 imagem** + descrição → vídeo (8 modelos) | Veo 3.1 · Seedance · Kling · Grok | fal / Comfy | 🟡 |
-| [`video-to-video-api`](workflows-api/video-to-video-api/) | Transforma **1 vídeo** (restyle · motion-transfer · extend) | Runway Aleph · **Wan 2.2 Animate** · Kling · Grok · Vidu | fal / Comfy | 🟡 |
-| [`extract-assets-api`](workflows-api/extract-assets-api/) | Separa **assets de uma UI** gerada por IA: nomeie cada elemento em texto → **PNG transparente** | `NanoBananaPro_fal` · `RecraftRemoveBackgroundNode` | fal + Comfy | 🟡 |
-| [`text-to-music-api`](workflows-api/text-to-music-api/) | Gera **trilha instrumental/ambient** (loopável), comercializável **para sempre** — **cloud clicável**, script em lote **ou** local | `StabilityTextToAudio` (partner) · `fishaudio/ace-step-1.5` (Replicate) · core local | comfy.org / Replicate / local | 🟡 |
+| [`image-edit-nano-banana-2`](workflows-api/image-edit-nano-banana-2/) | **6 edições de foto** num arquivo: roupa · objeto em cena · trocar a pessoa · **me pôr na foto (roupa/pose da cena)** · **me pôr na foto (minha roupa/pose)** · trocar o local + match de luz | `GeminiNanoBanana2` (partner) | comfy.org | 🟡 |
+| [`image-edit-seedream`](workflows-api/image-edit-seedream/) | **As mesmas 6 edições**, no outro melhor editor — rode os dois e compare | `ByteDanceSeedreamNode` (partner, 5.0 lite / 4.5) | comfy.org | 🟡 |
+| [`video-person-swap-seedance-2`](workflows-api/video-person-swap-seedance-2/) | **Me colocar num vídeo** no lugar de uma pessoa, mantendo pose, roupa, câmera e iluminação. Inclui o fluxo obrigatório de **asset verificado de humano real** | `ByteDance2ReferenceNode` + `ByteDanceCreate{Image,Video}Asset` + `GeminiNode` (partner) | comfy.org | 🟡 |
 
-## 🖥️ Self-hosted em GPU — `workflows-cloud/` (RunPod)
+Os três são **core do ComfyUI**: zero custom node, zero chave de API — só o login em `platform.comfy.org`.
 
-### 🎬 Vídeo & Animação (SCAIL-2)
-| Projeto | O que faz | Técnica | GPU/VRAM | Status |
-|---|---|---|---|---|
-| [`person-swap-scail2`](workflows-cloud/person-swap-scail2/) | Troca a pessoa de um vídeo por outra (a partir de 1 foto), preservando o movimento | SCAIL-2 Replacement (wrapper kijai) | 32–80 GB | 🟡 |
-| [`scail2-native-3rdparty`](workflows-cloud/scail2-native-3rdparty/) | SCAIL-2 **nativo** (2 passos) + **CatVTON-Flux** clothing transfer. Original preservado em `scail2-native-3rdparty.json` | SCAIL-2 core + CatVTON-Flux + SegFormer | 24 GB+ | 🟡 |
-
-### 🖼️ Edição de imagem
-| Projeto | O que faz | Técnica | GPU/VRAM | Status |
-|---|---|---|---|---|
-| [`inpaint-region-cropstitch`](workflows-cloud/inpaint-region-cropstitch/) | Edita só uma região (máscara) e recola sem tocar o resto (+ scripts Python) | Flux Fill / SDXL-inpaint + Crop&Stitch | 16–24 GB | 🟡 |
-| [`instruction-edit-kontext`](workflows-cloud/instruction-edit-kontext/) | Edita a imagem por instrução de texto, sem máscara | Flux.1 Kontext [dev] | ~16 GB | 🟡 |
-| [`qwen-image-edit`](workflows-cloud/qwen-image-edit/) | Edição por instrução (objeto/fundo/texto na imagem), bilíngue | Qwen-Image-Edit 2511 | 16–24 GB | 🟡 |
-
-### 🔭 Enquadramento & Fundo
-| Projeto | O que faz | Técnica | GPU/VRAM | Status |
-|---|---|---|---|---|
-| [`outpaint-extend`](workflows-cloud/outpaint-extend/) | Estende o enquadramento (outpainting) | Flux.1 Fill [dev] | 16–24 GB | 🟡 |
-| [`remove-background`](workflows-cloud/remove-background/) | Remove/troca o fundo (PNG com canal alpha) | RMBG / BiRefNet / BEN2 / SAM3 | Modesta | 🟢 |
+> **Histórico:** os bundles anteriores (fal/`*_fal`, SCAIL-2 self-hosted em `workflows-cloud/`,
+> comercial, música, image/video-to-video) foram removidos em 2026-08-03 para consolidar tudo em
+> créditos comfy.org. Estão recuperáveis no git — veja o commit `e1dd237` e o anterior a ele.
 
 ## Memória evolutiva (e suas salvaguardas)
 Skills de tarefa rodam um passo `<evolution>` ao concluir e registram aprendizados em `LEARNINGS.md`.
@@ -108,7 +89,8 @@ contradições, orçamento de tokens). **Toda mudança é um diff git para revis
 por LLM é rascunho até a curadoria. Só se persiste aprendizado de tarefa que passou nos critérios (estilo Voyager).
 
 ## Convenções e segurança
-- **API online vs self-hosted:** `workflows-api/` (modelo roda no provedor; chaves em `~/ComfyUI/secrets.env`, **nunca** `~/.secrets`; ver `knowledge-comfyui-api-nodes`) · `workflows-cloud/` (você roda em GPU RunPod).
+- **API online vs self-hosted:** `workflows-api/` (modelo roda no provedor) · `workflows-cloud/` (você roda em GPU RunPod; sem bundle versionado hoje). Ver `knowledge-comfyui-api-nodes`.
+- **Credencial por rota:** nós **partner** (os três bundles atuais) = **login** em `platform.comfy.org`, **sem chave**. Nós `*_fal`/Replicate = chave em `~/ComfyUI/secrets.env` (`chmod 600`), **nunca** `~/.secrets`.
 - Modelos vão em `ComfyUI/models/<subpasta>` no Network Volume (`/workspace`). ComfyUI na porta 8188.
 - SCAIL-2/Wan destilado (LightX2V): **cfg=1**, 6–8 steps, shift 1; dims **÷32** (SCAIL-2). Itere em 480p, finalize em 720p.
 - **Nunca** commitar tokens (`HF_TOKEN`, `CIVITAI_TOKEN`, `.env`). `setup.sh` lê tokens do ambiente, nunca embute.

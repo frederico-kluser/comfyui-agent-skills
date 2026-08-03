@@ -20,7 +20,7 @@
 | [knowledge-image-masking](knowledge-image-masking/SKILL.md) | seleção/segmentação: MaskEditor, SAM2/3, Florence-2, Grounding DINO, Impact Pack | `docs/image-editing.md` |
 | [knowledge-comfyui-api](knowledge-comfyui-api/SKILL.md) | API HTTP (/prompt,/upload,/history,/view) + composição Python (Pillow/NumPy/OpenCV) | `docs/image-editing.md` |
 | [knowledge-image-enhance](knowledge-image-enhance/SKILL.md) | upscale, outpaint, relight (IC-Light), ControlNet, IPAdapter, remoção de fundo | `docs/image-editing.md` |
-| [knowledge-scail2-native](knowledge-scail2-native/SKILL.md) | grafo NATIVO do SCAIL-2 (WanSCAILToVideo, SCAIL2ColoredMask, SAM3 por texto, toggle Replace, shift 5) | `workflows-cloud/scail2-native-3rdparty/` |
+| [knowledge-scail2-native](knowledge-scail2-native/SKILL.md) | grafo NATIVO do SCAIL-2 (WanSCAILToVideo, SCAIL2ColoredMask, SAM3 por texto, toggle Replace, shift 5) | (bundle removido em 2026-08-03; ver git) |
 | [knowledge-comfyui-api-nodes](knowledge-comfyui-api-nodes/SKILL.md) | nós de API ONLINE: partner (Comfy credits) vs fal (`*_fal`) vs Replicate; catálogo Veo/Kling/Nano Banana/Seedance/Flux Pro; **seed gates**; chaves; decisão API-vs-self-hosted | `workflows-api/` (+ pesquisa cloud-first) |
 
 ## Tarefa (memória procedural)
@@ -53,12 +53,10 @@
 | "editar/retocar imagem, trocar objeto/cor/fundo" | `task-edit-image` → `knowledge-image-editing` + `knowledge-image-masking` |
 | "editar por instrução (sem máscara)" | `knowledge-image-editing` (projetos `instruction-edit-kontext` / `qwen-image-edit`) |
 | "automatizar por API / recolar via código" | `knowledge-comfyui-api` |
-| "criar comercial SEM GPU / por API / Veo-Kling-Seedance" | `task-create-commercial-api` → `knowledge-comfyui-api-nodes` (bundle `workflows-api/commercial-ondokai/`) |
+| "criar comercial SEM GPU / por API / Veo-Kling-Seedance" | `task-create-commercial-api` → `knowledge-comfyui-api-nodes` (bundle removido em 2026-08-03; ver git) |
 | "rodar workflow por API / qual provedor / custo em créditos / fal vs Comfy / nó fal travou" | `knowledge-comfyui-api-nodes` |
-| "animar uma imagem por API (I2V: Veo/Kling/Seedance/Grok)" | `knowledge-comfyui-api-nodes` (bundle `workflows-api/image-to-video-api/`) |
-| "transformar/animar um vídeo por API (V2V: restyle Runway Aleph · motion-transfer Wan 2.2 Animate · extend)" | `knowledge-comfyui-api-nodes` (bundle `workflows-api/video-to-video-api/`) |
-| "editar imagem na nuvem / fal / sem GPU" | `task-edit-image` → `knowledge-comfyui-api-nodes` + `knowledge-image-editing`/`knowledge-image-masking` (bundle `workflows-api/mask-edit-cloud/`) |
-| "trocar a POSE de uma pessoa por API (foto-guia ou texto)" | `knowledge-comfyui-api-nodes` (bundle `workflows-api/replace-pose/`) |
-| "combinar roupa+fundo+pose por API (1 por vez **ou** tudo numa run)" | `knowledge-comfyui-api-nodes` (bundles `workflows-api/replace-suite/` · `replace-pipeline/`) |
+| "editar foto por API: trocar roupa · objeto · pessoa · local (+ match de luz)" | `task-edit-image` → `knowledge-comfyui-api-nodes` + `knowledge-image-editing` (bundles `workflows-api/image-edit-nano-banana-2/` · `image-edit-seedream/`) |
+| "me colocar numa FOTO no lugar de uma pessoa (mesma roupa/pose, **ou** com a minha)" | `knowledge-comfyui-api-nodes` (blocos 4 e 5 dos bundles `image-edit-*`) |
+| "me colocar num VÍDEO no lugar de uma pessoa (Seedance 2.0)" | `knowledge-comfyui-api-nodes` (bundle `workflows-api/video-person-swap-seedance-2/`) — ⚠️ humano real exige **asset verificado** |
 | "upscale / outpaint / relight / tirar fundo" | `knowledge-image-enhance` |
 | nenhuma skill cobre | `meta-evolution` (propor skill nova) |

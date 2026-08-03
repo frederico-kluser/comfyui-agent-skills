@@ -1,56 +1,61 @@
-# workflows-api/ — Bundles que rodam por **API online** (sem GPU pesada)
+# workflows-api — bundles que rodam por API online (sem GPU)
 
-Projetos de workflow em que **a inferência acontece num provedor hospedado** (Veo, Kling, Nano Banana, Seedance,
-Flux Pro…). O ComfyUI local só **orquestra**: monta o grafo, faz upload/download e compõe. Pensado para a máquina
-de **8 GB de VRAM** — a regra do projeto é *"nada de GGUF/quantizado/inferior local"*, então a geração pesada vai
-para a nuvem (modelo **melhor e mais rápido**), e a GPU local só faz máscara/composição/upscale ESRGAN.
+Três bundles, todos pagos com os **créditos do comfy.org**. **Zero custom node, zero chave de API:**
+a autenticação é o **login em `platform.comfy.org`** pela própria interface do ComfyUI.
 
-> **`workflows-api/` vs [`workflows-cloud/`](../workflows-cloud/) — o eixo é QUEM roda a inferência:**
-> - **`workflows-api/`** → um **provedor hospedado** roda o modelo; você paga **por chamada** (créditos). Sem alugar GPU.
-> - **`workflows-cloud/`** → **você** roda o modelo numa **GPU alugada** (RunPod); paga por **segundo de GPU**. (SCAIL-2, Wan, SDXL, Qwen self-hosted.)
+| Bundle | O que faz | Nó principal |
+|---|---|---|
+| [`image-edit-nano-banana-2`](image-edit-nano-banana-2/) | 6 edições de foto num arquivo só | `GeminiNanoBanana2` |
+| [`image-edit-seedream`](image-edit-seedream/) | As **mesmas** 6 edições, no outro melhor editor | `ByteDanceSeedreamNode` |
+| [`video-person-swap-seedance-2`](video-person-swap-seedance-2/) | Me colocar num vídeo no lugar de uma pessoa | `ByteDance2ReferenceNode` |
 
-## As 3 rotas de nuvem (e onde mora a qualidade)
-| Rota | Nós | Cobrança | Credencial |
-|---|---|---|---|
-| **Partner Nodes** (comfy.org) | `Kling*`, `FluxVTONode`, `GeminiNanoBanana2`, `FluxEraseNode`… (`partner/*`) | **Comfy credits** (free tier ~400 cr/mês) | **Login** em `platform.comfy.org` (sem arquivo de chave) |
-| **fal.ai** | sufixo `*_fal` (`Veo31_fal`, `NanoBananaPro_fal`, `Seedance*_fal`, `FluxPro1Fill_fal`…) | **fal credits** | `FAL_KEY` |
-| **Replicate** | `comfyui-replicate` | Replicate | `REPLICATE_API_TOKEN` |
+## Os 6 processos de imagem (iguais nos dois bundles de imagem)
+| # | Processo | O que você sobe |
+|---|---|---|
+| 1 | Trocar a roupa | a foto + a peça |
+| 2 | Trocar objetos em cena | a cena + o objeto novo |
+| 3 | Trocar a pessoa da foto | a cena + a pessoa nova |
+| 4 | **Eu na foto** — com a roupa e a pose **da cena** | a cena + a minha foto |
+| 5 | **Eu na foto** — com a **minha** roupa e a **minha** pose | a cena + minha foto de corpo inteiro |
+| 6 | Trocar o local (+ match de iluminação) | a foto + o novo local |
 
-> **Princípio:** *"fal vs Comfy não decide qualidade — o MODELO decide."* Os modelos de ponta (Veo 3.1, Nano Banana
-> **Pro**/Gemini 3, Flux 1.1 Pro Ultra, Kontext Max) existem em mais de uma hospedeira; muitos nós **partner** expõem
-> só versões antigas (`GeminiImageNode` = Gemini 2.5; `VeoVideoGenerationNode` = Veo 2) → a qualidade máxima costuma
-> vir do **fal**. Detalhes, catálogo de nós e os **seed gates** (errar TRAVA o nó): **`knowledge-comfyui-api-nodes`**.
+Cada bundle é **um arquivo** com os 6 processos como blocos independentes. Só o bloco ativo gasta
+crédito; os outros vêm em **bypass** (Ctrl+B liga/desliga pelo nó `Salvar`).
 
-## Chaves & segredos (regra do projeto)
-- Chaves do ComfyUI cloud → **`~/ComfyUI/secrets.env`** (`chmod 600`, gitignored), carregado pelo `run.sh`. **Nunca** em `~/.secrets` (esse é só dos agentes de código).
-- `FAL_KEY` também pode ir em `~/ComfyUI/custom_nodes/ComfyUI-fal-API/config.ini` (`[API]`). Partner = **login**, sem chave.
-- Os `setup.sh` deste folder **leem a chave do ambiente** e gravam o `config.ini` — **nunca** embutem segredo no repo.
+## Por que dois modelos para a mesma coisa
+Eles erram de formas diferentes. **Nano Banana 2** raciocina melhor sobre luz, perspectiva e oclusão
+(`thinking_level=HIGH`); **Seedream** preserva melhor textura de tecido, estampa e detalhe fino, e sai
+maior. Rodar os dois com a mesma entrada custa dois créditos e a diferença costuma ser óbvia.
 
-## Bundles
-| Bundle | O que faz | Provedores/Nós | Billing |
-|---|---|---|---|
-| [`commercial-ondokai/`](commercial-ondokai/) | Comercial de ~30s (9 cenas) com protagonista sintético consistente | Nano Banana Pro + Veo 3.1 + Kling + Seedance | fal + Comfy login |
-| [`mask-edit-cloud/`](mask-edit-cloud/) | Edita uma região (máscara) na nuvem **ou** local e recola sem tocar o resto | `FluxPro1Fill_fal` + SAM/GroundingDINO local | fal **ou** local grátis |
-| [`outfit-swap-api/`](outfit-swap-api/) | Troca a roupa/look mantendo pose, rosto e fundo | `FluxVTONode` (partner) · `NanoBananaPro_fal` | Comfy credits **ou** fal |
-| [`replace-object/`](replace-object/) | Troca um objeto pela imagem de um objeto novo (prompt nomeia o alvo); seleção de área opcional | `NanoBananaPro_fal` · `FluxProKontextMulti_fal` | fal |
-| [`replace-environment/`](replace-environment/) | Troca o ambiente/fundo mantendo e reiluminando o sujeito; seleção de área opcional | `NanoBananaPro_fal` · `FluxProKontextMulti_fal` | fal |
-| [`replace-pose/`](replace-pose/) | Troca a POSE da pessoa (mantém rosto/roupa/fundo); por foto de referência **ou** por texto | `NanoBananaPro_fal` · `FluxProKontextMulti_fal` | fal |
-| [`replace-suite/`](replace-suite/) | Roupa + fundo + pose num arquivo só; rode **1 por vez** (texto **ou** foto por etapa) | `NanoBananaPro_fal` · `FluxProKontextMulti_fal` | fal |
-| [`replace-pipeline/`](replace-pipeline/) | Roupa + fundo + pose **numa única run** encadeada (texto **ou** foto por etapa) | `NanoBananaPro_fal` · `FluxProKontextMulti_fal` | fal |
-| [`image-to-video-api/`](image-to-video-api/) | Anima **1 imagem** + descrição → vídeo (8 modelos, um por arquivo) | Veo 3.1 · Seedance 1.0/1.5/Pro · Kling 2.5/2.6 · Grok | fal **e/ou** Comfy login |
-| [`video-to-video-api/`](video-to-video-api/) | Transforma **1 vídeo** + descrição: restyle · motion-transfer · extend | Runway Aleph · **Wan 2.2 Animate** · Kling Omni/V3/Extend · Grok · Vidu | fal **e/ou** Comfy login |
-
-## Como usar
-Cada bundle tem `setup.sh` + `README.md` (Card Informativo + pipeline) + `API_REFERENCE_*.md` (inputs/params por nó).
+## Começar
 ```bash
-cd <bundle>/
-export FAL_KEY=...        # do seu ~/ComfyUI/secrets.env; nunca commitado
-bash setup.sh            # instala os custom nodes, grava o config.ini e baixa os .json
+cd image-edit-nano-banana-2 && bash setup.sh
 ```
-Procedimento ponta-a-ponta do comercial: **`task-create-commercial-api`**. Conhecimento dos nós: **`knowledge-comfyui-api-nodes`**.
+O `setup.sh` **não instala nada**: confere o servidor, verifica no `/object_info` que os nós existem, e
+garante que o `.json` aparece no painel *Workflows* (criando o symlink `~/ComfyUI/user/default/workflows/api`
+→ este diretório, se ainda não existir).
 
-## Gotchas (resumo — completo em `knowledge-comfyui-api-nodes`)
-- Os nós `*_fal` **bloqueiam sem barra de progresso**; cold-start pode ficar minutos em `IN_QUEUE` e ainda completar.
-- **Seed gates** divergem por nó: `FluxPro1Fill_fal` → `0` (`-1` trava); `Veo31_fal`/`NanoBananaPro_fal` → **sem seed** (trava por âncora).
-- `NanoBananaEdit_fal` = Gemini 2.5 (fraco, "devolve a foto") ≠ `NanoBananaPro_fal` = Gemini 3.
-- A cadeia `LoadVideoURL→CreateVideo` extrai **só frames** → perde o áudio nativo do Veo (baixe a URL original).
+Depois: abra o workflow no `:8188` e **leia o nó "LEIA PRIMEIRO"** — ele fica no canto superior esquerdo
+do grafo e explica os bypasses, a ordem das imagens e o que não apagar do prompt.
+
+## Antes de gastar crédito
+1. Esteja **logado** em `platform.comfy.org` (menu de usuário do ComfyUI) e confira o saldo.
+2. Rascunhe barato: Nano Banana 2 em `1K`/`MINIMAL`, Seedance em `Seedance 2.0 Fast` `480p` `4s`.
+3. Só um bloco ativo por `Run`.
+
+## Convenções destes bundles
+- **Prompts em inglês.** Os dois modelos seguem instrução em inglês com bem mais fidelidade. Onde houver
+  `<DESCREVA AQUI ...>`, troque pelo seu texto.
+- **A cláusula de realismo** no fim de cada prompt (luz, sombra, lente, grão) é o que faz o resultado casar
+  com a foto original. Apagou, volta a parecer colagem.
+- **A ordem das imagens é o contrato do prompt.** `image0` do `Empilha as imagens` é `Image 1`,
+  `image1` é `Image 2`. Inverter inverte o sentido da instrução.
+- **Status 🟡** em todos: o grafo foi validado estruturalmente (nós existem no `/object_info` ao vivo,
+  assinatura de widgets bate com os templates oficiais), mas **não foi executado** — executar gastaria
+  crédito. Valide no primeiro load.
+
+## Ver também
+- `.agents/skills/knowledge-comfyui-api-nodes` — as 3 rotas de billing (partner / fal / Replicate),
+  catálogo de nós, seed gates, chaves.
+- `.agents/skills/task-package-workflow-project` — como um bundle destes é montado.
+- `.agents/skills/task-debug-generation` — quando algo falha.

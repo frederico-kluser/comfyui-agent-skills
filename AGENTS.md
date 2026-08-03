@@ -16,6 +16,9 @@ Catálogo de skills: `.agents/skills/catalog.md`.
 - SCAIL-2 exige ComfyUI nightly/master (o nó `Create SCAIL-2 Colored Mask` é core, não custom).
 - Modelos vão em `ComfyUI/models/<subpasta>` no Network Volume (montado em `/workspace`).
 - **Por API online** (sem GPU): nós fal (`*_fal`, lê `FAL_KEY`) + partner (login comfy.org). Chaves em `~/ComfyUI/secrets.env` (chmod 600), **nunca** `~/.secrets`. Bundles em `workflows-api/`; conhecimento: `knowledge-comfyui-api-nodes`.
+- **Bundles atuais (2026-08-03): 3, todos partner/créditos comfy.org, zero custom node** — `image-edit-nano-banana-2` · `image-edit-seedream` (6 edições de foto cada) · `video-person-swap-seedance-2`. Os antigos (fal + `workflows-cloud/`) foram removidos; recuperáveis no git.
+- Antes de afirmar que um nó/modelo existe (ou não), **cheque o `/object_info` ao vivo** (`curl -s :8188/object_info`) — a lista partner muda a cada release.
+- Exemplo known-good p/ adaptar um grafo: os **templates oficiais já instalados** em `…/site-packages/comfyui_workflow_templates_*/templates/`.
 
 ## Convenções não-óbvias
 - SCAIL-2/Wan destilado (LightX2V): `cfg=1`, shift 1, euler/simple, 6–8 steps. `cfg>1` → vídeo borrado.
@@ -31,7 +34,7 @@ Catálogo de skills: `.agents/skills/catalog.md`.
 ## Referências (carregue sob demanda)
 - Catálogo de skills: `.agents/skills/catalog.md`
 - Skills (fonte única): `.agents/skills/` (symlink: `.claude/skills/`)
-- Projetos de workflow: `workflows-api/<projeto>/` (rodam por API, sem GPU) e `workflows-cloud/<projeto>/` (self-hosted em GPU RunPod) — json + README + setup.sh; crie via `task-package-workflow-project`.
+- Projetos de workflow: `workflows-api/<projeto>/` (rodam por API, sem GPU) e `workflows-cloud/<projeto>/` (self-hosted em GPU RunPod — **sem bundle versionado hoje**) — json + README + `API_REFERENCE_*.md` + setup.sh; crie via `task-package-workflow-project`.
 - Visão geral para humanos: `README.md` (raiz).
 
 ## Memória evolutiva

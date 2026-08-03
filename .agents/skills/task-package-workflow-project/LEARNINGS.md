@@ -70,3 +70,18 @@ _(novas entradas abaixo)_
 - **Aprendizado de empacotamento**: um bundle-API cujo usuário navega no **painel Workflows** do ComfyUI DEVE entregar **≥1 workflow `.json` clicável** para o caminho principal — não só um script CLI (o usuário não "acha" o caminho cloud se ele não é um grafo). Aqui: adicionei `text-to-music-cloud.json` (`StabilityTextToAudio`→`SaveAudio` FLAC, adaptado do template `api_stability_ai_text_to_audio.json`). Antes de afirmar "não existe nó X", **grep no `/object_info` ao vivo** (não confie na memória da skill).
 - **Fonte**: usuário + `/object_info` ao vivo + 2ª `/deep-research` (ToS Stability §4.a/§12.e, Sonilo, comfy.org, MusicGen CC-BY-NC).
 - **Ação**: corrigi `knowledge-comfyui-api-nodes` (seção Música). Promover a regra "bundle-API entrega workflow clicável + valide nós no /object_info antes de negar existência".
+
+## 2026-08-03 — Os templates oficiais JÁ ESTÃO instalados (o melhor "exemplo known-good") + setup.sh de bundle 100% partner
+- **Contexto**: reconstrução do `workflows-api/` do zero — 3 bundles novos (`image-edit-nano-banana-2`, `image-edit-seedream`, `video-person-swap-seedance-2`), todos em créditos comfy.org.
+- **Aprendizado**:
+  1. 🏆 **Não precisa baixar exemplo do GitHub.** O ComfyUI instala os templates oficiais em
+     `…/site-packages/comfyui_workflow_templates_{core,media_api,media_image,media_video,media_other}/templates/*.json`.
+     Achar a base para qualquer nó: `grep -rl "<NodeType>" …/comfyui_workflow_templates*/templates/`.
+     Isso resolveu casos que eu não teria acertado à mão (ex.: `api_seedance2_0_r2v_real_human.json` revelou que **humano real exige asset verificado**).
+  2. **Gerar o JSON por script Python** (builder mínimo de nós/links/grupos) > editar JSON à mão, quando o bundle tem N blocos repetidos. O que **não** pode ser inventado é a **ordem dos `widgets_values`** — essa tem que sair de um template oficial (o frontend intercala `control_after_generate` logo depois do `seed`, fora da ordem do `/object_info`).
+  3. **Validação estrutural barata e que pega quase tudo**: (a) todo `link` aponta para nós existentes; (b) todo `input.link` existe no array `links`; (c) todo `type` existe no `/object_info` (exceto `MarkdownNote`, que é frontend-only e **não** aparece lá); (d) `len(widgets_values)` bate com o do mesmo tipo nos templates oficiais.
+  4. **Bundle 100% partner não instala nada**: sem custom node, sem chave (a auth é o **login** em `platform.comfy.org`). O `setup.sh` vira um **verificador**: servidor no ar → nós presentes com `python_module` **não-nulo** → `.json` visível no painel.
+  5. 🐛 **Armadilha do `find` com symlink**: `~/ComfyUI/user/default/workflows/api` é symlink para `workflows-api/`. `find "$WF_DIR" -name x.json` **não entra em symlink** → o script concluía "não achei" e copiava o `.json` para dentro do próprio repo, poluindo a raiz de `workflows-api/`. **Use `find -L`.** E, no fallback, prefira **criar o symlink** a copiar (cópia solta dessincroniza do repo em silêncio).
+  6. **Card Informativo honesto**: 🟡 = "grafo validado estruturalmente, **não executado**" — executar um bundle-API gasta crédito de verdade, então não dá para prometer 🟢 sem o usuário rodar.
+- **Fonte**: usuário (pedido) + templates oficiais instalados + `/object_info` ao vivo.
+- **Ação**: promover ao corpo da skill os itens 1, 3 e 4 (mudam o procedimento padrão: passo 2 "adapte um exemplo known-good" deve apontar primeiro para os templates locais).

@@ -1,0 +1,863 @@
+{
+  "id": "fc6caa2a-4c2b-4247-b903-8e153c9606cc",
+  "revision": 0,
+  "last_node_id": 17,
+  "last_link_id": 12,
+  "nodes": [
+    {
+      "id": 1,
+      "type": "MarkdownNote",
+      "pos": [
+        -40,
+        -1180
+      ],
+      "size": [
+        760,
+        1040
+      ],
+      "flags": {},
+      "order": 0,
+      "mode": 0,
+      "color": "#533",
+      "bgcolor": "#653",
+      "inputs": [],
+      "outputs": [],
+      "properties": {},
+      "widgets_values": [
+        "# ⚠️ LEIA ANTES DE RODAR — humano real exige verificação\n\nO Seedance 2.0 **recusa** foto ou vídeo de **pessoa real** nas entradas normais\n(`reference_images` / `reference_videos`). Para colocar **você** num vídeo é obrigatório\no caminho de **asset verificado**:\n\n```\nLoadImage(sua foto) → ByteDance Create Image Asset → asset_id → Seedance\nLoadVideo(o vídeo)  → ByteDance Create Video Asset → asset_id → Seedance\n```\n\n## A verificação (só na primeira vez)\n1. Rode o **PASSO 1**. O nó `Create Image Asset` **para e imprime um link no console do\n   servidor ComfyUI** (o terminal onde o ComfyUI roda — *não* aparece na interface).\n2. Abra o link no navegador e faça a **verificação facial**.\n3. Ao terminar, os `PreviewAny` mostram o **`asset_id`** e o **`group_id`**.\n\n## Guarde o `group_id`\nCole o `group_id` no widget do nó `Create Image/Video Asset` nas próximas vezes → **pula a\nverificação** para a mesma pessoa. Regras:\n- O `group_id` vale **só para a conta que verificou** (não passa entre contas).\n- Cada imagem/vídeo usado para criar asset deve conter **uma pessoa só**.\n\n## Limites de referência\n| Tipo | Máximo |\n|---|---|\n| Imagens | 9 |\n| Vídeos | 3 |\n| Áudios | 3 |\n\n## Como o prompt enxerga as entradas (a parte que mais confunde)\nO modelo **não** conhece \"asset_1\". Ele recebe rótulos **posicionais**, na ordem\n`reference_images` → `reference_videos` → `reference_audios` → `reference_assets`:\n\n| O que você ligou | Vira, no prompt |\n|---|---|\n| `asset_1` = a sua foto (asset de imagem) | **`Image 1`** |\n| `asset_2` = o vídeo original (asset de vídeo) | **`Video 1`** |\n| se também ligar `reference_images.image_1` | ele é o `Image 1`, e o seu asset vira `Image 2` |\n\nPor isso o prompt do PASSO 3 fala em **`Image 1`** e **`Video 1`** — e não em `@asset_1`.\nSe mudar as ligações, **renumere o prompt**."
+      ],
+      "title": "LEIA PRIMEIRO"
+    },
+    {
+      "id": 2,
+      "type": "MarkdownNote",
+      "pos": [
+        740,
+        -1180
+      ],
+      "size": [
+        520,
+        1040
+      ],
+      "flags": {},
+      "order": 1,
+      "mode": 0,
+      "color": "#233",
+      "bgcolor": "#653",
+      "inputs": [],
+      "outputs": [],
+      "properties": {},
+      "widgets_values": [
+        "# Seedance 2.0 · ByteDance\n\n**Nó:** `ByteDance2ReferenceNode` — \"ByteDance Seedance 2.0 Reference to Video\"\n**Categoria:** `partner/video/ByteDance` · **Billing:** créditos **comfy.org** (login, sem chave)\n**Saída:** `VIDEO` nativo → vai **direto** no `SaveVideo` (o áudio é preservado).\n\n## Ajustes que importam\n| Widget | Vem como | O que fazer |\n|---|---|---|\n| `model` | `Seedance 2.0` | Máxima qualidade, até **1080p**. `Seedance 2.0 Fast` é mais barato/rápido mas **só vai a 720p** — use para rascunho. |\n| `resolution` | `1080p` | Rascunhe em `480p`, finalize em `1080p`. |\n| `ratio` | `adaptive` | `adaptive` herda o formato do vídeo de referência. Só force 16:9/9:16 se quiser reenquadrar. |\n| `duration` | `7` | Segundos, **4 a 15**. Ajuste ao trecho que você quer. Clipe maior = mais crédito. |\n| `generate_audio` | `true` | Gera áudio novo. Quer manter o áudio **original**? Ponha `false` e case o áudio na edição. |\n| `seed` | `randomize` | Serve só para forçar re-execução — **o resultado não é determinístico** nem com seed fixa (está no tooltip do nó). |\n| `auto_downscale` | `true` | Deixe ligado: reduz o vídeo de referência ao orçamento de pixels do modelo, preservando o formato. |\n| `auto_upscale` | `false` | Só ligue se o vídeo-fonte for pequeno demais — ampliar **não cria detalhe** e piora o resultado. |\n| `watermark` | `false` | Deixe `false`. |\n\n## Vídeo maior que 15s\nCorte em trechos de ≤15s, rode um por vez e junte no editor. Não há extensão nativa aqui.\n\n## Se o vídeo-fonte NÃO tiver pessoa real\n(animação, 3D, personagem sintético) você pode pular o `Create Video Asset` e ligar o\n`LoadVideo` direto no slot `model.reference_videos.video_1`."
+      ],
+      "title": "O modelo"
+    },
+    {
+      "id": 3,
+      "type": "LoadImage",
+      "pos": [
+        0,
+        60
+      ],
+      "size": [
+        260,
+        340
+      ],
+      "flags": {},
+      "order": 2,
+      "mode": 0,
+      "inputs": [],
+      "outputs": [
+        {
+          "name": "IMAGE",
+          "type": "IMAGE",
+          "links": [
+            1
+          ]
+        },
+        {
+          "name": "MASK",
+          "type": "MASK",
+          "links": null
+        }
+      ],
+      "properties": {
+        "cnr_id": "comfy-core",
+        "ver": "0.20.1",
+        "Node name for S&R": "LoadImage"
+      },
+      "widgets_values": [
+        "example.png",
+        "image"
+      ],
+      "title": "MINHA FOTO — rosto nítido, luz neutra, 1 pessoa só"
+    },
+    {
+      "id": 4,
+      "type": "ByteDanceCreateImageAsset",
+      "pos": [
+        330,
+        60
+      ],
+      "size": [
+        350,
+        150
+      ],
+      "flags": {},
+      "order": 3,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "image",
+          "type": "IMAGE",
+          "link": 1
+        }
+      ],
+      "outputs": [
+        {
+          "name": "asset_id",
+          "type": "STRING",
+          "links": [
+            2
+          ]
+        },
+        {
+          "name": "group_id",
+          "type": "STRING",
+          "links": [
+            3
+          ]
+        }
+      ],
+      "properties": {
+        "cnr_id": "comfy-core",
+        "ver": "0.22.0",
+        "Node name for S&R": "ByteDanceCreateImageAsset"
+      },
+      "widgets_values": [
+        ""
+      ],
+      "title": "Create Image Asset — EU (verificação facial)"
+    },
+    {
+      "id": 5,
+      "type": "PreviewAny",
+      "pos": [
+        720,
+        60
+      ],
+      "size": [
+        300,
+        110
+      ],
+      "flags": {},
+      "order": 4,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "source",
+          "type": "*",
+          "link": 2
+        }
+      ],
+      "outputs": [
+        {
+          "name": "STRING",
+          "type": "STRING",
+          "links": [
+            7
+          ]
+        }
+      ],
+      "properties": {
+        "cnr_id": "comfy-core",
+        "ver": "0.20.1",
+        "Node name for S&R": "PreviewAny"
+      },
+      "widgets_values": [
+        null,
+        null,
+        null
+      ],
+      "title": "asset_id (EU) → segue para o Seedance"
+    },
+    {
+      "id": 6,
+      "type": "PreviewAny",
+      "pos": [
+        720,
+        210
+      ],
+      "size": [
+        300,
+        110
+      ],
+      "flags": {},
+      "order": 5,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "source",
+          "type": "*",
+          "link": 3
+        }
+      ],
+      "outputs": [
+        {
+          "name": "STRING",
+          "type": "STRING",
+          "links": null
+        }
+      ],
+      "properties": {
+        "cnr_id": "comfy-core",
+        "ver": "0.20.1",
+        "Node name for S&R": "PreviewAny"
+      },
+      "widgets_values": [
+        null,
+        null,
+        null
+      ],
+      "title": "group_id — COPIE e guarde (pula a verificação)"
+    },
+    {
+      "id": 7,
+      "type": "LoadVideo",
+      "pos": [
+        0,
+        520
+      ],
+      "size": [
+        260,
+        300
+      ],
+      "flags": {},
+      "order": 6,
+      "mode": 0,
+      "inputs": [],
+      "outputs": [
+        {
+          "name": "VIDEO",
+          "type": "VIDEO",
+          "links": [
+            4
+          ]
+        }
+      ],
+      "properties": {
+        "cnr_id": "comfy-core",
+        "ver": "0.20.1",
+        "Node name for S&R": "LoadVideo"
+      },
+      "widgets_values": [
+        "example.mp4",
+        "image"
+      ],
+      "title": "VÍDEO ORIGINAL — a pessoa a substituir (≤15s)"
+    },
+    {
+      "id": 8,
+      "type": "ByteDanceCreateVideoAsset",
+      "pos": [
+        330,
+        520
+      ],
+      "size": [
+        350,
+        150
+      ],
+      "flags": {},
+      "order": 7,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "video",
+          "type": "VIDEO",
+          "link": 4
+        }
+      ],
+      "outputs": [
+        {
+          "name": "asset_id",
+          "type": "STRING",
+          "links": [
+            5
+          ]
+        },
+        {
+          "name": "group_id",
+          "type": "STRING",
+          "links": [
+            6
+          ]
+        }
+      ],
+      "properties": {
+        "cnr_id": "comfy-core",
+        "ver": "0.22.0",
+        "Node name for S&R": "ByteDanceCreateVideoAsset"
+      },
+      "widgets_values": [
+        ""
+      ],
+      "title": "Create Video Asset — o vídeo (verificação facial)"
+    },
+    {
+      "id": 9,
+      "type": "PreviewAny",
+      "pos": [
+        720,
+        520
+      ],
+      "size": [
+        300,
+        110
+      ],
+      "flags": {},
+      "order": 8,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "source",
+          "type": "*",
+          "link": 5
+        }
+      ],
+      "outputs": [
+        {
+          "name": "STRING",
+          "type": "STRING",
+          "links": [
+            8
+          ]
+        }
+      ],
+      "properties": {
+        "cnr_id": "comfy-core",
+        "ver": "0.20.1",
+        "Node name for S&R": "PreviewAny"
+      },
+      "widgets_values": [
+        null,
+        null,
+        null
+      ],
+      "title": "asset_id (VÍDEO) → segue para o Seedance"
+    },
+    {
+      "id": 10,
+      "type": "PreviewAny",
+      "pos": [
+        720,
+        670
+      ],
+      "size": [
+        300,
+        110
+      ],
+      "flags": {},
+      "order": 9,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "source",
+          "type": "*",
+          "link": 6
+        }
+      ],
+      "outputs": [
+        {
+          "name": "STRING",
+          "type": "STRING",
+          "links": null
+        }
+      ],
+      "properties": {
+        "cnr_id": "comfy-core",
+        "ver": "0.20.1",
+        "Node name for S&R": "PreviewAny"
+      },
+      "widgets_values": [
+        null,
+        null,
+        null
+      ],
+      "title": "group_id do vídeo — copie e guarde"
+    },
+    {
+      "id": 11,
+      "type": "ByteDance2ReferenceNode",
+      "pos": [
+        1100,
+        60
+      ],
+      "size": [
+        560,
+        760
+      ],
+      "flags": {},
+      "order": 10,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "model.reference_images.image_1",
+          "type": "IMAGE",
+          "link": null
+        },
+        {
+          "name": "model.reference_videos.video_1",
+          "type": "VIDEO",
+          "link": null
+        },
+        {
+          "name": "model.reference_audios.audio_1",
+          "type": "AUDIO",
+          "link": null
+        },
+        {
+          "name": "model.reference_assets.asset_1",
+          "type": "STRING",
+          "link": 7
+        },
+        {
+          "name": "model.reference_assets.asset_2",
+          "type": "STRING",
+          "link": 8
+        }
+      ],
+      "outputs": [
+        {
+          "name": "VIDEO",
+          "type": "VIDEO",
+          "links": [
+            9
+          ]
+        }
+      ],
+      "properties": {
+        "cnr_id": "comfy-core",
+        "ver": "0.22.0",
+        "Node name for S&R": "ByteDance2ReferenceNode"
+      },
+      "widgets_values": [
+        "Seedance 2.0",
+        "Replace the main person in Video 1 with the person shown in Image 1. Only the identity changes.\n\nIDENTITY (from Image 1): reproduce the facial geometry, bone structure, eye shape and colour, nose, mouth, jawline, ears, skin tone and texture, hairline, hair colour and style, facial hair, apparent age and body build with maximum fidelity. Keep the identity stable and consistent across every single frame - no drifting, morphing or flickering of the face, and no change of identity when the head turns or leaves and re-enters frame.\n\nMOTION AND POSE (from Video 1): keep the original performance exactly - full body motion, timing, gait, weight shift, limb angles, hand and finger positions, head turns, gaze direction, blinks, mouth movement and lip sync, and every micro-expression. The new person must move like the original person moved, frame for frame.\n\nWARDROBE (from Video 1): keep the original outfit and every garment detail, plus shoes and accessories. Make the fabric fold, stretch, wrinkle and swing correctly over the new body proportions, with self-shadowing that follows the motion.\n\nCAMERA AND SCENE (from Video 1): keep the framing, camera movement, shot scale, lens characteristics, depth of field, background, environment and all other people unchanged.\n\nLIGHTING: relight the new face, neck, hands and all exposed skin to match the scene exactly - light direction, colour temperature, intensity, contrast and shadow softness - and hold that match as the light changes through the shot. Reproduce specular highlights on skin, subsurface scattering, correct cast and contact shadows, rim light and colour bleed from nearby surfaces.\n\nREALISM: preserve skin pores, fine hair, sensor noise, motion blur and the grain of the original footage. Photorealistic live action. No visible seam, no mask edge, no waxy or over-smoothed skin, no uncanny stillness.",
+        "1080p",
+        "adaptive",
+        7,
+        true,
+        true,
+        false,
+        0,
+        "randomize",
+        false
+      ],
+      "title": "Seedance 2.0 — o swap"
+    },
+    {
+      "id": 12,
+      "type": "SaveVideo",
+      "pos": [
+        1720,
+        60
+      ],
+      "size": [
+        320,
+        260
+      ],
+      "flags": {},
+      "order": 11,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "video",
+          "type": "VIDEO",
+          "link": 9
+        }
+      ],
+      "outputs": [],
+      "properties": {
+        "cnr_id": "comfy-core",
+        "ver": "0.20.1",
+        "Node name for S&R": "SaveVideo"
+      },
+      "widgets_values": [
+        "video/eu-no-video-seedance2",
+        "auto",
+        "auto"
+      ],
+      "title": "Salvar o vídeo"
+    },
+    {
+      "id": 13,
+      "type": "LoadVideo",
+      "pos": [
+        0,
+        990
+      ],
+      "size": [
+        260,
+        300
+      ],
+      "flags": {},
+      "order": 12,
+      "mode": 4,
+      "inputs": [],
+      "outputs": [
+        {
+          "name": "VIDEO",
+          "type": "VIDEO",
+          "links": [
+            10
+          ]
+        }
+      ],
+      "properties": {
+        "cnr_id": "comfy-core",
+        "ver": "0.20.1",
+        "Node name for S&R": "LoadVideo"
+      },
+      "widgets_values": [
+        "example.mp4",
+        "image"
+      ],
+      "title": "O MESMO vídeo original (para o Gemini analisar)"
+    },
+    {
+      "id": 14,
+      "type": "GeminiNode",
+      "pos": [
+        330,
+        990
+      ],
+      "size": [
+        480,
+        520
+      ],
+      "flags": {},
+      "order": 13,
+      "mode": 4,
+      "inputs": [
+        {
+          "name": "images",
+          "shape": 7,
+          "type": "IMAGE",
+          "link": null
+        },
+        {
+          "name": "audio",
+          "shape": 7,
+          "type": "AUDIO",
+          "link": null
+        },
+        {
+          "name": "video",
+          "shape": 7,
+          "type": "VIDEO",
+          "link": 10
+        },
+        {
+          "name": "files",
+          "shape": 7,
+          "type": "GEMINI_INPUT_FILES",
+          "link": null
+        }
+      ],
+      "outputs": [
+        {
+          "name": "STRING",
+          "type": "STRING",
+          "links": [
+            11
+          ]
+        }
+      ],
+      "properties": {
+        "cnr_id": "comfy-core",
+        "ver": "0.20.1",
+        "Node name for S&R": "GeminiNode"
+      },
+      "widgets_values": [
+        "Describe this clip following the system instructions. Then, on a new line, state exactly which person in frame should be replaced (position, clothing, build) so another model can target them unambiguously.",
+        "gemini-3-1-pro",
+        0,
+        "randomize",
+        "You are an expert cinematographer and motion analyst. Break the clip down into a hyper-granular, chronological description that another video model can reproduce exactly.\n\nRULES\n- Never use names of people, actors, characters or franchises. Describe people purely by physical appearance, build and clothing.\n- Describe the camera as a physical object: shot scale, lens feel, handheld micro-shake, pans, pushes, focus hunts, motion blur.\n- Describe the light with precision: key direction, colour temperature, hardness, contrast ratio, practicals, rim and bounce, how shadows fall on the subject, and how any of it changes through the shot.\n- Describe wardrobe in detail: every garment, its cut, fabric, colour, print and how it moves.\n- Describe motion mechanics: weight transfer, momentum, limb angles, hand positions, head turns, gaze, blinks, mouth movement, micro-expressions, and their timing.\n- Transcribe all dialogue in quotes and describe every sound cue.\n\nFORMAT\nChunk the clip into blocks with bold timestamp headers. Under each header use these bullets: Visual Framing / The Subjects / The Action / Camera Dynamics / Lighting / Audio-Pacing."
+      ],
+      "title": "Gemini 3.1 Pro — descreve o vídeo em detalhe"
+    },
+    {
+      "id": 15,
+      "type": "StringConcatenate",
+      "pos": [
+        850,
+        990
+      ],
+      "size": [
+        420,
+        300
+      ],
+      "flags": {},
+      "order": 14,
+      "mode": 4,
+      "inputs": [
+        {
+          "name": "string_b",
+          "type": "STRING",
+          "widget": {
+            "name": "string_b"
+          },
+          "link": 11
+        }
+      ],
+      "outputs": [
+        {
+          "name": "STRING",
+          "type": "STRING",
+          "links": [
+            12
+          ]
+        }
+      ],
+      "properties": {
+        "cnr_id": "comfy-core",
+        "ver": "0.20.1",
+        "Node name for S&R": "StringConcatenate"
+      },
+      "widgets_values": [
+        "Replace the main person in Video 1 with the person shown in Image 1. Only the identity changes.\n\nIDENTITY (from Image 1): reproduce the facial geometry, bone structure, eye shape and colour, nose, mouth, jawline, ears, skin tone and texture, hairline, hair colour and style, facial hair, apparent age and body build with maximum fidelity. Keep the identity stable and consistent across every single frame - no drifting, morphing or flickering of the face, and no change of identity when the head turns or leaves and re-enters frame.\n\nMOTION AND POSE (from Video 1): keep the original performance exactly - full body motion, timing, gait, weight shift, limb angles, hand and finger positions, head turns, gaze direction, blinks, mouth movement and lip sync, and every micro-expression. The new person must move like the original person moved, frame for frame.\n\nWARDROBE (from Video 1): keep the original outfit and every garment detail, plus shoes and accessories. Make the fabric fold, stretch, wrinkle and swing correctly over the new body proportions, with self-shadowing that follows the motion.\n\nCAMERA AND SCENE (from Video 1): keep the framing, camera movement, shot scale, lens characteristics, depth of field, background, environment and all other people unchanged.\n\nLIGHTING: relight the new face, neck, hands and all exposed skin to match the scene exactly - light direction, colour temperature, intensity, contrast and shadow softness - and hold that match as the light changes through the shot. Reproduce specular highlights on skin, subsurface scattering, correct cast and contact shadows, rim light and colour bleed from nearby surfaces.\n\nREALISM: preserve skin pores, fine hair, sensor noise, motion blur and the grain of the original footage. Photorealistic live action. No visible seam, no mask edge, no waxy or over-smoothed skin, no uncanny stillness.",
+        "",
+        "\n\nSHOT BREAKDOWN OF Video 1 (reproduce this exactly):\n"
+      ],
+      "title": "Junta: o prompt de swap + a análise"
+    },
+    {
+      "id": 16,
+      "type": "PreviewAny",
+      "pos": [
+        1310,
+        990
+      ],
+      "size": [
+        420,
+        400
+      ],
+      "flags": {},
+      "order": 15,
+      "mode": 4,
+      "inputs": [
+        {
+          "name": "source",
+          "type": "*",
+          "link": 12
+        }
+      ],
+      "outputs": [
+        {
+          "name": "STRING",
+          "type": "STRING",
+          "links": null
+        }
+      ],
+      "properties": {
+        "cnr_id": "comfy-core",
+        "ver": "0.20.1",
+        "Node name for S&R": "PreviewAny"
+      },
+      "widgets_values": [
+        null,
+        null,
+        null
+      ],
+      "title": "COPIE isto para o prompt do PASSO 3"
+    },
+    {
+      "id": 17,
+      "type": "MarkdownNote",
+      "pos": [
+        1780,
+        990
+      ],
+      "size": [
+        520,
+        540
+      ],
+      "flags": {},
+      "order": 16,
+      "mode": 0,
+      "color": "#233",
+      "bgcolor": "#653",
+      "inputs": [],
+      "outputs": [],
+      "properties": {},
+      "widgets_values": [
+        "# Helper de prompt — quando usar\n\nMovimento complexo, várias pessoas em quadro, luz que muda durante o plano? Aí vale.\n\n**Como rodar:** selecione os 4 nós deste grupo → **Ctrl+B** (sai do bypass) → **Run**.\nSó este bloco executa (o PASSO 3 fica em bypass enquanto isso, ou ele roda junto e gasta crédito de vídeo).\n\nDepois: **copie** o texto do `PreviewAny` e **cole** no prompt do PASSO 3. Volte os 4 nós ao bypass.\n\n> Deixei em bypass de propósito: ligado, ele gasta uma chamada do Gemini a **cada** run do vídeo.\n\n## Por que isso melhora o realismo\nO Seedance recria o plano do zero. Quanto mais explícito o texto sobre **luz, lente, timing e\nmecânica do movimento**, menos ele inventa — é aí que \"super realista\" acontece.\n\n## Se ainda escorregar\n| Sintoma | Ajuste |\n|---|---|\n| Rosto muda ao longo do clipe | Trecho mais curto (4–6s) e uma foto sua mais frontal e nítida |\n| Ele troca a roupa | Reforce no prompt: descreva a peça original **item por item** |\n| Luz não casa | Descreva a luz do plano explicitamente (direção, temperatura, dureza) |\n| Pessoa errada trocada | Diga a posição em quadro: \"the person on the left, in the dark jacket\" |\n| Corpo com proporção errada | Use uma foto sua de **corpo inteiro** no PASSO 1 |"
+      ],
+      "title": "Dicas"
+    }
+  ],
+  "links": [
+    [
+      1,
+      3,
+      0,
+      4,
+      0,
+      "IMAGE"
+    ],
+    [
+      2,
+      4,
+      0,
+      5,
+      0,
+      "STRING"
+    ],
+    [
+      3,
+      4,
+      1,
+      6,
+      0,
+      "STRING"
+    ],
+    [
+      4,
+      7,
+      0,
+      8,
+      0,
+      "VIDEO"
+    ],
+    [
+      5,
+      8,
+      0,
+      9,
+      0,
+      "STRING"
+    ],
+    [
+      6,
+      8,
+      1,
+      10,
+      0,
+      "STRING"
+    ],
+    [
+      7,
+      5,
+      0,
+      11,
+      3,
+      "STRING"
+    ],
+    [
+      8,
+      9,
+      0,
+      11,
+      4,
+      "STRING"
+    ],
+    [
+      9,
+      11,
+      0,
+      12,
+      0,
+      "VIDEO"
+    ],
+    [
+      10,
+      13,
+      0,
+      14,
+      2,
+      "VIDEO"
+    ],
+    [
+      11,
+      14,
+      0,
+      15,
+      0,
+      "STRING"
+    ],
+    [
+      12,
+      15,
+      0,
+      16,
+      0,
+      "STRING"
+    ]
+  ],
+  "groups": [
+    {
+      "id": 1,
+      "title": "PASSO 1 · EU — criar o asset verificado (roda 1x)",
+      "bounding": [
+        -20,
+        0,
+        1060,
+        430
+      ],
+      "color": "#3f789e",
+      "font_size": 24,
+      "flags": {}
+    },
+    {
+      "id": 2,
+      "title": "PASSO 2 · VÍDEO — criar o asset verificado (roda 1x)",
+      "bounding": [
+        -20,
+        460,
+        1060,
+        430
+      ],
+      "color": "#3f789e",
+      "font_size": 24,
+      "flags": {}
+    },
+    {
+      "id": 3,
+      "title": "PASSO 3 · O SWAP — edite o prompt e rode",
+      "bounding": [
+        1080,
+        0,
+        1000,
+        890
+      ],
+      "color": "#8A2BE2",
+      "font_size": 24,
+      "flags": {}
+    },
+    {
+      "id": 4,
+      "title": "PASSO 4 (opcional, em bypass) · HELPER — o Gemini escreve o prompt por você",
+      "bounding": [
+        -20,
+        930,
+        1800,
+        600
+      ],
+      "color": "#653",
+      "font_size": 24,
+      "flags": {}
+    }
+  ],
+  "config": {},
+  "extra": {
+    "ds": {
+      "scale": 0.55,
+      "offset": [
+        80,
+        60
+      ]
+    }
+  },
+  "version": 0.4
+}
