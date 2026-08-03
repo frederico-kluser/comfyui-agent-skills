@@ -6,64 +6,63 @@
 |---|---|
 | 🎯 **Faz** | Gera **faixas instrumentais/ambient** (e vocais, se quiser) — prontas para loop, comercializáveis num jogo pago |
 | 🧠 **Técnica** | Text-to-music por **API online** (sem GPU) **ou** ACE-Step **local** — 3 caminhos (abaixo) |
-| 💳 **Custo/billing** | **comfy.org créditos** (nó Stability) · **Replicate** ~US$0,095/faixa · **fal** por chamada · **Local** = US$0 |
-| 🔌 **Provedores/Nós** | `StabilityTextToAudio` (partner, clicável) · `fishaudio/ace-step-1.5` (Replicate) · `fal-ai/ace-step` · nós **core** ACE-Step (local) |
+| 💳 **Custo/billing** | **Replicate** ~US$0,10/faixa · **fal** por chamada · **comfy.org créditos** (nó Sonilo) · **Local** = US$0 |
+| 🔌 **Provedores/Nós** | `fal-ai/ace-step` · `fishaudio/ace-step-1.5` (Replicate) · `SoniloTextToMusic` (partner, clicável) · nós **core** ACE-Step (local) |
 | 📥 **Entrada** | Um `preset` de estilo (tags/prompt) — instrumental por padrão; letra opcional |
 | 📤 **Saída** | `.wav`/`.flac` **lossless, loopável** em `output/` (ou `ComfyUI/output/audio/`) |
-| ⚖️ **Licença** | ACE-Step **MIT/Apache** · Stable Audio hospedado **cede a posse do output** (§4.a) → comercial perpétuo (ver [Licença](#licença)) |
-| 🧱 **Requer** | Login comfy.org (cloud clicável) · Node 18+ (script) · ComfyUI + ~8GB VRAM (local) |
-| 🟡 **Status** | Workflows validados contra o `/object_info` ao vivo (nós + widgets). Falta **smoke real** (precisa de créditos/chave) |
+| ⚖️ **Licença** | ACE-Step **MIT/Apache** = comercial **perpétuo/irrevogável** (o caminho mais limpo) · Sonilo = comercial só no **tier pago** (ver [Licença](#licença)) |
+| 🧱 **Requer** | Node 18+ (script, **testado ✅**) · login comfy.org + créditos (Sonilo) · ComfyUI + ~8GB VRAM (local) |
+| 🟢 **Status** | **Caminho fal (script) TESTADO** — gerou WAV real. Cloud clicável (Sonilo) e local validados contra o `/object_info` |
 
 ## Os 3 caminhos (todos comercializáveis)
 
-| Caminho | Arquivo / como | Modelo · licença | Custo | Quando usar |
+| Caminho | Arquivo / como | Modelo · licença | Custo | Status |
 |---|---|---|---|---|
-| **A) Cloud clicável** 🏆 | **`text-to-music-cloud.json`** (abre no ComfyUI) | **Stable Audio 2.5** · ToS hospedada **cede posse** do output (§4.a), sobrevive ao cancelamento (§12.e), **sem teto de US$1M** (isso é só dos pesos self-hosted) | créditos comfy.org | Quer clicar e gerar **dentro do ComfyUI**, comercial-limpo |
-| **B) Cloud em lote** | **`gerar_trilhas.mjs`** (script Node) | **ACE-Step 1.5 (MIT)** no Replicate · ToS do host **dá posse + sobrevive** (§5/§9.5) | ~US$0,10/faixa | Gerar **dezenas** de faixas de madrugada; licença a mais limpa |
-| **C) Local grátis** | **`text-to-music-local.json`** (ComfyUI) | **ACE-Step v1 (Apache-2.0)** · você roda os pesos, **nenhum host** | **US$0** | Tem ~8GB de VRAM (você tem: RTX 4070) — grátis, sem intermediário |
+| **B) Cloud em lote** 🏆 | **`gerar_trilhas.mjs`** (script Node) | **ACE-Step (MIT/Apache)** no **fal**/Replicate · licença mais limpa (comercial perpétuo) | ~US$0,02–0,10/faixa | ✅ **testado — gerou WAV** |
+| **C) Local grátis** | **`text-to-music-local.json`** (ComfyUI) | **ACE-Step v1 (Apache-2.0)** · você roda os pesos, **nenhum host** | **US$0** | 🟡 precisa baixar o modelo (3.5GB) |
+| **A) Cloud clicável** | **`text-to-music-cloud.json`** (ComfyUI) | **Sonilo** · comercial **só no tier pago**, **sem cláusula de sobrevivência** (treinado em conteúdo licenciado → baixo risco de litígio) | créditos comfy.org (0,53/seg) | 🟡 clicável, mas licença mais fraca |
 
-> **Descartados** para jogo pago (pesquisa de licença): **MusicGen** (`Replicate meta/musicgen`) = pesos **CC-BY-NC não-comercial**; **Sonilo** (`SoniloTextToMusic`) = comercial só no tier pago e **sem cláusula de sobrevivência** ("vender pra sempre" não confirmado); **Suno/Udio** = em litígio. Detalhes e citações em [`API_REFERENCE`](./API_REFERENCE_text-to-music-api.md#licenças).
-
-## Status
-🟡 **Rascunho funcional** — `text-to-music-cloud.json` e `text-to-music-local.json` validados contra o `/object_info` **ao vivo** (todos os nós existem, widgets alinhados, save em **lossless**); `gerar_trilhas.mjs` escrito contra os schemas confirmados de fal/Replicate. Falta o **smoke real** (gerar 1 faixa) — exige créditos comfy.org (A), `REPLICATE_API_TOKEN`/`FAL_KEY` (B) ou o checkpoint (C).
+> **Para "vender na Steam para sempre", prefira B ou C (ACE-Step MIT/Apache).** O **A (Sonilo)** é o único **clicável cloud** que o comfy.org realmente serve, mas o direito comercial depende do tier pago.
+>
+> **Descartados:** ⛔ **Stable Audio** (nó `StabilityTextToAudio`) — existe no código do ComfyUI mas **o comfy.org NÃO serve esse endpoint** → dá **`API Error: Not Found` (404)**; ⛔ **MusicGen** (`Replicate meta/musicgen`) = pesos **CC-BY-NC não-comercial**; 🔴 **Suno/Udio** = em litígio. Detalhes em [`API_REFERENCE`](./API_REFERENCE_text-to-music-api.md#licenças).
 
 ## Pré-requisitos
-- **A) Cloud clicável:** ComfyUI logado em **platform.comfy.org** com **créditos** (o nó Stability é partner). Máquina 8GB basta.
-- **B) Cloud lote:** Node.js 18+ e `REPLICATE_API_TOKEN` (r8_…) ou `FAL_KEY`.
-- **C) Local:** ComfyUI + **~8GB VRAM**. ACE-Step é **core** (sem custom node); só o checkpoint.
+- **B) Script (recomendado):** Node.js 18+ e `FAL_KEY` (ou `REPLICATE_API_TOKEN`). Máquina 8GB basta.
+- **C) Local:** ComfyUI + **~8GB VRAM** (sua RTX 4070 serve). ACE-Step é **core** (sem custom node); só o checkpoint.
+- **A) Sonilo:** ComfyUI logado em **platform.comfy.org** com **créditos**.
 
 ## Setup
 ```bash
-REPLICATE_API_TOKEN=r8_...  FAL_KEY=...  bash setup.sh
+FAL_KEY=...  REPLICATE_API_TOKEN=r8_...  bash setup.sh
 DOWNLOAD_CHECKPOINT=1  bash setup.sh    # opcional — baixa o modelo local (~3.5GB)
 ```
-Copia/baixa o bundle para `~/ComfyUI/user/default/workflows/text-to-music-api/`, instala as libs Node do script e grava as chaves (do ambiente) em `~/ComfyUI/secrets.env`. **Nenhum segredo versionado.**
+Copia/baixa o bundle para `~/ComfyUI/user/default/workflows/text-to-music-api/`, checa o Node e grava as chaves (do ambiente) em `~/ComfyUI/secrets.env`. **O script é zero-dependência (só o `fetch` nativo do Node 18+) — sem `npm install`, sem `node_modules`. Nenhum segredo versionado.**
 
 ## Como usar
 
-### A) Cloud clicável — ComfyUI + Stable Audio (recomendado p/ clicar e gerar)
-1. **Login** em platform.comfy.org (Settings → User → Sign In) e garanta **créditos**.
-2. Abra **`text-to-music-cloud.json`**.
-3. No nó **Stability Text To Audio**: ajuste o **prompt** (use um preset abaixo), `duration` e `steps`. **Run**.
-4. Sai `.flac` lossless em `ComfyUI/output/audio/`.
-
-### B) Cloud em lote — script (dezenas de faixas, sem GPU)
+### B) Cloud em lote — script (recomendado, testado ✅)
 ```bash
 source ~/ComfyUI/secrets.env
 cd ~/ComfyUI/user/default/workflows/text-to-music-api
-node gerar_trilhas.mjs --provider replicate --preset all --count 3    # ACE-Step 1.5 (MIT), ToS Replicate limpa
-node gerar_trilhas.mjs --provider fal --preset perseguicao --count 10
+node gerar_trilhas.mjs --provider fal --preset menu --count 1            # 1 faixa (testado — gera WAV)
+node gerar_trilhas.mjs --provider replicate --preset all --count 3       # ACE-Step 1.5 (MIT), ToS Replicate limpa
+node gerar_trilhas.mjs --provider fal --preset perseguicao --count 10    # lote
 ```
-Cada faixa vira `output/<preset>_<seed>.wav`.
+Cada faixa vira `output/<preset>_<seed>.wav` (WAVE PCM 16-bit 48kHz, lossless).
 
 ### C) Local grátis — ComfyUI + ACE-Step (US$0/faixa)
-1. `DOWNLOAD_CHECKPOINT=1 bash setup.sh` (uma vez).
-2. Reinicie o ComfyUI, abra **`text-to-music-local.json`**, ajuste as **tags** e **Run**.
+1. `DOWNLOAD_CHECKPOINT=1 bash setup.sh` (uma vez, baixa 3.5GB).
+2. Reinicie o ComfyUI, abra **`text-to-music-local.json`**, ajuste as **tags** e **Run** → `.flac` em `ComfyUI/output/audio/`.
 
-> **No painel *Workflows* do ComfyUI aparecem só os 2 `.json`** (`…-cloud` e `…-local`) — a sidebar filtra `.json`. Os outros arquivos da pasta (script, `presets.mjs`, docs) **não são workflows** e não abrem tela.
+### A) Cloud clicável — ComfyUI + Sonilo (clicável, mas licença mais fraca)
+1. **Login** em platform.comfy.org com **créditos**.
+2. Abra **`text-to-music-cloud.json`**, ajuste o **prompt** do nó *Sonilo Text To Music* e `duration`. **Run**.
+3. Sai `.flac` em `ComfyUI/output/audio/`. ⚠️ Comercial só no **tier pago** do Sonilo.
+
+> **No painel *Workflows* do ComfyUI aparecem só os 2 `.json`** (`…-cloud` e `…-local`) — a sidebar filtra `.json`. Os outros arquivos (script, `presets.mjs`, docs) **não são workflows** e não abrem tela.
 
 ## Presets (estética hacker / cyberpunk / Mr. Robot)
-Editáveis em **`presets.mjs`** (campo `tags`); no cloud clicável, cole a string no prompt do nó Stability.
+Editáveis em **`presets.mjs`** (campo `tags`); no cloud clicável, cole a string no prompt do nó Sonilo.
 
 | `id` | Uso no jogo | Estilo (tags) |
 |---|---|---|
@@ -74,22 +73,23 @@ Editáveis em **`presets.mjs`** (campo `tags`); no cloud clicável, cole a strin
 | `confronto` | Quebra de firewall / boss | dark synthwave, driving arpeggios, ominous, tense, **120 BPM** |
 
 ## Loop perfeito e formato (Electron/Web Audio API)
-- **Evite MP3/AAC**: encoder insere *delay + padding* (silêncio) → o loop "engasga". Por isso os 2 workflows salvam **FLAC** (lossless) e o script baixa **WAV**.
+- **Evite MP3/AAC**: encoder insere *delay + padding* (silêncio) → o loop "engasga". Por isso o script baixa **WAV** e os workflows salvam **FLAC** (lossless).
 - No Electron: `decodeAudioData` → `AudioBufferSourceNode` com `loop=true` + `loopStart`/`loopEnd`.
 
 ## Validação
-- ✅ `text-to-music-cloud.json` e `text-to-music-local.json` parseiam; **todos os nós existem no `/object_info` ao vivo**; widgets alinhados; save lossless; links íntegros.
-- ✅ `bash -n setup.sh` ok; `node --check gerar_trilhas.mjs` ok; sem segredos no `.sh`.
-- ⏳ **Smoke real** pendente (precisa de créditos/chave/checkpoint).
+- ✅ **Smoke test real** (fal): `node gerar_trilhas.mjs --provider fal --preset menu --count 1` → gerou `menu_*.wav` (WAVE PCM 16-bit 48kHz, ~12MB/60s).
+- ✅ `text-to-music-cloud.json` (Sonilo) e `text-to-music-local.json` (ACE-Step): nós existem no `/object_info` ao vivo; widgets alinhados; save lossless.
+- ✅ `bash -n setup.sh` · `node --check gerar_trilhas.mjs` · sem segredos no `.sh`.
 
 ## Troubleshooting
 | Sintoma | Causa | Ação |
 |---|---|---|
-| Nó Stability pede login / "insufficient credits" | sem login/créditos comfy.org | Settings → Sign In em platform.comfy.org; adicione créditos |
-| Clico num arquivo e não abre tela | é doc/script, não workflow | Abra só os `.json` (`…-cloud`/`…-local`); o resto não é grafo |
-| `Falta a lib …` (script) | deps Node ausentes | `npm i replicate @fal-ai/client` (ou `bash setup.sh`) |
-| Loop com "clique"/gap | salvou MP3 | use os workflows (FLAC) ou o script (WAV); corte no zero-crossing |
-| OOM no caminho local | pouca VRAM | use A ou B (nuvem) ou reduza `duration` |
+| `API Error: Not Found` no nó Stability | comfy.org **não serve** Stable Audio | Use o nó **Sonilo** (`…-cloud.json`) ou o **script** (fal/Replicate) |
+| Nó Sonilo: `Unauthorized: Please login first` | sem login comfy.org | Settings → Sign In em platform.comfy.org + créditos |
+| Script: `Defina FAL_KEY…` | chave não exportada | `source ~/ComfyUI/secrets.env` antes de rodar o script |
+| Clico num arquivo e não abre tela | é doc/script, não workflow | Abra só os `.json` (`…-cloud`/`…-local`) |
+| Loop com "clique"/gap | salvou MP3 | use o script (WAV) ou os workflows (FLAC); corte no zero-crossing |
+| OOM no local | pouca VRAM | use B (script, sem GPU) ou reduza `duration` |
 
 ## Referências
 - Params, nós e **licenças com citação**: [`API_REFERENCE_text-to-music-api.md`](./API_REFERENCE_text-to-music-api.md)

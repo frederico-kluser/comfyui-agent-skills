@@ -1,34 +1,24 @@
 #!/usr/bin/env node
 // gerar_trilhas.mjs — gera trilhas instrumentais/ambient em LOTE por API de nuvem (ACE-Step), sem GPU local.
+// ZERO dependencias npm: usa so o `fetch` nativo do Node 18+ (nada de node_modules — nao polui a sidebar do ComfyUI).
 //
 // Modelo: ACE-Step (licenca permissiva — v1 3.5B Apache-2.0 / 1.5 MIT). O modelo NAO restringe o audio gerado;
-//   o direito comercial vem da ToS do HOST. Por isso o provedor importa (ver README / API_REFERENCE).
+//   o direito comercial vem da ToS do HOST (ver README / API_REFERENCE).
+//   --provider replicate -> fishaudio/ace-step-1.5 (MIT). ToS Replicate da POSSE + SOBREVIVE ao cancelamento (§5/§9.5).
+//   --provider fal       -> fal-ai/ace-step (v1 Apache-2.0). Schema confirmado, devolve WAV. (padrao)
 //
-//   --provider replicate  -> fishaudio/ace-step-1.5 (MIT). ToS do Replicate da POSSE do output e SOBREVIVE ao
-//                            cancelamento (secoes 5 e 9.5). => maxima seguranca juridica para "vender para sempre".
-//   --provider fal        -> fal-ai/ace-step (v1 Apache-2.0). Schema confirmado, devolve WAV, usa FAL_KEY (padrao
-//                            do repo). ToS do host fal nao foi verificada nesta pesquisa; como o modelo e permissivo,
-//                            o risco e baixo, mas para o requisito "vender para sempre" prefira replicate ou o local.
-//
-// Chaves (do AMBIENTE — nunca commitadas):
-//   export REPLICATE_API_TOKEN=r8_...     (provider replicate)
-//   export FAL_KEY=...                     (provider fal)  — pode vir de ~/ComfyUI/secrets.env
+// Chaves (do AMBIENTE — nunca commitadas):  export FAL_KEY=...   |   export REPLICATE_API_TOKEN=r8_...
 //
 // Uso:
-//   node gerar_trilhas.mjs                              # 1 faixa de cada preset, no fal
-//   node gerar_trilhas.mjs --provider replicate         # idem, no Replicate (ToS mais limpa)
-//   node gerar_trilhas.mjs --preset perseguicao --count 10   # 10 variacoes de um preset
-//   node gerar_trilhas.mjs --preset all --count 3 --duration 90 --out ./trilhas
-//
-// Saida: arquivos .wav em --out (default ./output), 1 por faixa, nome <preset>_<seed>.wav — prontos para loop.
+//   node gerar_trilhas.mjs                                   # 1 faixa de cada preset, no fal
+//   node gerar_trilhas.mjs --provider replicate --preset all --count 3
+//   node gerar_trilhas.mjs --preset perseguicao --count 10 --duration 90 --out ./trilhas
 
 import fs from "node:fs/promises";
 import path from "node:path";
-import { fileURLToPath } from "node:url";
 
-const AQUI = path.dirname(fileURLToPath(import.meta.url));
+const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
 
-// ---------- args ----------
 function parseArgs(argv) {
   const a = { provider: "fal", preset: "all", count: 1, duration: null, steps: null, out: "./output" };
   for (let i = 0; i < argv.length; i++) {
@@ -39,68 +29,71 @@ function parseArgs(argv) {
     else if (k === "--duration") a.duration = parseFloat(argv[++i]);
     else if (k === "--steps") a.steps = parseInt(argv[++i], 10);
     else if (k === "--out") a.out = argv[++i];
-    else if (k === "-h" || k === "--help") { a.help = true; }
+    else if (k === "-h" || k === "--help") a.help = true;
   }
   return a;
 }
 
 function seedAleatorio() {
-  // faixa inedita a cada chamada (sem Math.random travado; usa o relogio + ruido)
   return Math.floor((Date.now() % 1_000_000) * Math.random());
 }
 
-// ---------- provedores ----------
+// ---------- fal: fila REST (submit -> poll -> result) ----------
 async function gerarFal(preset, { duration, steps }) {
-  let fal;
-  try { ({ fal } = await import("@fal-ai/client")); }
-  catch { throw new Error("Falta a lib: rode  npm i @fal-ai/client  (ou  bash setup.sh)"); }
-  if (!process.env.FAL_KEY) throw new Error("Defina FAL_KEY no ambiente (ex.: export FAL_KEY=... ou ~/ComfyUI/secrets.env).");
-  fal.config({ credentials: process.env.FAL_KEY });
-
+  const key = process.env.FAL_KEY;
+  if (!key) throw new Error("Defina FAL_KEY no ambiente (source ~/ComfyUI/secrets.env).");
   const seed = seedAleatorio();
-  const input = {
-    tags: preset.tags,
-    lyrics: "[inst]",                 // instrumental puro
-    duration: duration ?? 60,
-    seed,
-  };
+  const input = { tags: preset.tags, lyrics: "[inst]", duration: duration ?? 60, seed };
   if (steps) input.number_of_steps = steps;
-  const r = await fal.subscribe("fal-ai/ace-step", { input, logs: false });
-  const data = r?.data ?? r;
-  const url = data?.audio?.url ?? data?.audio_url ?? data?.url;
-  if (!url) throw new Error("fal nao devolveu URL de audio: " + JSON.stringify(data).slice(0, 300));
+  const H = { Authorization: `Key ${key}`, "Content-Type": "application/json" };
+
+  let r = await fetch("https://queue.fal.run/fal-ai/ace-step", { method: "POST", headers: H, body: JSON.stringify(input) });
+  if (!r.ok) throw new Error(`fal submit ${r.status}: ${(await r.text()).slice(0, 200)}`);
+  const sub = await r.json();
+  if (sub?.audio?.url) return { url: sub.audio.url, seed };            // caso responda sincrono
+  const statusUrl = sub.status_url, responseUrl = sub.response_url;
+  if (!statusUrl || !responseUrl) throw new Error("fal: resposta sem status/response_url: " + JSON.stringify(sub).slice(0, 200));
+
+  for (let i = 0; i < 150; i++) {
+    await sleep(2000);
+    const s = await (await fetch(statusUrl, { headers: H })).json();
+    if (s.status === "COMPLETED") break;
+    if (s.status === "FAILED" || s.status === "ERROR") throw new Error("fal FAILED: " + JSON.stringify(s).slice(0, 200));
+  }
+  const out = await (await fetch(responseUrl, { headers: H })).json();
+  const url = out?.audio?.url ?? out?.audio_url;
+  if (!url) throw new Error("fal: sem audio na resposta: " + JSON.stringify(out).slice(0, 200));
   return { url, seed };
 }
 
+// ---------- replicate: prediction com Prefer: wait ----------
 async function gerarReplicate(preset, { duration, steps }) {
-  let Replicate;
-  try { Replicate = (await import("replicate")).default; }
-  catch { throw new Error("Falta a lib: rode  npm i replicate  (ou  bash setup.sh)"); }
-  if (!process.env.REPLICATE_API_TOKEN) throw new Error("Defina REPLICATE_API_TOKEN no ambiente (r8_...).");
-  const replicate = new Replicate({ auth: process.env.REPLICATE_API_TOKEN });
-
+  const key = process.env.REPLICATE_API_TOKEN;
+  if (!key) throw new Error("Defina REPLICATE_API_TOKEN no ambiente (r8_...).");
   const seed = seedAleatorio();
-  const input = {
-    prompt: preset.tags,              // no Replicate o estilo vai em 'prompt'
-    lyrics: "[instrumental]",
-    instrumental: true,               // forca instrumental independentemente de lyrics
-    duration: duration ?? 60,
-    seed,
-  };
+  const input = { prompt: preset.tags, lyrics: "[instrumental]", instrumental: true, duration: duration ?? 60, seed };
   if (steps) input.infer_step = steps;
-  const out = await replicate.run("fishaudio/ace-step-1.5", { input });
-  // o client novo devolve FileOutput (com .url()); versoes antigas, string ou array
-  let url = out;
-  if (Array.isArray(out)) url = out[0];
-  if (url && typeof url === "object") url = typeof url.url === "function" ? url.url() : (url.url ?? String(url));
+  const H = { Authorization: `Bearer ${key}`, "Content-Type": "application/json", Prefer: "wait" };
+
+  let r = await fetch("https://api.replicate.com/v1/models/fishaudio/ace-step-1.5/predictions", {
+    method: "POST", headers: H, body: JSON.stringify({ input }),
+  });
+  if (!r.ok) throw new Error(`replicate ${r.status}: ${(await r.text()).slice(0, 200)}`);
+  let p = await r.json();
+  while (!["succeeded", "failed", "canceled"].includes(p.status)) {
+    await sleep(2000);
+    p = await (await fetch(p.urls.get, { headers: { Authorization: `Bearer ${key}` } })).json();
+  }
+  if (p.status !== "succeeded") throw new Error("replicate " + p.status + ": " + JSON.stringify(p.error || "").slice(0, 200));
+  let url = Array.isArray(p.output) ? p.output[0] : p.output;
+  if (url && typeof url === "object") url = url.url ?? String(url);
   url = String(url);
-  if (!url.startsWith("http")) throw new Error("Replicate nao devolveu URL de audio: " + url.slice(0, 300));
+  if (!url.startsWith("http")) throw new Error("replicate: output nao-URL: " + url.slice(0, 200));
   return { url, seed };
 }
 
 const PROVEDORES = { fal: gerarFal, replicate: gerarReplicate };
 
-// ---------- download ----------
 async function baixarWav(url, destino) {
   const resp = await fetch(url);
   if (!resp.ok) throw new Error(`download falhou (${resp.status}) ${url}`);
@@ -109,7 +102,6 @@ async function baixarWav(url, destino) {
   return buf.length;
 }
 
-// ---------- main ----------
 async function main() {
   const args = parseArgs(process.argv.slice(2));
   if (args.help) {
@@ -148,7 +140,7 @@ async function main() {
     }
   }
   console.log(`\n>> concluido: ${ok}/${total} faixa(s) em ${args.out}`);
-  console.log(">> loop perfeito: WAV nao tem padding de compressao (ver README). No Electron/Web Audio API, use loopStart/loopEnd no AudioBufferSourceNode.");
+  console.log(">> loop perfeito: WAV nao tem padding de compressao. No Electron/Web Audio API use loopStart/loopEnd no AudioBufferSourceNode.");
 }
 
 main().catch((e) => { console.error(e); process.exit(1); });

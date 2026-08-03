@@ -1,19 +1,19 @@
 {
-  "id": "1adf06bd-6553-49a3-a635-20f6aaa8fa80",
+  "id": "9132f036-0cbe-44bb-9948-c8d1348ec66b",
   "revision": 0,
-  "last_node_id": 8,
-  "last_link_id": 3,
+  "last_node_id": 727,
+  "last_link_id": 1817,
   "nodes": [
     {
-      "id": 4,
-      "type": "StabilityTextToAudio",
+      "id": 726,
+      "type": "SoniloTextToMusic",
       "pos": [
-        -1440,
-        320
+        -1450,
+        3600
       ],
       "size": [
-        410,
-        360
+        400,
+        204
       ],
       "flags": {},
       "order": 0,
@@ -24,88 +24,58 @@
           "name": "AUDIO",
           "type": "AUDIO",
           "links": [
-            3
+            1817
           ]
         }
       ],
       "properties": {
-        "Node name for S&R": "StabilityTextToAudio",
-        "cnr_id": "comfy-core",
-        "ver": "0.3.57"
+        "Node name for S&R": "SoniloTextToMusic"
       },
       "widgets_values": [
-        "stable-audio-2.5",
-        "dark ambient, mysterious, deep drones, suspenseful, enigmatic textures, shadowy, slow-moving, 80 BPM",
+        "dark ambient, mysterious, deep drones, suspenseful, enigmatic textures, shadowy, slow-moving, 80 BPM\n",
         60,
-        2981122115,
-        "randomize",
-        8
+        0,
+        "randomize"
       ],
       "color": "#432",
       "bgcolor": "#653"
     },
     {
-      "id": 6,
+      "id": 727,
       "type": "SaveAudio",
       "pos": [
         -1010,
-        320
+        3600
       ],
       "size": [
-        390,
-        240
+        430,
+        70
       ],
       "flags": {},
-      "order": 2,
+      "order": 1,
       "mode": 0,
       "inputs": [
         {
           "name": "audio",
           "type": "AUDIO",
-          "link": 3
+          "link": 1817
         }
       ],
       "outputs": [],
       "properties": {
-        "Node name for S&R": "SaveAudio",
-        "cnr_id": "comfy-core",
-        "ver": "0.3.57"
+        "Node name for S&R": "SaveAudio"
       },
       "widgets_values": [
         "audio/hacker_cloud"
       ]
-    },
-    {
-      "id": 7,
-      "type": "MarkdownNote",
-      "pos": [
-        -1830,
-        320
-      ],
-      "size": [
-        370,
-        230
-      ],
-      "flags": {},
-      "order": 1,
-      "mode": 0,
-      "inputs": [],
-      "outputs": [],
-      "title": "Note: About API Node",
-      "properties": {},
-      "widgets_values": [
-        "[Tutorial](https://docs.comfy.org/tutorials/partner-nodes/stability-ai/stable-audio) | [教程](https://docs.comfy.org/zh/tutorials/partner-nodes/stability-ai/stable-audio)｜[About API Node](https://docs.comfy.org/tutorials/partner-nodes/overview) | [Pricing](https://docs.comfy.org/tutorials/partner-nodes/pricing)\n\nTo use the API, you must be in a secure network environment:\n\n- Allows access from `127.0.0.1` or `localhost`.\n\n- Use our API Node in website services starting with `https`\n\n- Make sure you can normally connect to our API services (some regions may need a proxy).\n\n- Make sure you are logged in in the settings and that your account still has enough credits to cover the consumption of API calls.\n\n- On non-whitelisted sites or local area networks (LANs), please try to [log in using an API Key](https://docs.comfy.org/interface/user#logging-in-with-an-api-key)."
-      ],
-      "color": "#222",
-      "bgcolor": "#000"
     }
   ],
   "links": [
     [
-      3,
-      4,
+      1817,
+      726,
       0,
-      6,
+      727,
       0,
       "AUDIO"
     ]
@@ -113,14 +83,15 @@
   "groups": [],
   "config": {},
   "extra": {
+    "ue_links": [],
     "ds": {
-      "scale": 1.4818888525121015,
+      "scale": 1.0005407009398435,
       "offset": [
-        1920.4836212062016,
-        -88.49792893081995
+        1987.0522464242404,
+        -3280.743439224505
       ]
     },
-    "frontendVersion": "1.27.2"
+    "frontendVersion": "1.42.10"
   },
   "version": 0.4
 }

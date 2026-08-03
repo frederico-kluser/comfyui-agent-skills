@@ -23,23 +23,23 @@ Nós de música por API **já instalados** no ComfyUI (modelo roda no provedor; 
 
 | Nó (clicável) | Modelo | Billing | Direito comercial (jogo pago) | Veredito |
 |---|---|---|---|---|
-| **`StabilityTextToAudio`** 🏆 | Stable Audio 2.5 | créditos comfy.org | ToS hospedada **§4.a CEDE a posse** do output ("we assign to you all of our right, title, and interest in the Outputs"); sobrevive ao cancelamento (§12.e→§10); **teto US$1M é só dos pesos self-hosted, não da API** | ✅ **Melhor cloud clicável** |
-| `SoniloTextToMusic` | Sonilo v1.1 | créditos comfy.org | comercial **só no tier pago**; posse fraca ("assigns any rights we may have"); **sem cláusula de sobrevivência** → "vender pra sempre" não confirmado; "perpetual/irrevocable" na ToS corre USER→Sonilo (treino) | 🟡 **atrelado à assinatura** |
+| 🏆 `SoniloTextToMusic` | Sonilo v1.1 (0,53/seg) | créditos comfy.org | **ÚNICO cloud clicável que o comfy.org serve**; comercial **só no tier pago**; posse fraca ("assigns any rights we may have"); **sem cláusula de sobrevivência**; treinado em conteúdo licenciado (Shutterstock) → baixo risco de litígio | 🟡 **clicável, licença fraca** |
+| ⛔ `StabilityTextToAudio` | Stable Audio 2.5 | — | licença hospedada **seria** limpa (§4.a cede posse + §12.e sobrevive), **MAS o comfy.org NÃO serve esse endpoint** (`/proxy/stability/.../stable-audio-2/...`) → **`API Error: Not Found` 404**; não está na tabela de preços do comfy.org | ⛔ **não usável hoje** |
 | `Replicate meta/musicgen` | MusicGen | Replicate | pesos **CC-BY-NC 4.0 = NÃO-COMERCIAL** (o código é MIT, mas os pesos que geram o áudio não são); o host não concede mais que a licença dos pesos | ⛔ **proibido** em jogo pago |
 | ACE-Step via `comfyui-replicate` | ACE-Step 1.5 (MIT) | Replicate | **mais limpo em tese** (MIT), mas: (a) **não vem pré-instalado** (edite `supported_models.json` + `./import_schemas.py`); (b) o README avisa que **saídas de áudio "podem não funcionar"** | 🟡 setup + risco técnico |
 
-> ⚠️ **Créditos comfy.org não dão direito por si**: a ToS do comfy.org define "Output" só como conteúdo **visual** — áudio de partner é regido pela ToS do **provedor** (Stability/Sonilo). Por isso o Stability, que **cede posse**, é o que importa.
+> ⚠️ **Créditos comfy.org não dão direito por si**: a ToS do comfy.org define "Output" só como conteúdo **visual** — áudio de partner é regido pela ToS do **provedor**. Como o único servido é o **Sonilo** (licença fraca), para direito comercial **limpo** use o **script/local ACE-Step** (MIT/Apache).
 
-### `StabilityTextToAudio` (o nó do `text-to-music-cloud.json`)
-saída: `AUDIO` → `SaveAudio` (FLAC lossless). Ordem dos widgets: `model, prompt, duration, seed, [control], steps`.
+### `SoniloTextToMusic` (o nó do `text-to-music-cloud.json`)
+saída: `AUDIO` → `SaveAudio` (FLAC lossless). Ordem dos widgets: `prompt, duration, seed, [control]`.
 
 | Widget | Vale | Nota |
 |---|---|---|
-| `model` | `stable-audio-2.5` | combo (versão hospedada) |
 | `prompt` | estilo/tags | ex.: `dark ambient, deep drones, 80 BPM` |
-| `duration` | INT (s) | segundos da faixa |
+| `duration` | INT (s) | 1–360; default 30 |
 | `seed` | INT | `control_after_generate=randomize` p/ variar |
-| `steps` | INT | ~8 (Stable Audio 2.5 usa poucos passos) |
+
+> Outro áudio servido pelo comfy.org: `ByteDanceSeedAudio` (Seed Audio 1.0, ~45/min) — licença não verificada.
 
 ---
 
@@ -124,7 +124,7 @@ Critério = **o direito comercial sobrevive ao cancelamento da assinatura?**
 | 2 | **ACE-Step local (open)** | Você roda os pesos (Apache-2.0/MIT) | N/A (sem host) | 🏆 **Licença mais limpa** + grátis |
 | 3 | Soundraw | Licença (Soundraw mantém copyright) | **Sim** (perpétuo pós-download) | 🟢 ok, mas sem posse |
 | 4 | Loudly | Licença (tier pago) | Provável (não citado explícito) | 🟢 ok |
-| 5a | Stable Audio **hospedado** (API/nó `StabilityTextToAudio`) | **Posse cedida** (§4.a) | **Sim** — sobrevive (§12.e→§10); **sem** teto US$1M na API | 🟢 **cloud clicável ok** |
+| 5a | Stable Audio **hospedado** (nó `StabilityTextToAudio`) | **Posse cedida** (§4.a) | Sim (§12.e→§10) — MAS ⚠️ **o comfy.org NÃO serve** esse endpoint → **404** | ⛔ **licença ok, mas indisponível hoje** |
 | 5b | Stable Audio **pesos self-hosted** (Community License) | Posse do output | Licença **revogável** + auto-termina acima de **US$1M/ano** | 🔴 não usar (é a licença dos pesos, não da API) |
 | 6 | **Suno** (Pro/Premier) | **Posse** (assignment) | Sim (assignment é transferência) | 🔴 **em litígio** (Sony/UMG/Warner) |
 | 7 | Udio | ToS não verificada | — | 🔴 **em litígio** |

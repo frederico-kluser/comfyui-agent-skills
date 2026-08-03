@@ -38,16 +38,12 @@ get_files(){
   done
 }
 
-# deps do script de nuvem (Node): replicate + @fal-ai/client
-node_deps(){
-  if ! command -v npm >/dev/null 2>&1; then
-    echo ">> npm nao encontrado. Instale Node.js 18+ (https://nodejs.org) e rode de novo, OU use so o caminho LOCAL (ComfyUI)."
-    return 0
-  fi
-  ( cd "$DEST" && [ -f package.json ] || printf '{\n  "name": "text-to-music-api",\n  "private": true,\n  "type": "module"\n}\n' > package.json )
-  ( cd "$DEST" && npm install --no-audit --no-fund replicate @fal-ai/client ) \
-    && echo ">> deps Node instaladas em $DEST/node_modules" \
-    || echo ">> falha no npm install (rode manualmente:  cd \"$DEST\" && npm i replicate @fal-ai/client )"
+# O script gerar_trilhas.mjs e ZERO-dependencia (usa so o fetch nativo do Node 18+).
+# NAO instalamos node_modules aqui de proposito: ele ficaria sob a pasta de workflows (symlink) e
+# poluiria a sidebar do ComfyUI com dezenas de package.json. So checamos o Node.
+check_node(){
+  if command -v node >/dev/null 2>&1; then echo ">> Node $(node -v) ok (script nao precisa de npm install)."
+  else echo ">> Node.js 18+ nao encontrado — necessario p/ o script de nuvem (https://nodejs.org)."; fi
 }
 
 # grava chaves do AMBIENTE em secrets.env (nunca embute segredo no repo)
@@ -69,7 +65,7 @@ get_checkpoint(){
   else wget -c -O "$dir/ace_step_v1_3.5b.safetensors" "$url"; fi
 }
 
-get_files; node_deps; config_keys; get_checkpoint
+get_files; check_node; config_keys; get_checkpoint
 echo "============================================"
 echo " text-to-music-api pronto."
 echo " Bundle em: $DEST"

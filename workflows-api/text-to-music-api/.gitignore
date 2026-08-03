@@ -1,0 +1,7 @@
+# runtime artifacts do bundle — nao versionar
+node_modules/
+package-lock.json
+output/
+*.wav
+*.flac
+*.opus
