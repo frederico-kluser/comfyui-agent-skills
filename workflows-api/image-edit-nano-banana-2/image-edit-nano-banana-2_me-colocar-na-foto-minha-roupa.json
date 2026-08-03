@@ -1,59 +1,89 @@
 {
-  "id": "45f6e2db-733f-4174-a91e-5b89e94f2394",
+  "id": "ae75ccc2-ae1f-5c83-a272-796f1b20d8db",
   "revision": 0,
-  "last_node_id": 27,
-  "last_link_id": 20,
+  "last_node_id": 17,
+  "last_link_id": 14,
   "nodes": [
     {
       "id": 1,
       "type": "MarkdownNote",
       "pos": [
         -40,
-        -4440
+        -1010
       ],
       "size": [
-        720,
-        700
+        700,
+        920
       ],
       "flags": {},
       "order": 0,
       "mode": 0,
-      "color": "#223",
-      "bgcolor": "#653",
       "inputs": [],
       "outputs": [],
-      "properties": {},
+      "properties": {
+        "Node name for S&R": "MarkdownNote"
+      },
       "widgets_values": [
-        "# 🎛️ Como usar este arquivo\n\n**Processo único: 5 · ME COLOCAR NA FOTO — com a MINHA ROUPA e a MINHA POSE**\n\nInsere você na cena, mantendo a SUA roupa e a SUA pose. Sobe a cena de destino como BASE e a sua foto de corpo inteiro como REF.\n\n## O que você precisa\n- **BASE** (`LoadImage` à esquerda): a cena de destino.\n- **REF** (`LoadImage` à direita): minha foto de corpo inteiro (obrigatória).\n\n## O prompt\nEstá em **inglês** de propósito — o modelo segue instrução em inglês com bem mais fidelidade.\nOnde houver `<DESCREVA AQUI ...>`, **troque pelo seu texto**.\n\n## A cláusula de realismo\nO prompt termina com um bloco que resolve **iluminação, sombras, lente e grão** — é ele que faz o\nresultado \"casar\" com a foto original. **Não apague.** Se o resultado ficar plástico ou com borda de\nrecorte, é sinal de que essa parte foi perdida.\n\n## Encadear com outros processos\nA saída deste processo (em `output/`) pode virar a **BASE** do próximo: baixe o PNG gerado e suba no\n`LoadImage` da BASE do processo seguinte."
+        "# 🎛️ Como usar\n\n**Processo: 5 · ME COLOCAR NA FOTO — com a MINHA ROUPA e a MINHA POSE**\n\n## 1. Suba as imagens (coluna da esquerda)\n| Slot | O que subir |\n|---|---|\n| **BASE** | a cena/foto de destino → vira **Image 1** no prompt |\n| **REF 1** | a MINHA foto de corpo inteiro (a roupa e a pose a manter) → vira **Image 2** |\n| **REF 2** | a MINHA foto — SEGUNDO angulo (rosto nitido) → vira **Image 3** |\n> A **ordem importa**: o prompt cita as imagens por posicao (`Image 1`, `Image 2`…).\n> E assim que estes modelos identificam quem e a base e quem e a referencia.\n\n## 2. Edite o prompt\nEsta em **ingles** de proposito — os modelos seguem instrucao em ingles com bem mais fidelidade.\nOnde houver `<DESCREVA AQUI ...>`, troque pelo seu texto.\n\n**Nao apague os 3 paragrafos finais.** Eles resolvem, nesta ordem:\n1. **Exposicao** — impede o erro classico de colagem (voce bem exposto na frente de uma\n   janela estourada). Foi o defeito visivel nas suas geracoes anteriores.\n2. **Luz / lente / grao** — casa sombra, temperatura de cor e caracteristica de lente.\n3. **Look de celular** — enquadramento casual, sem cara de estudio.\n\n## 3. Run\nSaem **dois** arquivos:\n- `output/edit/nb2_me-colocar-na-foto-minha-roupa_limpo_*.png` → **PNG limpo**, direto do modelo. Use este para **encadear** noutro processo.\n- `output/edit/nb2_me-colocar-na-foto-minha-roupa_FINAL_*.jpg` → **JPG tratado** pela cadeia de realismo. **Este e o entregavel.**\n\n## 4. Se ainda parecer IA\nAumente o tratamento: no grupo de realismo troque para o preset `marcado`\n(veja a nota *Realismo* a direita). O bundle ja vem no preset `padrao`.\n"
       ],
-      "title": "LEIA PRIMEIRO"
+      "title": "LEIA PRIMEIRO",
+      "color": "#432",
+      "bgcolor": "#653"
     },
     {
       "id": 2,
       "type": "MarkdownNote",
       "pos": [
         700,
-        -4440
+        -1010
       ],
       "size": [
-        520,
-        700
+        580,
+        920
       ],
       "flags": {},
       "order": 1,
       "mode": 0,
-      "color": "#233",
-      "bgcolor": "#653",
       "inputs": [],
       "outputs": [],
-      "properties": {},
+      "properties": {
+        "Node name for S&R": "MarkdownNote"
+      },
       "widgets_values": [
-        "# Nano Banana 2 · Gemini 3.1 Flash Image\n\n**Nó:** `GeminiNanoBanana2` — `partner/image/Gemini`\n**Billing:** créditos **comfy.org** (login em `platform.comfy.org`, sem chave de API)\n\n## Ajustes que importam\n| Widget | Vem como | O que fazer |\n|---|---|---|\n| `thinking_level` | `HIGH` | Deixe **HIGH** para trocar pessoa / casar luz. `MINIMAL` é mais rápido e barato, mas erra perspectiva e sombra. |\n| `resolution` | `2K` | `4K` só na finalização (upscaler nativo do Gemini). |\n| `aspect_ratio` | `auto` | `auto` mantém o formato da BASE. Só mude se quiser reenquadrar. |\n| `seed` | `randomize` | Achou um resultado bom? Troque para **fixed** e guarde o número. |\n| `system_prompt` | preenchido | Já está calibrado para **fotorrealismo/compositing**. Não apague. |\n\n## Ordem das imagens = ordem do prompt\nO `Empilha as imagens` define quem é **Image 1** (a BASE, `image0`) e quem é **Image 2** (a REF, `image1`). Inverter a ordem inverte o significado do prompt.\n\nAceita até **14** imagens de referência — é só ligar mais `LoadImage` nos slots livres do `Empilha as imagens` e citar `Image 3`, `Image 4`… no prompt.\n\n## Saídas do nó\n`IMAGE` (use esta) · `STRING` (texto, se `response_modalities=IMAGE+TEXT`) · `thought_image` (rascunho do raciocínio — útil para depurar por que ele errou)."
+        "# Nano Banana 2 · Gemini 3.1 Flash Image\n\n**No:** `GeminiNanoBanana2` — `partner/image/Gemini`\n\n## 💳 Como pagar / obter acesso\n**Nao usa chave de API.** Billing por **creditos comfy.org**:\n1. No ComfyUI: **Settings → User → Login** (ou o botao de conta no topo).\n2. Entre/crie conta em `platform.comfy.org`.\n3. Compre creditos em **Credits** no painel.\n4. Pronto — o no passa a executar. Confira o saldo no proprio painel.\n\n> Alternativa por chave (se preferir sair do comfy.org): existe o no `NanoBanana2_fal`\n> (`FAL/Image`), que usa `FAL_KEY`. Veja como pegar a chave no README do bundle de video.\n\n## Ajustes que importam\n| Widget | Vem como | Nota |\n|---|---|---|\n| `resolution` | **`1K`** | **Mudei de 2K para 1K.** E o minimo do modelo: mais barato, e resolucao menor ja ajuda no look de celular. `4K` so na finalizacao. |\n| `aspect_ratio` | `auto` | `auto` mantem o formato da sua foto BASE. Mudar aqui **reenquadra**. |\n| `thinking_level` | `HIGH` | Deixe **HIGH** para inserir pessoa / casar luz. `MINIMAL` e mais barato mas erra perspectiva e sombra. |\n| `seed` | `randomize` | Gostou de um resultado? Troque para `fixed` e anote o numero. Repeticao e *best effort*. |\n| `system_prompt` | preenchido | Calibrado para compositing fotorrealista. **Nao apague.** |\n\n## Ate 14 referencias\nO `Empilha as imagens` aceita **14** slots. Mais fotos suas (angulos diferentes)\n= identidade mais travada. E o motivo de este bundle ja vir com **2 slots de rosto**\nnos processos de pessoa.\n\n## Saidas\n`IMAGE` (a que usamos) · `STRING` (texto, se `response_modalities=IMAGE+TEXT`) ·\n`thought_image` (rascunho do raciocinio — util para depurar por que ele errou).\n"
       ],
-      "title": "O modelo"
+      "title": "O modelo · billing",
+      "color": "#432",
+      "bgcolor": "#653"
     },
     {
-      "id": 23,
+      "id": 3,
+      "type": "MarkdownNote",
+      "pos": [
+        1320,
+        -1010
+      ],
+      "size": [
+        660,
+        920
+      ],
+      "flags": {},
+      "order": 2,
+      "mode": 0,
+      "inputs": [],
+      "outputs": [],
+      "properties": {
+        "Node name for S&R": "MarkdownNote"
+      },
+      "widgets_values": [
+        "# 📱 Realismo de celular\n\nOs 8 nos verdes rodam **localmente na CPU** — **custo zero**, nao gastam credito.\nSao eles que tiram o aspecto \"IA limpa demais\".\n\n## Por que isso e necessario\nPedir grao e ruido **no prompt nao funciona**: o modelo entrega uma imagem\nmatematicamente limpa (gradientes perfeitos, pele sem poro, tudo igualmente nitido).\nFoto de celular de verdade tem uma assinatura de sensor que so se reproduz **depois**.\n\n## Presets (medidos, nao chutados)\n| Preset | Quando usar |\n|---|---|\n| `limpo` | luz boa, quer o minimo de tratamento |\n| **`padrao`** ← vem assim | **serve para quase tudo** |\n| `marcado` | quando o resultado ainda parece \"renderizado\" |\n| `luzbaixa` | foto de noite / ambiente escuro |\n\n## Como trocar de preset\n| No | `limpo` | **`padrao`** | `marcado` | `luzbaixa` |\n|---|---|---|---|---|\n| 2 · `largest_size` | 1024 | **896** | 768 | 720 |\n| 3 · `contrast` | 0.97 | **0.95** | 0.93 | 0.90 |\n| 3 · `saturation` | 1.06 | **1.08** | 1.10 | 0.98 |\n| 4 · `intensity` (CA) | 0.0 | **0.06** | 0.10 | 0.08 |\n| 5 · `alpha` (sharpen) | 0.35 | **0.50** | 0.65 | 0.40 |\n| 6 · `intensity` (grao) | 0.03 | **0.05** | 0.08 | 0.14 |\n| 7 · `strength` (ruido) | 0.006 | **0.010** | 0.016 | 0.030 |\n| 8 · `quality` (JPG) | 92 | **90** | 85 | 80 |\n\n> ⚠️ **Nao exagere.** Testado: aberracao cromatica acima de ~0.15 cria franja\n> colorida em toda borda e grao acima de ~0.2 vira chuvisco. Ai para de parecer\n> celular e passa a parecer JPEG estragado.\n\n## ⚠️ No 2 — `largest_size` e tambem uma trava de seguranca\nEle limita o **lado maior** e preserva a proporcao. Alem de entregar a resolucao\nbaixa que voce pediu, ele **protege a memoria**: o no 6 (grao) supersampleia 4x\ninternamente. Sem esse limite, uma foto muito grande **derruba o ComfyUI** —\naconteceu aqui durante a calibracao, com uma imagem de 5248x12800.\n\n**Nao aumente `largest_size` acima de ~2048.** Se precisar de mais resolucao,\nsuba antes o `resolution` do modelo e mantenha este no baixo.\n\n## No 1 — `ColorMatchV2`\nPuxa a paleta da **sua foto BASE** para o resultado. E o que faz a pessoa inserida\n\"pertencer\" aquela foto. `strength 0.45` e o meio-termo; suba para 0.7 se a cena\ntiver uma dominante forte (por-do-sol, luz de restaurante).\n"
+      ],
+      "title": "Realismo de celular",
+      "color": "#432",
+      "bgcolor": "#356"
+    },
+    {
+      "id": 4,
       "type": "LoadImage",
       "pos": [
         0,
@@ -64,7 +94,7 @@
         340
       ],
       "flags": {},
-      "order": 22,
+      "order": 3,
       "mode": 0,
       "inputs": [],
       "outputs": [
@@ -72,28 +102,27 @@
           "name": "IMAGE",
           "type": "IMAGE",
           "links": [
-            17
+            1,
+            7
           ]
         },
         {
           "name": "MASK",
           "type": "MASK",
-          "links": null
+          "links": []
         }
       ],
       "properties": {
-        "cnr_id": "comfy-core",
-        "ver": "0.20.1",
         "Node name for S&R": "LoadImage"
       },
       "widgets_values": [
         "example.png",
         "image"
       ],
-      "title": "BASE — a cena/foto de destino"
+      "title": "BASE (Image 1) — a cena/foto de destino"
     },
     {
-      "id": 24,
+      "id": 5,
       "type": "LoadImage",
       "pos": [
         0,
@@ -104,7 +133,7 @@
         340
       ],
       "flags": {},
-      "order": 23,
+      "order": 4,
       "mode": 0,
       "inputs": [],
       "outputs": [
@@ -112,28 +141,64 @@
           "name": "IMAGE",
           "type": "IMAGE",
           "links": [
-            18
+            2
           ]
         },
         {
           "name": "MASK",
           "type": "MASK",
-          "links": null
+          "links": []
         }
       ],
       "properties": {
-        "cnr_id": "comfy-core",
-        "ver": "0.20.1",
         "Node name for S&R": "LoadImage"
       },
       "widgets_values": [
         "example.png",
         "image"
       ],
-      "title": "REF — a MINHA foto de corpo inteiro (a roupa e a pose a manter)"
+      "title": "REF 1 (Image 2) — a MINHA foto de corpo inteiro (a roupa e a pose a manter)"
     },
     {
-      "id": 25,
+      "id": 6,
+      "type": "LoadImage",
+      "pos": [
+        0,
+        820
+      ],
+      "size": [
+        260,
+        340
+      ],
+      "flags": {},
+      "order": 5,
+      "mode": 0,
+      "inputs": [],
+      "outputs": [
+        {
+          "name": "IMAGE",
+          "type": "IMAGE",
+          "links": [
+            3
+          ]
+        },
+        {
+          "name": "MASK",
+          "type": "MASK",
+          "links": []
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "LoadImage"
+      },
+      "widgets_values": [
+        "example.png",
+        "image"
+      ],
+      "title": "REF 2 (Image 3) — a MINHA foto — SEGUNDO angulo (rosto nitido)"
+    },
+    {
+      "id": 7,
       "type": "BatchImagesNode",
       "pos": [
         330,
@@ -141,30 +206,38 @@
       ],
       "size": [
         240,
-        152
+        144
       ],
       "flags": {},
-      "order": 24,
+      "order": 6,
       "mode": 0,
       "inputs": [
         {
-          "label": "image0",
           "name": "images.image0",
           "type": "IMAGE",
-          "link": 17
+          "link": 1,
+          "label": "image0"
         },
         {
-          "label": "image1",
           "name": "images.image1",
           "type": "IMAGE",
-          "link": 18
+          "link": 2,
+          "shape": 7,
+          "label": "image1"
         },
         {
-          "label": "image2",
           "name": "images.image2",
-          "shape": 7,
           "type": "IMAGE",
-          "link": null
+          "link": 3,
+          "shape": 7,
+          "label": "image2"
+        },
+        {
+          "name": "images.image3",
+          "type": "IMAGE",
+          "link": null,
+          "shape": 7,
+          "label": "image3"
         }
       ],
       "outputs": [
@@ -172,44 +245,42 @@
           "name": "IMAGE",
           "type": "IMAGE",
           "links": [
-            19
+            4
           ]
         }
       ],
       "properties": {
-        "cnr_id": "comfy-core",
-        "ver": "0.14.1",
         "Node name for S&R": "BatchImagesNode"
       },
       "widgets_values": [],
-      "title": "Empilha as imagens"
+      "title": "Empilha as imagens  (ordem = Image 1, 2, 3…)"
     },
     {
-      "id": 26,
+      "id": 8,
       "type": "GeminiNanoBanana2",
       "pos": [
         620,
         60
       ],
       "size": [
-        420,
-        560
+        430,
+        640
       ],
       "flags": {},
-      "order": 25,
+      "order": 7,
       "mode": 0,
       "inputs": [
         {
           "name": "images",
-          "shape": 7,
           "type": "IMAGE",
-          "link": 19
+          "link": 4,
+          "shape": 7
         },
         {
           "name": "files",
-          "shape": 7,
           "type": "GEMINI_INPUT_FILES",
-          "link": null
+          "link": null,
+          "shape": 7
         }
       ],
       "outputs": [
@@ -217,43 +288,44 @@
           "name": "IMAGE",
           "type": "IMAGE",
           "links": [
-            20
+            5,
+            6
           ]
         },
         {
           "name": "STRING",
           "type": "STRING",
-          "links": null
+          "links": []
         },
         {
           "name": "thought_image",
           "type": "IMAGE",
-          "links": null
+          "links": []
         }
       ],
       "properties": {
-        "cnr_id": "comfy-core",
-        "ver": "0.20.1",
         "Node name for S&R": "GeminiNanoBanana2"
       },
       "widgets_values": [
-        "Remove the person in Image 1 and put me, the person from Image 2, in their place.\nKeep from Image 2: my identity, my exact outfit with every garment detail, and my exact body pose, including limb angles, hand positions and head tilt.\nKeep from Image 1 only the environment: background, framing, camera angle, focal length, perspective, horizon line and lighting. Fully reconstruct whatever the removed person was occluding.\nIntegrate me physically into the scene: scale me to the scene's perspective, place my contact points (feet, hands, whichever touches a surface) exactly on the ground plane where the original person made contact, and respect the camera height and horizon line so I am not floating or tilted.\nRe-light every edited element to match the base photograph: light direction, colour temperature, intensity, contrast and shadow softness. Add correct cast shadows, contact shadows and bounce light from nearby surfaces. Match the base photo's lens characteristics, depth of field, motion blur, chromatic aberration, highlight roll-off and film grain. Preserve skin pores and fabric weave. Photorealistic, no visible seam, no cutout edge, no plastic or over-smoothed skin.",
+        "Insert me — the person shown in Image 2 and Image 3 — into the scene of Image 1 as a new person present in that place.\nImage 2 and Image 3 are two photographs of the SAME person (me), from different angles. Use BOTH to reconstruct my identity in three dimensions — do not copy either one flat. Reproduce with maximum fidelity: facial geometry and proportions, eye shape and colour, nose, mouth, jawline, ears, skin tone and texture, moles and blemishes, hairline, hair colour and style, facial hair, apparent age and body build.\nCarry over from Image 2: my clothing and every garment detail, and my body pose and posture.\nKeep from Image 1, pixel-faithful: the background, the location, the framing, the camera angle and everyone already in the frame. Do not remove anyone.\nPlace me at a plausible spot on the ground plane with correct scale for my distance from the camera, correct perspective and eye-line, a contact shadow where my feet meet the floor, and correct occlusion behind any object between me and the lens.\n\nMatch the base photograph's EXPOSURE behaviour, not just its colour: if the background is brighter than the subject, let the subject fall darker and slightly flat exactly as a phone camera would meter it; if a window or lamp is behind the subject, allow it to clip to white and spill a little halation onto the subject's edges. Never light the inserted person more flatteringly than the rest of the frame.\n\nRe-light every edited element to match the base photograph: light direction, colour temperature, intensity, contrast and shadow softness. Add correct cast shadows, contact shadows and bounce light from nearby surfaces. Match the base photo's lens characteristics, depth of field, motion blur, chromatic aberration, highlight roll-off and film grain. Preserve skin pores and fabric weave. Photorealistic, no visible seam, no cutout edge, no plastic or over-smoothed skin.\n\nOverall look: an ordinary snapshot taken on a modern smartphone by a friend — casual framing, slightly off-centre, imperfect horizon, natural unposed body language, ordinary ambient light. Not a studio portrait, not a magazine photo, no cinematic colour grade, no bokeh-heavy background, no beauty retouching.",
         "Nano Banana 2 (Gemini 3.1 Flash Image)",
         42,
         "randomize",
         "auto",
-        "2K",
+        "1K",
         "IMAGE",
         "HIGH",
-        "You are an expert photo-retouching and compositing engine. You must ALWAYS produce an image.\nTreat every instruction as a literal visual directive. Preserve photographic realism at all times: keep skin texture, pores, fabric weave, sensor noise and lens characteristics of the base photograph. Never switch to an illustrated, plastic or over-smoothed look. When compositing a subject into a scene, always solve light direction, colour temperature, contrast, cast shadows, contact shadows and bounce light before anything else."
+        "You are an expert photo-retouching and compositing engine. You must ALWAYS produce an image.\nTreat every instruction as a literal visual directive. Preserve photographic realism at all times: keep skin texture, pores, fabric weave, sensor noise and lens characteristics of the base photograph. Never switch to an illustrated, plastic or over-smoothed look. When compositing a subject into a scene, always solve light direction, colour temperature, contrast, cast shadows, contact shadows and bounce light before anything else. The result must be indistinguishable from an ordinary photograph taken on a consumer smartphone."
       ],
-      "title": "Nano Banana 2 — 5 · ME COLOCAR NA FOTO — com a MINHA ROUPA e a MINHA POSE"
+      "title": "Nano Banana 2 — 5 · ME COLOCAR NA FOTO — com a MINHA ROUPA e a MINHA POSE",
+      "color": "#323",
+      "bgcolor": "#535"
     },
     {
-      "id": 27,
+      "id": 9,
       "type": "SaveImage",
       "pos": [
-        1090,
+        1100,
         60
       ],
       "size": [
@@ -261,66 +333,536 @@
         300
       ],
       "flags": {},
-      "order": 26,
+      "order": 8,
       "mode": 0,
       "inputs": [
         {
           "name": "images",
           "type": "IMAGE",
-          "link": 20
+          "link": 5
         }
       ],
       "outputs": [],
       "properties": {
-        "cnr_id": "comfy-core",
-        "ver": "0.20.1",
         "Node name for S&R": "SaveImage"
       },
       "widgets_values": [
-        "edit/nb2_eu_minha_roupa"
+        "edit/nb2_me-colocar-na-foto-minha-roupa_limpo"
       ],
-      "title": "Salvar — 5 · ME COLOCAR NA FOTO — com a MINHA ROUPA e a MINHA POSE"
+      "title": "PNG limpo (para encadear noutro processo)"
+    },
+    {
+      "id": 10,
+      "type": "ColorMatchV2",
+      "pos": [
+        1100,
+        760
+      ],
+      "size": [
+        300,
+        130
+      ],
+      "flags": {},
+      "order": 9,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "image_target",
+          "type": "IMAGE",
+          "link": 6
+        },
+        {
+          "name": "image_ref",
+          "type": "IMAGE",
+          "link": 7
+        }
+      ],
+      "outputs": [
+        {
+          "name": "IMAGE",
+          "type": "IMAGE",
+          "links": [
+            8
+          ]
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "ColorMatchV2"
+      },
+      "widgets_values": [
+        "mkl",
+        0.45,
+        true
+      ],
+      "title": "1 · Casar a cor com a foto ORIGINAL",
+      "color": "#232",
+      "bgcolor": "#353"
+    },
+    {
+      "id": 11,
+      "type": "ImageScaleToMaxDimension",
+      "pos": [
+        1430,
+        760
+      ],
+      "size": [
+        290,
+        82
+      ],
+      "flags": {},
+      "order": 10,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "image",
+          "type": "IMAGE",
+          "link": 8
+        }
+      ],
+      "outputs": [
+        {
+          "name": "IMAGE",
+          "type": "IMAGE",
+          "links": [
+            9
+          ]
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "ImageScaleToMaxDimension"
+      },
+      "widgets_values": [
+        "area",
+        896
+      ],
+      "title": "2 · Limitar o lado maior (resolucao baixa + trava de memoria)",
+      "color": "#232",
+      "bgcolor": "#353"
+    },
+    {
+      "id": 12,
+      "type": "Image Filter Adjustments",
+      "pos": [
+        1750,
+        760
+      ],
+      "size": [
+        300,
+        250
+      ],
+      "flags": {},
+      "order": 11,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "image",
+          "type": "IMAGE",
+          "link": 9
+        }
+      ],
+      "outputs": [
+        {
+          "name": "IMAGE",
+          "type": "IMAGE",
+          "links": [
+            10
+          ]
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "Image Filter Adjustments"
+      },
+      "widgets_values": [
+        0.0,
+        0.95,
+        1.08,
+        1.0,
+        0,
+        0.0,
+        0.0,
+        "false"
+      ],
+      "title": "3 · Curva HDR de celular",
+      "color": "#232",
+      "bgcolor": "#353"
+    },
+    {
+      "id": 13,
+      "type": "Image Chromatic Aberration",
+      "pos": [
+        2080,
+        760
+      ],
+      "size": [
+        300,
+        180
+      ],
+      "flags": {},
+      "order": 12,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "image",
+          "type": "IMAGE",
+          "link": 10
+        }
+      ],
+      "outputs": [
+        {
+          "name": "IMAGE",
+          "type": "IMAGE",
+          "links": [
+            11
+          ]
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "Image Chromatic Aberration"
+      },
+      "widgets_values": [
+        1,
+        0,
+        -1,
+        0.06,
+        30
+      ],
+      "title": "4 · Aberracao cromatica da lente",
+      "color": "#232",
+      "bgcolor": "#353"
+    },
+    {
+      "id": 14,
+      "type": "ImageSharpen",
+      "pos": [
+        2410,
+        760
+      ],
+      "size": [
+        280,
+        130
+      ],
+      "flags": {},
+      "order": 13,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "image",
+          "type": "IMAGE",
+          "link": 11
+        }
+      ],
+      "outputs": [
+        {
+          "name": "IMAGE",
+          "type": "IMAGE",
+          "links": [
+            12
+          ]
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "ImageSharpen"
+      },
+      "widgets_values": [
+        1,
+        0.45,
+        0.5
+      ],
+      "title": "5 · Over-sharpening (halo de celular)",
+      "color": "#232",
+      "bgcolor": "#353"
+    },
+    {
+      "id": 15,
+      "type": "Image Film Grain",
+      "pos": [
+        2720,
+        760
+      ],
+      "size": [
+        280,
+        150
+      ],
+      "flags": {},
+      "order": 14,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "image",
+          "type": "IMAGE",
+          "link": 12
+        }
+      ],
+      "outputs": [
+        {
+          "name": "IMAGE",
+          "type": "IMAGE",
+          "links": [
+            13
+          ]
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "Image Film Grain"
+      },
+      "widgets_values": [
+        0.7,
+        0.05,
+        1.0,
+        4
+      ],
+      "title": "6 · Grao / ISO",
+      "color": "#232",
+      "bgcolor": "#353"
+    },
+    {
+      "id": 16,
+      "type": "ImageAddNoise",
+      "pos": [
+        3030,
+        760
+      ],
+      "size": [
+        280,
+        110
+      ],
+      "flags": {},
+      "order": 15,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "image",
+          "type": "IMAGE",
+          "link": 13
+        }
+      ],
+      "outputs": [
+        {
+          "name": "IMAGE",
+          "type": "IMAGE",
+          "links": [
+            14
+          ]
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "ImageAddNoise"
+      },
+      "widgets_values": [
+        7,
+        "fixed",
+        0.01
+      ],
+      "title": "7 · Ruido de sensor",
+      "color": "#232",
+      "bgcolor": "#353"
+    },
+    {
+      "id": 17,
+      "type": "Image Save",
+      "pos": [
+        3340,
+        760
+      ],
+      "size": [
+        340,
+        500
+      ],
+      "flags": {},
+      "order": 16,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "images",
+          "type": "IMAGE",
+          "link": 14
+        }
+      ],
+      "outputs": [],
+      "properties": {
+        "Node name for S&R": "Image Save"
+      },
+      "widgets_values": [
+        "",
+        "edit/nb2_me-colocar-na-foto-minha-roupa_FINAL",
+        "_",
+        4,
+        "false",
+        "jpg",
+        72,
+        90,
+        "true",
+        "false",
+        "false",
+        "false",
+        "false",
+        "false",
+        "true"
+      ],
+      "title": "8 · Salvar JPG (compressao real de celular)",
+      "color": "#232",
+      "bgcolor": "#353"
     }
   ],
   "links": [
     [
-      17,
-      23,
+      1,
+      4,
       0,
-      25,
+      7,
       0,
       "IMAGE"
     ],
     [
-      18,
-      24,
+      2,
+      5,
       0,
-      25,
+      7,
       1,
       "IMAGE"
     ],
     [
-      19,
-      25,
+      3,
+      6,
       0,
-      26,
+      7,
+      2,
+      "IMAGE"
+    ],
+    [
+      4,
+      7,
+      0,
+      8,
       0,
       "IMAGE"
     ],
     [
-      20,
-      26,
+      5,
+      8,
       0,
-      27,
+      9,
+      0,
+      "IMAGE"
+    ],
+    [
+      6,
+      8,
+      0,
+      10,
+      0,
+      "IMAGE"
+    ],
+    [
+      7,
+      4,
+      0,
+      10,
+      1,
+      "IMAGE"
+    ],
+    [
+      8,
+      10,
+      0,
+      11,
+      0,
+      "IMAGE"
+    ],
+    [
+      9,
+      11,
+      0,
+      12,
+      0,
+      "IMAGE"
+    ],
+    [
+      10,
+      12,
+      0,
+      13,
+      0,
+      "IMAGE"
+    ],
+    [
+      11,
+      13,
+      0,
+      14,
+      0,
+      "IMAGE"
+    ],
+    [
+      12,
+      14,
+      0,
+      15,
+      0,
+      "IMAGE"
+    ],
+    [
+      13,
+      15,
+      0,
+      16,
+      0,
+      "IMAGE"
+    ],
+    [
+      14,
+      16,
+      0,
+      17,
       0,
       "IMAGE"
     ]
   ],
-  "groups": [],
+  "groups": [
+    {
+      "id": 1,
+      "title": "REALISMO DE CELULAR  (local, CPU, custo zero)",
+      "bounding": [
+        1080,
+        670,
+        2620,
+        620
+      ],
+      "color": "#3f5159",
+      "font_size": 24,
+      "flags": {}
+    },
+    {
+      "id": 2,
+      "title": "1 · ENTRADAS",
+      "bounding": [
+        -30,
+        -10,
+        320,
+        1160
+      ],
+      "color": "#3f789e",
+      "font_size": 24,
+      "flags": {}
+    },
+    {
+      "id": 3,
+      "title": "2 · EDICAO NO MODELO (paga credito)",
+      "bounding": [
+        310,
+        -10,
+        760,
+        730
+      ],
+      "color": "#88A",
+      "font_size": 24,
+      "flags": {}
+    }
+  ],
   "config": {},
   "extra": {
     "ds": {
-      "scale": 0.55,
+      "scale": 0.5,
       "offset": [
         80,
         60

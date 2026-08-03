@@ -1,5 +1,21 @@
 # video-person-swap-seedance-2 — me colocar num vídeo no lugar de uma pessoa (Seedance 2.0)
 
+> ### 👉 Quer editar **o vídeo que você mesmo gravou**? Use [`../video-person-replace/`](../video-person-replace/)
+> Este bundle usa **Seedance 2.0 reference-to-video**: ele **gera um vídeo novo** a partir de
+> referências — a coreografia é do modelo, não a do seu vídeo. Para *"pegar o meu vídeo e trocar
+> quem aparece nele, mantendo o movimento, o enquadramento e os cortes"*, a ferramenta certa é
+> **Wan 2.2 Animate em modo *replace*** (`../video-person-replace/`), que recebe o seu vídeo e o edita.
+>
+> | | `video-person-replace` | **este bundle** |
+> |---|---|---|
+> | Recebe o **seu** vídeo e edita ele | ✅ | ⚠️ usa só como referência |
+> | Mantém movimento/enquadramento/cortes | ✅ | ❌ recria a cena |
+> | Precisa de prompt | ❌ | ✅ |
+> | Chave de API | `FAL_KEY` | nenhuma (só login) |
+>
+> Continue aqui se você **não quer usar chave de API** (este roda só com login/crédito comfy.org)
+> ou se quer **gerar** um plano novo em vez de editar um existente.
+
 > Troca a pessoa de um vídeo por **você**, mantendo a **pose, a roupa, a câmera e a iluminação** do
 > plano original. Roda **sem GPU**, pagando com os **créditos do comfy.org**.
 

@@ -1,103 +1,93 @@
 {
-  "id": "0c555c33-ed9b-465a-9bf9-5030583c4fcc",
+  "id": "153b292d-25e3-591d-a8ab-d78e1b48a4a2",
   "revision": 0,
-  "last_node_id": 7,
-  "last_link_id": 4,
+  "last_node_id": 16,
+  "last_link_id": 13,
   "nodes": [
     {
       "id": 1,
       "type": "MarkdownNote",
       "pos": [
         -40,
-        -840
+        -1010
       ],
       "size": [
-        720,
-        700
+        700,
+        920
       ],
       "flags": {},
       "order": 0,
       "mode": 0,
-      "color": "#223",
-      "bgcolor": "#653",
       "inputs": [],
       "outputs": [],
-      "properties": {},
+      "properties": {
+        "Node name for S&R": "MarkdownNote"
+      },
       "widgets_values": [
-        "# 🎛️ Como usar este arquivo\n\n**Processo único: 1 · TROCAR A ROUPA**\n\nTroca a roupa da pessoa na imagem BASE pela peça mostrada na imagem REF (ou descrita no prompt).\n\n## O que você precisa\n- **BASE** (`LoadImage` à esquerda): a pessoa.\n- **REF** (`LoadImage` à direita): a peça de roupa. (opcional — se não tiver foto, descreva no prompt)\n\n## O prompt\nEstá em **inglês** de propósito — o modelo segue instrução em inglês com bem mais fidelidade.\nOnde houver `<DESCREVA AQUI ...>`, **troque pelo seu texto**.\n\n## A cláusula de realismo\nO prompt termina com um bloco que resolve **iluminação, sombras, lente e grão** — é ele que faz o\nresultado \"casar\" com a foto original. **Não apague.** Se o resultado ficar plástico ou com borda de\nrecorte, é sinal de que essa parte foi perdida.\n\n## Encadear com outros processos\nA saída deste processo (em `output/`) pode virar a **BASE** do próximo: baixe o PNG gerado e suba no\n`LoadImage` da BASE do processo seguinte."
+        "# 🎛️ Como usar\n\n**Processo: 1 · TROCAR A ROUPA**\n\n## 1. Suba as imagens (coluna da esquerda)\n| Slot | O que subir |\n|---|---|\n| **BASE** | a foto da pessoa → vira **Image 1** no prompt |\n| **REF 1** | a peca de roupa (ou deixe vazio e descreva no prompt) → vira **Image 2** |\n\n> A **ordem importa**: o prompt cita as imagens por posicao (`Image 1`, `Image 2`…).\n> E assim que estes modelos identificam quem e a base e quem e a referencia.\n\n## 2. Edite o prompt\nEsta em **ingles** de proposito — os modelos seguem instrucao em ingles com bem mais fidelidade.\nOnde houver `<DESCREVA AQUI ...>`, troque pelo seu texto.\n\n**Nao apague os 3 paragrafos finais.** Eles resolvem, nesta ordem:\n1. **Exposicao** — impede o erro classico de colagem (voce bem exposto na frente de uma\n   janela estourada). Foi o defeito visivel nas suas geracoes anteriores.\n2. **Luz / lente / grao** — casa sombra, temperatura de cor e caracteristica de lente.\n3. **Look de celular** — enquadramento casual, sem cara de estudio.\n\n## 3. Run\nSaem **dois** arquivos:\n- `output/edit/sd_trocar-roupa_limpo_*.png` → **PNG limpo**, direto do modelo. Use este para **encadear** noutro processo.\n- `output/edit/sd_trocar-roupa_FINAL_*.jpg` → **JPG tratado** pela cadeia de realismo. **Este e o entregavel.**\n\n## 4. Se ainda parecer IA\nAumente o tratamento: no grupo de realismo troque para o preset `marcado`\n(veja a nota *Realismo* a direita). O bundle ja vem no preset `padrao`.\n"
       ],
-      "title": "LEIA PRIMEIRO"
+      "title": "LEIA PRIMEIRO",
+      "color": "#432",
+      "bgcolor": "#653"
     },
     {
       "id": 2,
       "type": "MarkdownNote",
       "pos": [
         700,
-        -840
+        -1010
       ],
       "size": [
-        520,
-        700
+        580,
+        920
       ],
       "flags": {},
       "order": 1,
       "mode": 0,
-      "color": "#233",
-      "bgcolor": "#653",
       "inputs": [],
       "outputs": [],
-      "properties": {},
+      "properties": {
+        "Node name for S&R": "MarkdownNote"
+      },
       "widgets_values": [
-        "# Seedream 5.0 / 4.5 · ByteDance\n\n**Nó:** `ByteDanceSeedreamNode` — `partner/image/ByteDance`\n**Billing:** créditos **comfy.org** (login em `platform.comfy.org`, sem chave de API)\n\n## Ajustes que importam\n| Widget | Vem como | O que fazer |\n|---|---|---|\n| `model` | `seedream 5.0 lite` | 5.0 lite = mais novo, aceita **14** referências, saída **PNG**. `seedream-4-5-251128` = geração anterior, **10** referências — troque se o 5.0 alucinar detalhe de roupa. |\n| `size_preset` | `2560x1440 (16:9)` | **Escolha o preset com o mesmo formato da sua BASE**, senão ele reenquadra. `Custom` libera `width`/`height`. |\n| `seed` | `randomize` | Achou um bom? Troque para **fixed** e guarde o número. |\n| `max_images` | `1` | Só vale com `sequential_image_generation=auto` (variações). Cada imagem extra **custa uma geração**. |\n| `watermark` | `false` | Deixe `false`. |\n\n## Piso de resolução (erro comum)\nNo 4.5 e no 5.0 a saída precisa de **≥ 3.686.400 px** (≈ 2560×1440). Preset menor que isso → o nó **rejeita**. No 4.0 o piso é 921.600 px.\n\n## Ordem das imagens = ordem do prompt\nO `Empilha as imagens` define quem é **the first image** (a BASE, `image0`) e quem é **the second image** (a REF, `image1`).\n\n## Estilo de prompt\nO Seedream foi treinado para **edição por frase única**. Os prompts aqui são uma frase longa de propósito — evite quebrá-los em lista de tópicos."
+        "# Seedream (ByteDance)\n\n**No:** `ByteDanceSeedreamNode` — `partner/image/ByteDance`\n\n## 💳 Como pagar / obter acesso\n**Nao usa chave de API.** Billing por **creditos comfy.org**:\n1. No ComfyUI: **Settings → User → Login**.\n2. Entre/crie conta em `platform.comfy.org` e compre creditos.\n\n> Alternativa por chave: `SeedreamV4Edit_fal` (`FAL/Image`) usa `FAL_KEY`.\n> Direto na ByteDance: `console.byteplus.com` → ModelArk → API keys.\n\n## Ajustes que importam\n| Widget | Vem como | Nota |\n|---|---|---|\n| `size_preset` | **`Custom`** | **Mudei.** Todos os presets prontos comecam em 2048 px. So o `Custom` alcanca o minimo real do modelo. |\n| `width` / `height` | **1024 × 1360** | **1024 e o minimo aceito** (o no rejeita menos que isso). 1024×1360 = retrato 3:4, o formato de foto de celular. |\n| `model` | `seedream 5.0 lite` | O `lite` e o mais barato e basta para edicao. |\n| `watermark` | `false` | Sem marca d'agua. |\n\n## ⚠️ Diferenca importante para o Nano Banana\nO Seedream **nao tem `aspect_ratio: auto`** — ele **sempre** entrega no tamanho que voce\npedir. Se a sua foto BASE for **paisagem**, troque para `1360 × 1024`; se for **9:16**,\nuse `1024 × 1820`. Se voce deixar em retrato uma foto paisagem, ele **reenquadra** e\nvoce perde as bordas.\n\n> Por causa disso, para \"me colocar na foto\" o **Nano Banana costuma dar menos trabalho**\n> (ele preserva o formato sozinho). Rode os dois e compare — e barato no minimo de resolucao.\n"
       ],
-      "title": "O modelo"
+      "title": "O modelo · billing",
+      "color": "#432",
+      "bgcolor": "#653"
     },
     {
       "id": 3,
-      "type": "LoadImage",
+      "type": "MarkdownNote",
       "pos": [
-        0,
-        60
+        1320,
+        -1010
       ],
       "size": [
-        260,
-        340
+        660,
+        920
       ],
       "flags": {},
       "order": 2,
       "mode": 0,
       "inputs": [],
-      "outputs": [
-        {
-          "name": "IMAGE",
-          "type": "IMAGE",
-          "links": [
-            1
-          ]
-        },
-        {
-          "name": "MASK",
-          "type": "MASK",
-          "links": null
-        }
-      ],
+      "outputs": [],
       "properties": {
-        "cnr_id": "comfy-core",
-        "ver": "0.20.1",
-        "Node name for S&R": "LoadImage"
+        "Node name for S&R": "MarkdownNote"
       },
       "widgets_values": [
-        "example.png",
-        "image"
+        "# 📱 Realismo de celular\n\nOs 8 nos verdes rodam **localmente na CPU** — **custo zero**, nao gastam credito.\nSao eles que tiram o aspecto \"IA limpa demais\".\n\n## Por que isso e necessario\nPedir grao e ruido **no prompt nao funciona**: o modelo entrega uma imagem\nmatematicamente limpa (gradientes perfeitos, pele sem poro, tudo igualmente nitido).\nFoto de celular de verdade tem uma assinatura de sensor que so se reproduz **depois**.\n\n## Presets (medidos, nao chutados)\n| Preset | Quando usar |\n|---|---|\n| `limpo` | luz boa, quer o minimo de tratamento |\n| **`padrao`** ← vem assim | **serve para quase tudo** |\n| `marcado` | quando o resultado ainda parece \"renderizado\" |\n| `luzbaixa` | foto de noite / ambiente escuro |\n\n## Como trocar de preset\n| No | `limpo` | **`padrao`** | `marcado` | `luzbaixa` |\n|---|---|---|---|---|\n| 2 · `largest_size` | 1024 | **896** | 768 | 720 |\n| 3 · `contrast` | 0.97 | **0.95** | 0.93 | 0.90 |\n| 3 · `saturation` | 1.06 | **1.08** | 1.10 | 0.98 |\n| 4 · `intensity` (CA) | 0.0 | **0.06** | 0.10 | 0.08 |\n| 5 · `alpha` (sharpen) | 0.35 | **0.50** | 0.65 | 0.40 |\n| 6 · `intensity` (grao) | 0.03 | **0.05** | 0.08 | 0.14 |\n| 7 · `strength` (ruido) | 0.006 | **0.010** | 0.016 | 0.030 |\n| 8 · `quality` (JPG) | 92 | **90** | 85 | 80 |\n\n> ⚠️ **Nao exagere.** Testado: aberracao cromatica acima de ~0.15 cria franja\n> colorida em toda borda e grao acima de ~0.2 vira chuvisco. Ai para de parecer\n> celular e passa a parecer JPEG estragado.\n\n## ⚠️ No 2 — `largest_size` e tambem uma trava de seguranca\nEle limita o **lado maior** e preserva a proporcao. Alem de entregar a resolucao\nbaixa que voce pediu, ele **protege a memoria**: o no 6 (grao) supersampleia 4x\ninternamente. Sem esse limite, uma foto muito grande **derruba o ComfyUI** —\naconteceu aqui durante a calibracao, com uma imagem de 5248x12800.\n\n**Nao aumente `largest_size` acima de ~2048.** Se precisar de mais resolucao,\nsuba antes o `resolution` do modelo e mantenha este no baixo.\n\n## No 1 — `ColorMatchV2`\nPuxa a paleta da **sua foto BASE** para o resultado. E o que faz a pessoa inserida\n\"pertencer\" aquela foto. `strength 0.45` e o meio-termo; suba para 0.7 se a cena\ntiver uma dominante forte (por-do-sol, luz de restaurante).\n"
       ],
-      "title": "BASE — a foto da pessoa"
+      "title": "Realismo de celular",
+      "color": "#432",
+      "bgcolor": "#356"
     },
     {
       "id": 4,
       "type": "LoadImage",
       "pos": [
         0,
-        440
+        60
       ],
       "size": [
         260,
@@ -112,28 +102,65 @@
           "name": "IMAGE",
           "type": "IMAGE",
           "links": [
-            2
+            1,
+            6
           ]
         },
         {
           "name": "MASK",
           "type": "MASK",
-          "links": null
+          "links": []
         }
       ],
       "properties": {
-        "cnr_id": "comfy-core",
-        "ver": "0.20.1",
         "Node name for S&R": "LoadImage"
       },
       "widgets_values": [
         "example.png",
         "image"
       ],
-      "title": "REF — a peca de roupa (ou deixe vazio e descreva no prompt)"
+      "title": "BASE (Image 1) — a foto da pessoa"
     },
     {
       "id": 5,
+      "type": "LoadImage",
+      "pos": [
+        0,
+        440
+      ],
+      "size": [
+        260,
+        340
+      ],
+      "flags": {},
+      "order": 4,
+      "mode": 0,
+      "inputs": [],
+      "outputs": [
+        {
+          "name": "IMAGE",
+          "type": "IMAGE",
+          "links": [
+            2
+          ]
+        },
+        {
+          "name": "MASK",
+          "type": "MASK",
+          "links": []
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "LoadImage"
+      },
+      "widgets_values": [
+        "example.png",
+        "image"
+      ],
+      "title": "REF 1 (Image 2) — a peca de roupa (ou deixe vazio e descreva no prompt)"
+    },
+    {
+      "id": 6,
       "type": "BatchImagesNode",
       "pos": [
         330,
@@ -141,30 +168,31 @@
       ],
       "size": [
         240,
-        152
+        118
       ],
       "flags": {},
-      "order": 4,
+      "order": 5,
       "mode": 0,
       "inputs": [
         {
-          "label": "image0",
           "name": "images.image0",
           "type": "IMAGE",
-          "link": 1
+          "link": 1,
+          "label": "image0"
         },
         {
-          "label": "image1",
           "name": "images.image1",
           "type": "IMAGE",
-          "link": 2
+          "link": 2,
+          "shape": 7,
+          "label": "image1"
         },
         {
-          "label": "image2",
           "name": "images.image2",
-          "shape": 7,
           "type": "IMAGE",
-          "link": null
+          "link": null,
+          "shape": 7,
+          "label": "image2"
         }
       ],
       "outputs": [
@@ -177,33 +205,31 @@
         }
       ],
       "properties": {
-        "cnr_id": "comfy-core",
-        "ver": "0.14.1",
         "Node name for S&R": "BatchImagesNode"
       },
       "widgets_values": [],
-      "title": "Empilha as imagens"
+      "title": "Empilha as imagens  (ordem = Image 1, 2, 3…)"
     },
     {
-      "id": 6,
+      "id": 7,
       "type": "ByteDanceSeedreamNode",
       "pos": [
         620,
         60
       ],
       "size": [
-        420,
-        520
+        430,
+        640
       ],
       "flags": {},
-      "order": 5,
+      "order": 6,
       "mode": 0,
       "inputs": [
         {
           "name": "image",
-          "shape": 7,
           "type": "IMAGE",
-          "link": 3
+          "link": 3,
+          "shape": 7
         }
       ],
       "outputs": [
@@ -211,21 +237,20 @@
           "name": "IMAGE",
           "type": "IMAGE",
           "links": [
-            4
+            4,
+            5
           ]
         }
       ],
       "properties": {
-        "cnr_id": "comfy-core",
-        "ver": "0.20.1",
         "Node name for S&R": "ByteDanceSeedreamNode"
       },
       "widgets_values": [
         "seedream 5.0 lite",
-        "Replace the outfit worn by the person in the first image with the exact garment shown in the second image, keeping the person's identity, face, pose, framing and background identical, reproducing the garment's cut, fabric, colour and print exactly, draping it naturally over the existing pose with realistic folds. Re-light every edited element to match the base photograph: light direction, colour temperature, intensity, contrast and shadow softness. Add correct cast shadows, contact shadows and bounce light from nearby surfaces. Match the base photo's lens characteristics, depth of field, motion blur, chromatic aberration, highlight roll-off and film grain. Preserve skin pores and fabric weave. Photorealistic, no visible seam, no cutout edge, no plastic or over-smoothed skin.",
-        "2560x1440 (16:9)",
-        2048,
-        2048,
+        "Change ONLY the clothing worn by the person in Image 1. Dress them in the garment shown in Image 2 (if a second image is provided); otherwise dress them in: <DESCREVA AQUI A ROUPA>.\nKeep pixel-faithful and untouched: the person's face and identity, hair, skin, body pose, hands, the background, the framing and the camera angle.\nMake the garment obey the body: correct drape and folds where the fabric falls, tension where it stretches, occlusion by the arms, and a natural neckline and hem.\n\nMatch the base photograph's EXPOSURE behaviour, not just its colour: if the background is brighter than the subject, let the subject fall darker and slightly flat exactly as a phone camera would meter it; if a window or lamp is behind the subject, allow it to clip to white and spill a little halation onto the subject's edges. Never light the inserted person more flatteringly than the rest of the frame.\n\nRe-light every edited element to match the base photograph: light direction, colour temperature, intensity, contrast and shadow softness. Add correct cast shadows, contact shadows and bounce light from nearby surfaces. Match the base photo's lens characteristics, depth of field, motion blur, chromatic aberration, highlight roll-off and film grain. Preserve skin pores and fabric weave. Photorealistic, no visible seam, no cutout edge, no plastic or over-smoothed skin.\n\nOverall look: an ordinary snapshot taken on a modern smartphone by a friend — casual framing, slightly off-centre, imperfect horizon, natural unposed body language, ordinary ambient light. Not a studio portrait, not a magazine photo, no cinematic colour grade, no bokeh-heavy background, no beauty retouching.",
+        "Custom",
+        1024,
+        1360,
         "disabled",
         1,
         0,
@@ -233,13 +258,15 @@
         false,
         true
       ],
-      "title": "Seedream — 1 · TROCAR A ROUPA"
+      "title": "Seedream — 1 · TROCAR A ROUPA",
+      "color": "#323",
+      "bgcolor": "#535"
     },
     {
-      "id": 7,
+      "id": 8,
       "type": "SaveImage",
       "pos": [
-        1090,
+        1100,
         60
       ],
       "size": [
@@ -247,7 +274,7 @@
         300
       ],
       "flags": {},
-      "order": 6,
+      "order": 7,
       "mode": 0,
       "inputs": [
         {
@@ -258,55 +285,517 @@
       ],
       "outputs": [],
       "properties": {
-        "cnr_id": "comfy-core",
-        "ver": "0.20.1",
         "Node name for S&R": "SaveImage"
       },
       "widgets_values": [
-        "edit/seedream_roupa"
+        "edit/sd_trocar-roupa_limpo"
       ],
-      "title": "Salvar — 1 · TROCAR A ROUPA"
+      "title": "PNG limpo (para encadear noutro processo)"
+    },
+    {
+      "id": 9,
+      "type": "ColorMatchV2",
+      "pos": [
+        1100,
+        760
+      ],
+      "size": [
+        300,
+        130
+      ],
+      "flags": {},
+      "order": 8,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "image_target",
+          "type": "IMAGE",
+          "link": 5
+        },
+        {
+          "name": "image_ref",
+          "type": "IMAGE",
+          "link": 6
+        }
+      ],
+      "outputs": [
+        {
+          "name": "IMAGE",
+          "type": "IMAGE",
+          "links": [
+            7
+          ]
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "ColorMatchV2"
+      },
+      "widgets_values": [
+        "mkl",
+        0.45,
+        true
+      ],
+      "title": "1 · Casar a cor com a foto ORIGINAL",
+      "color": "#232",
+      "bgcolor": "#353"
+    },
+    {
+      "id": 10,
+      "type": "ImageScaleToMaxDimension",
+      "pos": [
+        1430,
+        760
+      ],
+      "size": [
+        290,
+        82
+      ],
+      "flags": {},
+      "order": 9,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "image",
+          "type": "IMAGE",
+          "link": 7
+        }
+      ],
+      "outputs": [
+        {
+          "name": "IMAGE",
+          "type": "IMAGE",
+          "links": [
+            8
+          ]
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "ImageScaleToMaxDimension"
+      },
+      "widgets_values": [
+        "area",
+        896
+      ],
+      "title": "2 · Limitar o lado maior (resolucao baixa + trava de memoria)",
+      "color": "#232",
+      "bgcolor": "#353"
+    },
+    {
+      "id": 11,
+      "type": "Image Filter Adjustments",
+      "pos": [
+        1750,
+        760
+      ],
+      "size": [
+        300,
+        250
+      ],
+      "flags": {},
+      "order": 10,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "image",
+          "type": "IMAGE",
+          "link": 8
+        }
+      ],
+      "outputs": [
+        {
+          "name": "IMAGE",
+          "type": "IMAGE",
+          "links": [
+            9
+          ]
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "Image Filter Adjustments"
+      },
+      "widgets_values": [
+        0.0,
+        0.95,
+        1.08,
+        1.0,
+        0,
+        0.0,
+        0.0,
+        "false"
+      ],
+      "title": "3 · Curva HDR de celular",
+      "color": "#232",
+      "bgcolor": "#353"
+    },
+    {
+      "id": 12,
+      "type": "Image Chromatic Aberration",
+      "pos": [
+        2080,
+        760
+      ],
+      "size": [
+        300,
+        180
+      ],
+      "flags": {},
+      "order": 11,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "image",
+          "type": "IMAGE",
+          "link": 9
+        }
+      ],
+      "outputs": [
+        {
+          "name": "IMAGE",
+          "type": "IMAGE",
+          "links": [
+            10
+          ]
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "Image Chromatic Aberration"
+      },
+      "widgets_values": [
+        1,
+        0,
+        -1,
+        0.06,
+        30
+      ],
+      "title": "4 · Aberracao cromatica da lente",
+      "color": "#232",
+      "bgcolor": "#353"
+    },
+    {
+      "id": 13,
+      "type": "ImageSharpen",
+      "pos": [
+        2410,
+        760
+      ],
+      "size": [
+        280,
+        130
+      ],
+      "flags": {},
+      "order": 12,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "image",
+          "type": "IMAGE",
+          "link": 10
+        }
+      ],
+      "outputs": [
+        {
+          "name": "IMAGE",
+          "type": "IMAGE",
+          "links": [
+            11
+          ]
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "ImageSharpen"
+      },
+      "widgets_values": [
+        1,
+        0.45,
+        0.5
+      ],
+      "title": "5 · Over-sharpening (halo de celular)",
+      "color": "#232",
+      "bgcolor": "#353"
+    },
+    {
+      "id": 14,
+      "type": "Image Film Grain",
+      "pos": [
+        2720,
+        760
+      ],
+      "size": [
+        280,
+        150
+      ],
+      "flags": {},
+      "order": 13,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "image",
+          "type": "IMAGE",
+          "link": 11
+        }
+      ],
+      "outputs": [
+        {
+          "name": "IMAGE",
+          "type": "IMAGE",
+          "links": [
+            12
+          ]
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "Image Film Grain"
+      },
+      "widgets_values": [
+        0.7,
+        0.05,
+        1.0,
+        4
+      ],
+      "title": "6 · Grao / ISO",
+      "color": "#232",
+      "bgcolor": "#353"
+    },
+    {
+      "id": 15,
+      "type": "ImageAddNoise",
+      "pos": [
+        3030,
+        760
+      ],
+      "size": [
+        280,
+        110
+      ],
+      "flags": {},
+      "order": 14,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "image",
+          "type": "IMAGE",
+          "link": 12
+        }
+      ],
+      "outputs": [
+        {
+          "name": "IMAGE",
+          "type": "IMAGE",
+          "links": [
+            13
+          ]
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "ImageAddNoise"
+      },
+      "widgets_values": [
+        7,
+        "fixed",
+        0.01
+      ],
+      "title": "7 · Ruido de sensor",
+      "color": "#232",
+      "bgcolor": "#353"
+    },
+    {
+      "id": 16,
+      "type": "Image Save",
+      "pos": [
+        3340,
+        760
+      ],
+      "size": [
+        340,
+        500
+      ],
+      "flags": {},
+      "order": 15,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "images",
+          "type": "IMAGE",
+          "link": 13
+        }
+      ],
+      "outputs": [],
+      "properties": {
+        "Node name for S&R": "Image Save"
+      },
+      "widgets_values": [
+        "",
+        "edit/sd_trocar-roupa_FINAL",
+        "_",
+        4,
+        "false",
+        "jpg",
+        72,
+        90,
+        "true",
+        "false",
+        "false",
+        "false",
+        "false",
+        "false",
+        "true"
+      ],
+      "title": "8 · Salvar JPG (compressao real de celular)",
+      "color": "#232",
+      "bgcolor": "#353"
     }
   ],
   "links": [
     [
       1,
-      3,
+      4,
       0,
-      5,
+      6,
       0,
       "IMAGE"
     ],
     [
       2,
-      4,
-      0,
       5,
+      0,
+      6,
       1,
       "IMAGE"
     ],
     [
       3,
-      5,
-      0,
-      6,
-      0,
-      "IMAGE"
-    ],
-    [
-      4,
       6,
       0,
       7,
       0,
       "IMAGE"
+    ],
+    [
+      4,
+      7,
+      0,
+      8,
+      0,
+      "IMAGE"
+    ],
+    [
+      5,
+      7,
+      0,
+      9,
+      0,
+      "IMAGE"
+    ],
+    [
+      6,
+      4,
+      0,
+      9,
+      1,
+      "IMAGE"
+    ],
+    [
+      7,
+      9,
+      0,
+      10,
+      0,
+      "IMAGE"
+    ],
+    [
+      8,
+      10,
+      0,
+      11,
+      0,
+      "IMAGE"
+    ],
+    [
+      9,
+      11,
+      0,
+      12,
+      0,
+      "IMAGE"
+    ],
+    [
+      10,
+      12,
+      0,
+      13,
+      0,
+      "IMAGE"
+    ],
+    [
+      11,
+      13,
+      0,
+      14,
+      0,
+      "IMAGE"
+    ],
+    [
+      12,
+      14,
+      0,
+      15,
+      0,
+      "IMAGE"
+    ],
+    [
+      13,
+      15,
+      0,
+      16,
+      0,
+      "IMAGE"
     ]
   ],
-  "groups": [],
+  "groups": [
+    {
+      "id": 1,
+      "title": "REALISMO DE CELULAR  (local, CPU, custo zero)",
+      "bounding": [
+        1080,
+        670,
+        2620,
+        620
+      ],
+      "color": "#3f5159",
+      "font_size": 24,
+      "flags": {}
+    },
+    {
+      "id": 2,
+      "title": "1 · ENTRADAS",
+      "bounding": [
+        -30,
+        -10,
+        320,
+        780
+      ],
+      "color": "#3f789e",
+      "font_size": 24,
+      "flags": {}
+    },
+    {
+      "id": 3,
+      "title": "2 · EDICAO NO MODELO (paga credito)",
+      "bounding": [
+        310,
+        -10,
+        760,
+        730
+      ],
+      "color": "#88A",
+      "font_size": 24,
+      "flags": {}
+    }
+  ],
   "config": {},
   "extra": {
     "ds": {
-      "scale": 0.55,
+      "scale": 0.5,
       "offset": [
         80,
         60
