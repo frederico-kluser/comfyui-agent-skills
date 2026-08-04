@@ -1,0 +1,454 @@
+{
+  "id": "",
+  "revision": 0,
+  "last_node_id": 10,
+  "last_link_id": 5,
+  "nodes": [
+    {
+      "id": 1,
+      "type": "MarkdownNote",
+      "pos": [
+        -40,
+        -1120
+      ],
+      "size": [
+        760,
+        1000
+      ],
+      "flags": {},
+      "order": 0,
+      "mode": 0,
+      "inputs": [],
+      "outputs": [],
+      "properties": {},
+      "widgets_values": [
+        "# ⚠️ Este workflow NÃO é Seedance\n\nEle está nesta pasta porque cobre o caso que o Seedance **não sabe fazer**:\n**pegar o SEU vídeo e trocar quem aparece nele**, mantendo movimento, enquadramento,\ncortes, fundo e os outros atores.\n\n| | Seedance (os outros workflows) | **este (Wan 2.2 Animate)** |\n|---|---|---|\n| Recebe o seu vídeo e **edita** ele | ❌ usa só como referência | ✅ |\n| Mantém enquadramento, cortes e fundo | ❌ recria a cena | ✅ |\n| Mantém os outros atores do plano | ❌ | ✅ |\n| Precisa de prompt | ✅ | ❌ **não tem prompt** |\n| Escolhe o cenário | ✅ | ❌ o cenário é o do vídeo |\n| Resolução máxima | 4k | **720p** |\n\n**Não existe prompt e não existe máscara.** O movimento e a expressão saem do\npróprio vídeo. É isso que torna este nó a ferramenta certa para *\"me colocar\nno vídeo que eu gravei\"* — e o que o torna inútil se você quer inventar uma cena.\n\n## Chave\nMesma `FAL_KEY` dos outros workflows do bundle. Nenhum crédito comfy.org.\n\n## Os dois modos\n| Modo | O que faz |\n|---|---|\n| **replace** | Troca a pessoa do vídeo pela pessoa da foto. O plano continua igual |\n| **move** | Anima a pessoa da foto com o movimento do vídeo (o vídeo vira só o guia) |\n\n## ⚖️ Pessoa real\nSó com autorização de quem aparece — no vídeo **e** na foto.\nVer \"Uso responsável\" no `README.md`.\n"
+      ],
+      "color": "#533",
+      "bgcolor": "#653"
+    },
+    {
+      "id": 2,
+      "type": "MarkdownNote",
+      "pos": [
+        760,
+        -1120
+      ],
+      "size": [
+        560,
+        1000
+      ],
+      "flags": {},
+      "order": 1,
+      "mode": 0,
+      "inputs": [],
+      "outputs": [],
+      "properties": {},
+      "widgets_values": [
+        "# O nó `Wan Animate BYOK`\n\n**Endpoint:** `fal-ai/wan/v2.2-14b/animate/{replace,move}`\n⚠️ Repare: **este leva** o prefixo `fal-ai/`. O Seedance 2.x **não leva**.\n**Saída:** `VIDEO` nativo + `video_url` + `prompt_gerado` (o modelo escreve um prompt sozinho e devolve).\n\n## Widgets que importam\n| Widget | O que fazer |\n|---|---|\n| `resolution` | `480p` é o **piso e o default** — barato e já parece vídeo de celular. Suba para `580p`/`720p` só na versão final |\n| `use_turbo` | `true`: rota rápida com parâmetros auto-otimizados. Deixe ligado até ter o take certo |\n| `guidance_scale` | ⚠️ **Deixe em 1.0.** É modelo destilado: acima de 1 o vídeo **borra**. O nó avisa no console se você subir |\n| `shift` | `5.0` (o default real do endpoint) |\n| `num_inference_steps` | `20`. Subir custa tempo e raramente melhora |\n| `video_quality` | Qualidade de **encode**, não de geração. `high` está ótimo |\n| `seed` | Aqui a seed **funciona de verdade** (diferente do Seedance). `0` = aleatória. Achou um take bom? Fixe a seed |\n\n## Custo\nCobrado por **segundo de vídeo**. Comece com um trecho de **3–6 s** — é o teste\nmais barato para ver se a identidade pegou.\n\n## Áudio\nA saída deste endpoint **não traz o áudio original**. Recoloque o áudio do seu\nvídeo na edição, ou por linha de comando:\n\n```bash\nffmpeg -i saida.mp4 -i original.mp4 \\\n  -c:v copy -map 0:v:0 -map 1:a:0 -shortest final.mp4\n```\n"
+      ],
+      "color": "#233",
+      "bgcolor": "#653"
+    },
+    {
+      "id": 3,
+      "type": "SeedanceBYOKCheckKey",
+      "pos": [
+        1380,
+        -1120
+      ],
+      "size": [
+        340,
+        130
+      ],
+      "flags": {},
+      "order": 2,
+      "mode": 0,
+      "inputs": [],
+      "outputs": [
+        {
+          "name": "status",
+          "type": "STRING",
+          "links": null
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "SeedanceBYOKCheckKey"
+      },
+      "widgets_values": [],
+      "title": "Testar a chave (grátis — rode primeiro)"
+    },
+    {
+      "id": 4,
+      "type": "LoadImage",
+      "pos": [
+        0,
+        80
+      ],
+      "size": [
+        280,
+        340
+      ],
+      "flags": {},
+      "order": 3,
+      "mode": 0,
+      "inputs": [],
+      "outputs": [
+        {
+          "name": "IMAGE",
+          "type": "IMAGE",
+          "links": [
+            1
+          ]
+        },
+        {
+          "name": "MASK",
+          "type": "MASK",
+          "links": null
+        }
+      ],
+      "properties": {
+        "cnr_id": "comfy-core",
+        "ver": "0.25.0",
+        "Node name for S&R": "LoadImage"
+      },
+      "widgets_values": [
+        "example.png",
+        "image"
+      ],
+      "title": "A PESSOA QUE ENTRA — foto de corpo inteiro"
+    },
+    {
+      "id": 5,
+      "type": "LoadVideo",
+      "pos": [
+        0,
+        470
+      ],
+      "size": [
+        280,
+        200
+      ],
+      "flags": {},
+      "order": 4,
+      "mode": 0,
+      "inputs": [],
+      "outputs": [
+        {
+          "name": "VIDEO",
+          "type": "VIDEO",
+          "links": [
+            2
+          ]
+        }
+      ],
+      "properties": {
+        "cnr_id": "comfy-core",
+        "ver": "0.25.0",
+        "Node name for S&R": "LoadVideo"
+      },
+      "widgets_values": [
+        "example.mp4",
+        "image"
+      ],
+      "title": "O MEU VÍDEO — o plano a editar (3–6 s no teste)"
+    },
+    {
+      "id": 6,
+      "type": "WanAnimateBYOK",
+      "pos": [
+        900,
+        80
+      ],
+      "size": [
+        520,
+        620
+      ],
+      "flags": {},
+      "order": 5,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "image",
+          "type": "IMAGE",
+          "link": 1
+        },
+        {
+          "name": "video",
+          "type": "VIDEO",
+          "link": 2
+        }
+      ],
+      "outputs": [
+        {
+          "name": "video",
+          "type": "VIDEO",
+          "links": [
+            3
+          ]
+        },
+        {
+          "name": "video_url",
+          "type": "STRING",
+          "links": [
+            4
+          ]
+        },
+        {
+          "name": "prompt_gerado",
+          "type": "STRING",
+          "links": [
+            5
+          ]
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "WanAnimateBYOK"
+      },
+      "widgets_values": [
+        "replace — trocar a pessoa do video",
+        "480p",
+        true,
+        20,
+        1.0,
+        5.0,
+        "high",
+        0,
+        "randomize",
+        false
+      ],
+      "title": "Wan Animate BYOK — trocar mantendo o plano"
+    },
+    {
+      "id": 7,
+      "type": "SaveVideo",
+      "pos": [
+        1560,
+        80
+      ],
+      "size": [
+        340,
+        300
+      ],
+      "flags": {},
+      "order": 6,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "video",
+          "type": "VIDEO",
+          "link": 3
+        }
+      ],
+      "outputs": [],
+      "properties": {
+        "cnr_id": "comfy-core",
+        "ver": "0.25.0",
+        "Node name for S&R": "SaveVideo"
+      },
+      "widgets_values": [
+        "video/eu-no-meu-video",
+        "auto",
+        "auto"
+      ],
+      "title": "Salvar o vídeo"
+    },
+    {
+      "id": 8,
+      "type": "PreviewAny",
+      "pos": [
+        1560,
+        420
+      ],
+      "size": [
+        340,
+        110
+      ],
+      "flags": {},
+      "order": 7,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "source",
+          "type": "*",
+          "link": 4
+        }
+      ],
+      "outputs": [
+        {
+          "name": "STRING",
+          "type": "STRING",
+          "links": null
+        }
+      ],
+      "properties": {
+        "cnr_id": "comfy-core",
+        "ver": "0.25.0",
+        "Node name for S&R": "PreviewAny"
+      },
+      "widgets_values": [
+        null,
+        null,
+        null
+      ],
+      "title": "URL do vídeo na fal"
+    },
+    {
+      "id": 9,
+      "type": "PreviewAny",
+      "pos": [
+        1560,
+        580
+      ],
+      "size": [
+        340,
+        110
+      ],
+      "flags": {},
+      "order": 8,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "source",
+          "type": "*",
+          "link": 5
+        }
+      ],
+      "outputs": [
+        {
+          "name": "STRING",
+          "type": "STRING",
+          "links": null
+        }
+      ],
+      "properties": {
+        "cnr_id": "comfy-core",
+        "ver": "0.25.0",
+        "Node name for S&R": "PreviewAny"
+      },
+      "widgets_values": [
+        null,
+        null,
+        null
+      ],
+      "title": "Prompt que o modelo escreveu sozinho"
+    },
+    {
+      "id": 10,
+      "type": "MarkdownNote",
+      "pos": [
+        900,
+        740
+      ],
+      "size": [
+        520,
+        460
+      ],
+      "flags": {},
+      "order": 9,
+      "mode": 0,
+      "inputs": [],
+      "outputs": [],
+      "properties": {},
+      "widgets_values": [
+        "# Se o resultado não convencer\n\n| Sintoma | Causa provável | Correção |\n|---|---|---|\n| Vídeo borrado | `guidance_scale` > 1.0 | Volte para **1.0** |\n| Rosto não parece | Foto fraca | Foto **frontal, nítida, corpo inteiro**, uma pessoa só |\n| Proporção de corpo errada | Foto só de rosto | Use foto de **corpo inteiro** |\n| Trocou a pessoa errada | Várias pessoas no plano | Corte o plano, ou use um trecho onde só ela aparece |\n| Áudio sumiu | O endpoint não devolve áudio | Recoloque com o `ffmpeg` da nota ao lado |\n| Muito caro | 720p desde o início | Teste em **480p** com 3–6 s |\n| Demorou minutos sem barra | Cold start da fila | Normal. O nó imprime a posição na fila no console e **respeita o botão Cancel** |\n\n## E se você quiser trocar o CENÁRIO também\nEste nó não faz isso — ele preserva o plano inteiro.\nPara mudar de lugar, o caminho é o Seedance:\n`video-seedance25-byok_eu-foto__lugar-foto.json` ou `video-seedance25-byok_combo-completo.json`.\n"
+      ],
+      "color": "#233",
+      "bgcolor": "#653"
+    }
+  ],
+  "links": [
+    [
+      1,
+      4,
+      0,
+      6,
+      0,
+      "IMAGE"
+    ],
+    [
+      2,
+      5,
+      0,
+      6,
+      1,
+      "VIDEO"
+    ],
+    [
+      3,
+      6,
+      0,
+      7,
+      0,
+      "VIDEO"
+    ],
+    [
+      4,
+      6,
+      1,
+      8,
+      0,
+      "STRING"
+    ],
+    [
+      5,
+      6,
+      2,
+      9,
+      0,
+      "STRING"
+    ]
+  ],
+  "groups": [
+    {
+      "id": 1,
+      "title": "ENTRADAS · quem entra + o plano",
+      "bounding": [
+        -20,
+        20,
+        320,
+        800
+      ],
+      "color": "#3f789e",
+      "font_size": 24,
+      "flags": {}
+    },
+    {
+      "id": 2,
+      "title": "EDITAR o vídeo original",
+      "bounding": [
+        880,
+        20,
+        560,
+        660
+      ],
+      "color": "#8e5fb0",
+      "font_size": 24,
+      "flags": {}
+    },
+    {
+      "id": 3,
+      "title": "SAÍDA",
+      "bounding": [
+        1540,
+        20,
+        380,
+        780
+      ],
+      "color": "#b06f3f",
+      "font_size": 24,
+      "flags": {}
+    }
+  ],
+  "config": {},
+  "extra": {
+    "ds": {
+      "scale": 0.6,
+      "offset": [
+        80,
+        60
+      ]
+    }
+  },
+  "version": 0.4
+}

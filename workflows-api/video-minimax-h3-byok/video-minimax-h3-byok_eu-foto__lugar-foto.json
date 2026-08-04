@@ -1,0 +1,402 @@
+{
+  "id": "",
+  "revision": 0,
+  "last_node_id": 8,
+  "last_link_id": 4,
+  "nodes": [
+    {
+      "id": 1,
+      "type": "MarkdownNote",
+      "pos": [
+        -40,
+        -1140
+      ],
+      "size": [
+        760,
+        1020
+      ],
+      "flags": {},
+      "order": 0,
+      "mode": 0,
+      "inputs": [],
+      "outputs": [],
+      "properties": {},
+      "widgets_values": [
+        "# ⚠️ Leia antes de rodar\n\n## O que este workflow FAZ e o que NÃO faz\nO MiniMax H3 reference-to-video **gera uma cena nova** guiada pelas suas referências.\nEle **não edita** o vídeo que você enviou: enquadramento, cortes e fundo do material\nde referência **não** são preservados — servem de inspiração.\n\n> Quer **pegar o seu vídeo e trocar quem aparece nele**, mantendo movimento,\n> enquadramento e cortes? O H3 não faz isso em nenhum modo. Use\n> `../video-seedance25-byok/` (workflow 7, Wan 2.2 Animate) ou `../video-person-replace/`.\n\n## Chave de API (a única credencial)\nNada de login ou crédito comfy.org. Este bundle fala direto com a **API v2 da MiniMax**:\n\n```bash\nprintf 'MINIMAX_API_KEY=%s\\n' \"SUA_CHAVE\" >> ~/ComfyUI/secrets.env\nchmod 600 ~/ComfyUI/secrets.env\n```\nDepois **reinicie o ComfyUI**. O passo a passo para criar a chave está no `README.md`.\nRode o nó **Testar a chave** (grátis) antes de gastar.\n\n## Como citar as referências no prompt\n⚠️ **Aqui NÃO se usa `@Image1`.** A MiniMax usa **linguagem natural**, e a numeração\nsegue a **ordem dos slots**:\n\n| Slot ligado | Como citar no prompt |\n|---|---|\n| `image_1` | *\"reference image 1\"* |\n| `image_2` | *\"reference image 2\"* |\n| `video_1` | *\"reference video 1\"* |\n| `audio_1` | *\"reference audio 1\"* |\n\nExemplo da própria documentação: *\"Voice timbre follows reference audio 1.\"*\n**Mudou as ligações? Renumere o prompt.**\n\n## Rascunhe barato\nPrimeira passada: `resolution = 768P`, `duration = 4`. Só depois suba para `2K`.\n\n## ⚖️ Pessoa real\nSó use foto, vídeo ou voz de alguém **com autorização dessa pessoa** — inclusive você.\nVer \"Uso responsável\" no `README.md`.\n"
+      ],
+      "color": "#533",
+      "bgcolor": "#653"
+    },
+    {
+      "id": 2,
+      "type": "MarkdownNote",
+      "pos": [
+        760,
+        -1140
+      ],
+      "size": [
+        560,
+        1020
+      ],
+      "flags": {},
+      "order": 1,
+      "mode": 0,
+      "inputs": [],
+      "outputs": [],
+      "properties": {},
+      "widgets_values": [
+        "# O nó `MiniMax H3 BYOK · Reference to Video`\n\n**Rota:** `POST https://api.minimax.io/v2/video_generation`, direto com a sua\n`MINIMAX_API_KEY`. Assíncrono: o nó cria a tarefa, faz polling e baixa o MP4.\n**Saída:** `VIDEO` nativo → vai **direto** no `SaveVideo`, com o áudio preservado.\n\n## Widgets\n| Widget | O que fazer |\n|---|---|\n| `prompt` | **Obrigatório sempre** — a API recusa `content` sem um item de texto não-vazio. Máx. **7000 caracteres** |\n| `resolution` | `768P` (rascunho e padrão) ou `2K` (final). São os **dois únicos valores** |\n| `duration` | **4 a 15** segundos |\n| `seed` | ⚠️ **Não vai para a API** — a v2 não aceita seed. Só força re-execução do nó |\n| `callback_url` | Opcional. Se preencher, a MiniMax faz POST do progresso — e **exige** que o seu servidor devolva o `challenge` em 3 s. Deixe vazio se não tiver isso montado |\n\n> Não há widget de `ratio` aqui de propósito: em reference-to-video e image-to-video\n> o formato é **`adaptive`**, herdado das referências. Só o nó **Text to Video** pede\n> formato explícito — e lá ele é **obrigatório**.\n\n## Limites da API (o nó valida antes de gastar)\n| Tipo | Máximo | Detalhe |\n|---|---|---|\n| Imagens de referência | **9** | ≤30 MB · lado entre **256 e 5760 px** · proporção entre **0,4 e 2,5** |\n| Vídeos de referência | **3** | ≤50 MB cada · **2–15 s cada, somados ≤15 s** · 23,976–60 fps · MP4/MOV, H.264/H.265 |\n| Áudios de referência | **3** | ≤15 MB · 2–15 s cada, somados ≤15 s · WAV/MP3 · **não pode vir sozinho** |\n\n⚠️ **Image-to-video e reference-to-video são mutuamente exclusivos.** Se houver\nqualquer `reference_*`, não pode haver `first_frame`/`last_frame` — e vice-versa.\nPor isso são nós separados.\n\n## Como os arquivos chegam lá\nO nó **sobe cada arquivo** (`POST /v1/files/upload`, `purpose=video_generation_input`)\ne referencia por `mm_file://<id>`, que vale **7 dias**.\nNão usamos base64 embutido: o corpo do POST tem teto de **64 MB** e base64 infla ~33%,\nentão um vídeo de referência estouraria.\n\n## A URL do resultado expira\n`task.content.url` é temporária — o nó já baixa na hora. A saída `video_url` serve\npara baixar fora do ComfyUI **no mesmo dia**.\n"
+      ],
+      "color": "#233",
+      "bgcolor": "#653"
+    },
+    {
+      "id": 3,
+      "type": "MiniMaxH3BYOKCheckKey",
+      "pos": [
+        1380,
+        -1140
+      ],
+      "size": [
+        340,
+        130
+      ],
+      "flags": {},
+      "order": 2,
+      "mode": 0,
+      "inputs": [],
+      "outputs": [
+        {
+          "name": "status",
+          "type": "STRING",
+          "links": null
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "MiniMaxH3BYOKCheckKey"
+      },
+      "widgets_values": [],
+      "title": "Testar a chave (grátis — rode primeiro)"
+    },
+    {
+      "id": 4,
+      "type": "LoadImage",
+      "pos": [
+        0,
+        80
+      ],
+      "size": [
+        280,
+        340
+      ],
+      "flags": {},
+      "order": 3,
+      "mode": 0,
+      "inputs": [],
+      "outputs": [
+        {
+          "name": "IMAGE",
+          "type": "IMAGE",
+          "links": [
+            1
+          ]
+        },
+        {
+          "name": "MASK",
+          "type": "MASK",
+          "links": null
+        }
+      ],
+      "properties": {
+        "cnr_id": "comfy-core",
+        "ver": "0.25.0",
+        "Node name for S&R": "LoadImage"
+      },
+      "widgets_values": [
+        "example.png",
+        "image"
+      ],
+      "title": "MINHA FOTO — corpo inteiro, rosto nítido"
+    },
+    {
+      "id": 5,
+      "type": "LoadImage",
+      "pos": [
+        0,
+        470
+      ],
+      "size": [
+        280,
+        340
+      ],
+      "flags": {},
+      "order": 4,
+      "mode": 0,
+      "inputs": [],
+      "outputs": [
+        {
+          "name": "IMAGE",
+          "type": "IMAGE",
+          "links": [
+            2
+          ]
+        },
+        {
+          "name": "MASK",
+          "type": "MASK",
+          "links": null
+        }
+      ],
+      "properties": {
+        "cnr_id": "comfy-core",
+        "ver": "0.25.0",
+        "Node name for S&R": "LoadImage"
+      },
+      "widgets_values": [
+        "example.png",
+        "image"
+      ],
+      "title": "O LUGAR — foto do cenário"
+    },
+    {
+      "id": 6,
+      "type": "MiniMaxH3BYOKReferenceToVideo",
+      "pos": [
+        900,
+        80
+      ],
+      "size": [
+        560,
+        640
+      ],
+      "flags": {},
+      "order": 5,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "image_1",
+          "type": "IMAGE",
+          "link": 1
+        },
+        {
+          "name": "image_2",
+          "type": "IMAGE",
+          "link": 2
+        },
+        {
+          "name": "image_3",
+          "type": "IMAGE",
+          "link": null
+        },
+        {
+          "name": "image_4",
+          "type": "IMAGE",
+          "link": null
+        },
+        {
+          "name": "video_1",
+          "type": "VIDEO",
+          "link": null
+        },
+        {
+          "name": "video_2",
+          "type": "VIDEO",
+          "link": null
+        },
+        {
+          "name": "audio_1",
+          "type": "AUDIO",
+          "link": null
+        }
+      ],
+      "outputs": [
+        {
+          "name": "video",
+          "type": "VIDEO",
+          "links": [
+            3
+          ]
+        },
+        {
+          "name": "video_url",
+          "type": "STRING",
+          "links": [
+            4
+          ]
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "MiniMaxH3BYOKReferenceToVideo"
+      },
+      "widgets_values": [
+        "The person in reference image 1 walks into the location shown in reference image 2, stops in the middle of the frame and looks around, then smiles.\n\nIDENTITY: reproduce the face, bone structure, skin tone and texture, hair, apparent age and body build of the person in reference image 1 with maximum fidelity. Keep the identity stable across every frame — no drifting or morphing.\n\nLOCATION: keep the architecture, materials, colours and depth of reference image 2 exactly as shown. Do not invent a different place.\n\nWARDROBE: keep the exact clothing worn in reference image 1.\n\nLIGHTING: match the light of reference image 2 — direction, colour temperature and hardness — and light the person with it.\n\nCAMERA: slow dolly-in, eye level, shallow depth of field.\n\nREALISM: photographic, 35mm lens, natural skin texture, real motion blur, no plastic skin, no beauty filter, no CGI look.",
+        "768P",
+        "6",
+        0,
+        "randomize",
+        ""
+      ],
+      "title": "MiniMax H3 — eu no lugar"
+    },
+    {
+      "id": 7,
+      "type": "SaveVideo",
+      "pos": [
+        1780,
+        60
+      ],
+      "size": [
+        340,
+        300
+      ],
+      "flags": {},
+      "order": 6,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "video",
+          "type": "VIDEO",
+          "link": 3
+        }
+      ],
+      "outputs": [],
+      "properties": {
+        "cnr_id": "comfy-core",
+        "ver": "0.25.0",
+        "Node name for S&R": "SaveVideo"
+      },
+      "widgets_values": [
+        "video/eu-no-lugar-mm",
+        "auto",
+        "auto"
+      ],
+      "title": "Salvar o vídeo"
+    },
+    {
+      "id": 8,
+      "type": "PreviewAny",
+      "pos": [
+        1780,
+        400
+      ],
+      "size": [
+        340,
+        110
+      ],
+      "flags": {},
+      "order": 7,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "source",
+          "type": "*",
+          "link": 4
+        }
+      ],
+      "outputs": [
+        {
+          "name": "STRING",
+          "type": "STRING",
+          "links": null
+        }
+      ],
+      "properties": {
+        "cnr_id": "comfy-core",
+        "ver": "0.25.0",
+        "Node name for S&R": "PreviewAny"
+      },
+      "widgets_values": [
+        null,
+        null,
+        null
+      ],
+      "title": "URL do vídeo na MiniMax (temporária)"
+    }
+  ],
+  "links": [
+    [
+      1,
+      4,
+      0,
+      6,
+      0,
+      "IMAGE"
+    ],
+    [
+      2,
+      5,
+      0,
+      6,
+      1,
+      "IMAGE"
+    ],
+    [
+      3,
+      6,
+      0,
+      7,
+      0,
+      "VIDEO"
+    ],
+    [
+      4,
+      6,
+      1,
+      8,
+      0,
+      "STRING"
+    ]
+  ],
+  "groups": [
+    {
+      "id": 1,
+      "title": "ENTRADAS · a pessoa e o lugar",
+      "bounding": [
+        -20,
+        20,
+        320,
+        800
+      ],
+      "color": "#3f789e",
+      "font_size": 24,
+      "flags": {}
+    },
+    {
+      "id": 2,
+      "title": "GERAR · edite o prompt e rode",
+      "bounding": [
+        880,
+        20,
+        600,
+        740
+      ],
+      "color": "#3f9e6f",
+      "font_size": 24,
+      "flags": {}
+    },
+    {
+      "id": 3,
+      "title": "SAÍDA",
+      "bounding": [
+        1760,
+        20,
+        380,
+        620
+      ],
+      "color": "#b06f3f",
+      "font_size": 24,
+      "flags": {}
+    }
+  ],
+  "config": {},
+  "extra": {
+    "ds": {
+      "scale": 0.6,
+      "offset": [
+        80,
+        60
+      ]
+    }
+  },
+  "version": 0.4
+}

@@ -1,0 +1,22 @@
+# Segredos — NUNCA versionar (ver "Don't touch / seguranca" no AGENTS.md)
+.env
+.env.*
+secrets.env
+*.key
+*.pem
+
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.venv/
+venv/
+
+# Saidas locais e temporarios
+output/
+temp/
+*.log
+
+# Sistema
+.DS_Store
+Thumbs.db

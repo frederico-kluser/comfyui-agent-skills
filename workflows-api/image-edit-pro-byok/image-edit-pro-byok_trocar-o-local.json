@@ -1,0 +1,383 @@
+{
+  "id": "",
+  "revision": 0,
+  "last_node_id": 8,
+  "last_link_id": 3,
+  "nodes": [
+    {
+      "id": 1,
+      "type": "MarkdownNote",
+      "pos": [
+        -40,
+        -1240
+      ],
+      "size": [
+        760,
+        1180
+      ],
+      "flags": {},
+      "order": 0,
+      "mode": 0,
+      "inputs": [],
+      "outputs": [],
+      "properties": {},
+      "widgets_values": [
+        "# ⚠️ Leia antes de rodar — e leia o diagnóstico\n\n## Por que as fotos anteriores erravam o rosto\nEste bundle nasceu de um diagnóstico do `../image-edit-nano-banana-2/`. Quatro causas,\nem ordem de impacto:\n\n1. **Saída em `1K`.** Era o mínimo do nó, escolhido para gastar menos. Se você aparece de\n   corpo inteiro num quadro de 1K, o seu rosto ocupa talvez 120×120 px — **não existe modelo\n   que segure identidade nesse orçamento de pixel.** Aqui o padrão é **2K**.\n2. **A cadeia de \"realismo de celular\" rodava depois** (grão, aberração cromática, JPEG).\n   Ela é ótima para disfarçar render — e péssima para o rosto, porque destrói exatamente a\n   microtextura que faz você parecer você. **Não está neste bundle.** Se quiser o look de\n   celular, rode `../foto-realismo-celular/` **depois**, como passe separado e opcional.\n3. **O prompt pedia coisas demais de uma vez** — identidade + exposição + reiluminação +\n   estética de celular. Quanto mais eixos você manda mudar numa tacada, mais o modelo\n   reinterpreta o rosto. Os prompts daqui são **focados em identidade**.\n4. **O prompt pedia para SUBEXPOR você** (\"let the subject fall darker and slightly flat\").\n   Rosto escuro e chapado = menos informação de rosto. Removido.\n\n## O que este bundle faz de diferente\n**O modelo é um dropdown.** O mesmo prompt e as mesmas referências atravessam quatro motores.\nVocê decide qual acerta o **seu** rosto — a única medida que importa.\n\n| Modelo | Quando escolher |\n|---|---|\n| **Seedream 5.0 Pro** (padrão) | Até **10 referências** — mais âncoras de identidade que qualquer outro. Comece por ele |\n| **FLUX.2 Pro** | Melhor pele e anatomia; aceita **seed** (repetível) |\n| **Nano Banana Pro** | Gemini 3 **Pro** (não o Flash do bundle antigo), vai a **4K**, tem `system_prompt` |\n| **GPT Image 2** | Até **16 referências** e o único que aceita **máscara** |\n\n> ⚠️ Não existe \"o melhor do mundo\" universal para rosto — existe o melhor **para o seu rosto**.\n> Rode `00_teste-de-identidade` uma vez e a pergunta fica respondida com o seu material.\n\n## Chave de API\nNenhum login comfy.org. Só a sua `FAL_KEY`:\n```bash\nprintf 'FAL_KEY=%s\\n' \"SUA_CHAVE\" >> ~/ComfyUI/secrets.env\nchmod 600 ~/ComfyUI/secrets.env\n```\nDepois **reinicie o ComfyUI**. Rode o nó **Testar a chave** (grátis) antes de gastar.\n\n## As referências: onde se ganha ou se perde\n- **Duas fotos suas, de ângulos diferentes** (frontal + 3/4). Três é melhor que duas.\n- **O rosto deve ocupar 35–60% do quadro da referência.** Foto de corpo inteiro como\n  referência de rosto é o erro mais caro — recorte no rosto antes de subir.\n- **Luz uniforme, sem óculos escuros, sem cabelo cobrindo, expressão neutra.**\n- **Nitidez importa.** Referência borrada obriga o modelo a inventar — e ele inventa um rosto\n  bonito genérico, não o seu.\n\n## Como citar as imagens\n`Image 1`, `Image 2`, `Image 3`… **na ordem dos slots**. Mexeu nas ligações? Renumere o prompt.\n"
+      ],
+      "color": "#533",
+      "bgcolor": "#653"
+    },
+    {
+      "id": 2,
+      "type": "MarkdownNote",
+      "pos": [
+        760,
+        -1240
+      ],
+      "size": [
+        560,
+        1180
+      ],
+      "flags": {},
+      "order": 1,
+      "mode": 0,
+      "inputs": [],
+      "outputs": [],
+      "properties": {},
+      "widgets_values": [
+        "# O nó `Pro Image Edit BYOK`\n\n**Rota:** fal.ai, direto pela sua `FAL_KEY`. **Saída:** `IMAGE` (batch) + `image_url` + `descricao`.\n\n## Widgets\n| Widget | O que fazer |\n|---|---|\n| `model` | O dropdown que troca o motor. Comece no **Seedream 5.0 Pro** |\n| `prompt` | Cite as imagens como `Image 1`, `Image 2`… na ordem dos slots |\n| `resolucao` | **`2K` é o padrão e o certo para rosto.** `1K` só para rascunho. `4K` só o Nano Banana Pro (os outros ignoram e avisam no console) |\n| `num_images` | **Suba para 3.** Gera 3 variações na mesma chamada e você escolhe o melhor rosto — é a forma mais barata de vencer a loteria da identidade |\n| `output_format` | **`png`**. JPEG já custa detalhe de pele |\n| `seed` | Só FLUX.2 Pro e Nano Banana Pro usam de verdade; nos outros só força re-execução |\n| `aspect_ratio` | Só o Nano Banana Pro usa |\n| `system_prompt` | Só o Nano Banana Pro aceita. Vazio = não enviado |\n| `safety_tolerance` | Ignorado por quem não aceita (Seedream, GPT Image 2) |\n\nO nó **normaliza as diferenças entre os modelos** e avisa no console quando um pedido seu\nnão existe naquele motor (ex.: `4K` no Seedream, máscara fora do GPT Image 2) — em vez de\nfalhar com um erro críptico da API.\n\n## Limites de referência por modelo\n| Modelo | Máx. de imagens |\n|---|---|\n| Seedream 5.0 Pro / Lite | 10 |\n| FLUX.2 Pro | 10 |\n| Nano Banana Pro | 14 |\n| GPT Image 2 | 16 |\n\nO nó tem 6 slots, que cobre com folga o uso normal (base + 2 ângulos do rosto + 3 extras).\n\n## Entrada também é qualidade\nO nó sobe as suas imagens como **PNG**, sem recompressão. Se você já carregar um JPEG\nsalvo várias vezes, o estrago veio de antes — parta do arquivo original.\n"
+      ],
+      "color": "#233",
+      "bgcolor": "#653"
+    },
+    {
+      "id": 3,
+      "type": "ProImageEditCheckKey",
+      "pos": [
+        1380,
+        -1240
+      ],
+      "size": [
+        340,
+        130
+      ],
+      "flags": {},
+      "order": 2,
+      "mode": 0,
+      "inputs": [],
+      "outputs": [
+        {
+          "name": "status",
+          "type": "STRING",
+          "links": null
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "ProImageEditCheckKey"
+      },
+      "widgets_values": [],
+      "title": "Testar a chave (grátis — rode primeiro)"
+    },
+    {
+      "id": 4,
+      "type": "LoadImage",
+      "pos": [
+        0,
+        80
+      ],
+      "size": [
+        280,
+        340
+      ],
+      "flags": {},
+      "order": 3,
+      "mode": 0,
+      "inputs": [],
+      "outputs": [
+        {
+          "name": "IMAGE",
+          "type": "IMAGE",
+          "links": [
+            1
+          ]
+        },
+        {
+          "name": "MASK",
+          "type": "MASK",
+          "links": null
+        }
+      ],
+      "properties": {
+        "cnr_id": "comfy-core",
+        "ver": "0.25.0",
+        "Node name for S&R": "LoadImage"
+      },
+      "widgets_values": [
+        "example.png",
+        "image"
+      ],
+      "title": "BASE — a pessoa/objeto a manter"
+    },
+    {
+      "id": 5,
+      "type": "LoadImage",
+      "pos": [
+        0,
+        470
+      ],
+      "size": [
+        280,
+        340
+      ],
+      "flags": {},
+      "order": 4,
+      "mode": 0,
+      "inputs": [],
+      "outputs": [
+        {
+          "name": "IMAGE",
+          "type": "IMAGE",
+          "links": [
+            2
+          ]
+        },
+        {
+          "name": "MASK",
+          "type": "MASK",
+          "links": null
+        }
+      ],
+      "properties": {
+        "cnr_id": "comfy-core",
+        "ver": "0.25.0",
+        "Node name for S&R": "LoadImage"
+      },
+      "widgets_values": [
+        "example.png",
+        "image"
+      ],
+      "title": "O NOVO LOCAL"
+    },
+    {
+      "id": 6,
+      "type": "ProImageEditBYOK",
+      "pos": [
+        900,
+        80
+      ],
+      "size": [
+        560,
+        660
+      ],
+      "flags": {},
+      "order": 5,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "image_1",
+          "type": "IMAGE",
+          "link": 1
+        },
+        {
+          "name": "image_2",
+          "type": "IMAGE",
+          "link": 2
+        },
+        {
+          "name": "image_3",
+          "type": "IMAGE",
+          "link": null
+        },
+        {
+          "name": "image_4",
+          "type": "IMAGE",
+          "link": null
+        },
+        {
+          "name": "image_5",
+          "type": "IMAGE",
+          "link": null
+        },
+        {
+          "name": "image_6",
+          "type": "IMAGE",
+          "link": null
+        },
+        {
+          "name": "mask",
+          "type": "MASK",
+          "link": null
+        }
+      ],
+      "outputs": [
+        {
+          "name": "images",
+          "type": "IMAGE",
+          "links": [
+            3
+          ]
+        },
+        {
+          "name": "image_url",
+          "type": "STRING",
+          "links": null
+        },
+        {
+          "name": "descricao",
+          "type": "STRING",
+          "links": null
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "ProImageEditBYOK"
+      },
+      "widgets_values": [
+        "Seedream 5.0 Pro — 10 referências (padrão p/ rosto)",
+        "Minha chave (fal.ai)",
+        "Place the person from Image 1 into the location shown in Image 2.\n\nKEEP FROM Image 1: the person's face and identity, hair, skin texture, clothing, body pose and proportions, exactly as they are. The face must be untouched — do not re-render it, do not beautify it.\n\nLOCATION: reproduce the place of Image 2 — its architecture, materials, colours, props and depth. Choose a camera angle and a distance consistent with how the person is framed in Image 1.\n\nRELIGHT the person to match Image 2: light direction, colour temperature, intensity, contrast and shadow softness. Add a cast shadow on the ground consistent with that light, a contact shadow under the feet, and bounce light from nearby surfaces.\n\nThe result must read as one photograph taken in that place, not as a cut-out on a backdrop.",
+        "2K",
+        1,
+        "png",
+        0,
+        "randomize",
+        "auto",
+        "",
+        "4"
+      ],
+      "title": "Trocar o local (com match de luz)"
+    },
+    {
+      "id": 7,
+      "type": "SaveImage",
+      "pos": [
+        1560,
+        60
+      ],
+      "size": [
+        360,
+        400
+      ],
+      "flags": {},
+      "order": 6,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "images",
+          "type": "IMAGE",
+          "link": 3
+        }
+      ],
+      "outputs": [],
+      "properties": {
+        "cnr_id": "comfy-core",
+        "ver": "0.25.0",
+        "Node name for S&R": "SaveImage"
+      },
+      "widgets_values": [
+        "edit/pro_trocar-local"
+      ],
+      "title": "Salvar"
+    },
+    {
+      "id": 8,
+      "type": "MarkdownNote",
+      "pos": [
+        900,
+        800
+      ],
+      "size": [
+        560,
+        460
+      ],
+      "flags": {},
+      "order": 7,
+      "mode": 0,
+      "inputs": [],
+      "outputs": [],
+      "properties": {},
+      "widgets_values": [
+        "# Trocar o local é, na prática, um problema de LUZ\n\nO recorte quase nunca é o que denuncia — a luz é. Uma pessoa iluminada por janela suave\ncolada num deserto de meio-dia nunca vai colar, por melhor que seja o recorte.\n\n**Por isso o prompt gasta um parágrafo inteiro em reiluminação** e exige as três sombras:\nprojetada, de contato e a luz de rebote.\n\n## Escolha locais com luz compatível\nSe a foto base é interna e difusa, prefira um local externo nublado ou uma sombra.\nTrocar a direção da luz em 180° é o pedido mais difícil que existe aqui.\n\n## Se o rosto mudar\nEste processo não deveria tocar no rosto — o prompt proíbe. Se mudar mesmo assim, é\nsinal de que o motor está re-renderizando a pessoa inteira: **troque o motor** ou baixe\na ambição do enquadramento novo.\n"
+      ],
+      "color": "#233",
+      "bgcolor": "#653"
+    }
+  ],
+  "links": [
+    [
+      1,
+      4,
+      0,
+      6,
+      0,
+      "IMAGE"
+    ],
+    [
+      2,
+      5,
+      0,
+      6,
+      1,
+      "IMAGE"
+    ],
+    [
+      3,
+      6,
+      0,
+      7,
+      0,
+      "IMAGE"
+    ]
+  ],
+  "groups": [
+    {
+      "id": 1,
+      "title": "ENTRADAS",
+      "bounding": [
+        -20,
+        20,
+        320,
+        800
+      ],
+      "color": "#3f789e",
+      "font_size": 24,
+      "flags": {}
+    },
+    {
+      "id": 2,
+      "title": "EDITAR · escolha o motor no dropdown",
+      "bounding": [
+        880,
+        20,
+        600,
+        700
+      ],
+      "color": "#3f9e6f",
+      "font_size": 24,
+      "flags": {}
+    },
+    {
+      "id": 3,
+      "title": "SAÍDA",
+      "bounding": [
+        1540,
+        20,
+        400,
+        460
+      ],
+      "color": "#b06f3f",
+      "font_size": 24,
+      "flags": {}
+    }
+  ],
+  "config": {},
+  "extra": {
+    "ds": {
+      "scale": 0.6,
+      "offset": [
+        80,
+        60
+      ]
+    }
+  },
+  "version": 0.4
+}

@@ -1,0 +1,272 @@
+{
+  "id": "",
+  "revision": 0,
+  "last_node_id": 6,
+  "last_link_id": 2,
+  "nodes": [
+    {
+      "id": 1,
+      "type": "MarkdownNote",
+      "pos": [
+        -40,
+        -1240
+      ],
+      "size": [
+        760,
+        1120
+      ],
+      "flags": {},
+      "order": 0,
+      "mode": 0,
+      "inputs": [],
+      "outputs": [],
+      "properties": {},
+      "widgets_values": [
+        "# Passe final: restaurar o rosto\n\n## Por que isto existe\nA literatura de face swap de 2026 converge num ponto que eu não tinha aplicado:\n**um passe de restauração depois da geração responde por boa parte do ganho de\nqualidade final.** Ele limpa artefato de difusão e devolve microtextura de pele —\nporos, micro-sombras, o granulado que distingue foto de render.\n\nSem ele, o rosto sai \"limpo demais\" e o olho registra isso como falso mesmo quando\nos traços estão corretos.\n\n## Onde encaixa no fluxo\n```\nEditar foto (qualquer workflow deste bundle)\n   └── PNG salvo em output/edit/\n        └── ESTE workflow  ->  rosto restaurado\n             └── (opcional) ../foto-realismo-celular/  se quiser look de celular\n```\n\nVocê pode também **ligar direto** o `images` de um nó de edição na entrada daqui,\ndentro do mesmo grafo — sem passar por arquivo.\n\n## ⚠️ O único botão que importa: `fidelity`\n| Valor | O que acontece |\n|---|---|\n| **0.7 – 0.9** | **Fiel ao rosto que entrou.** É o que você quer. Restaura textura sem mexer nos traços |\n| 0.5 (padrão do modelo) | Meio-termo; já começa a \"corrigir\" o rosto |\n| 0.0 – 0.3 | Prioriza \"beleza\": alisa, regulariza e **troca traços**. É exatamente o erro que estamos tentando evitar |\n\nO nó **avisa no console** se você descer abaixo de 0.5.\n\n## `only_center_face`\nLigue quando houver **outras pessoas no quadro** e você não quiser que o modelo\nmexa nelas — ele restaura só o rosto central.\n\n## `upscale_factor`\n`1.0` = só restaura, mantém o tamanho. Suba para `2.0` quando quiser mais pixel de\nrosto no entregável final (custa mais).\n\n## Custo\nUma chamada barata — é dos endpoints mais baratos da fal. Vale rodar sempre.\n"
+      ],
+      "color": "#533",
+      "bgcolor": "#653"
+    },
+    {
+      "id": 2,
+      "type": "MarkdownNote",
+      "pos": [
+        760,
+        -1240
+      ],
+      "size": [
+        560,
+        1120
+      ],
+      "flags": {},
+      "order": 1,
+      "mode": 0,
+      "inputs": [],
+      "outputs": [],
+      "properties": {},
+      "widgets_values": [
+        "# Como usar\n\n1. **Suba a imagem já editada** no `LoadImage` (o PNG que saiu de qualquer workflow\n   deste bundle).\n2. Deixe `fidelity` em **0.8**.\n3. **Run.**\n4. Compare lado a lado com a entrada. Se o rosto mudou, **suba a fidelity** para 0.9.\n\n## Encadeando dentro de um grafo só\nEm vez de passar por arquivo, você pode copiar o nó\n**`Pro Image Edit BYOK · Restaurar rosto`** para dentro de qualquer outro workflow\ndo bundle e ligar assim:\n\n```\nPro Image Edit BYOK ──images──> Restaurar rosto ──image──> SaveImage\n```\n\nFica uma chamada a mais por execução — em troca, o entregável já sai pronto.\n\n## O que este passe NÃO conserta\n- **Traço errado.** Se o modelo te deu outro nariz, restaurar não traz o seu de volta —\n  isso se resolve na etapa de edição (referência melhor, `num_images = 3`, outro motor).\n- **Rosto pequeno demais no quadro.** Restauração ajuda, mas não inventa informação\n  que nunca existiu. Gere em 2K.\n\nEste passe conserta **acabamento**, não **identidade**.\n\n## Sequência recomendada do bundle inteiro\n```\n00_teste-de-identidade   (uma vez, escolhe o motor)\n      ↓\nprocesso desejado (1 a 6)  em 2K, num_images = 3\n      ↓\n07_refinar-rosto           fidelity 0.8\n      ↓\n../foto-realismo-celular/  (opcional, só se quiser look de celular)\n```\n"
+      ],
+      "color": "#233",
+      "bgcolor": "#653"
+    },
+    {
+      "id": 3,
+      "type": "ProImageEditCheckKey",
+      "pos": [
+        1380,
+        -1240
+      ],
+      "size": [
+        340,
+        130
+      ],
+      "flags": {},
+      "order": 2,
+      "mode": 0,
+      "inputs": [],
+      "outputs": [
+        {
+          "name": "status",
+          "type": "STRING",
+          "links": null
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "ProImageEditCheckKey"
+      },
+      "widgets_values": [],
+      "title": "Testar a chave (grátis — rode primeiro)"
+    },
+    {
+      "id": 4,
+      "type": "LoadImage",
+      "pos": [
+        0,
+        80
+      ],
+      "size": [
+        280,
+        340
+      ],
+      "flags": {},
+      "order": 3,
+      "mode": 0,
+      "inputs": [],
+      "outputs": [
+        {
+          "name": "IMAGE",
+          "type": "IMAGE",
+          "links": [
+            1
+          ]
+        },
+        {
+          "name": "MASK",
+          "type": "MASK",
+          "links": null
+        }
+      ],
+      "properties": {
+        "cnr_id": "comfy-core",
+        "ver": "0.25.0",
+        "Node name for S&R": "LoadImage"
+      },
+      "widgets_values": [
+        "example.png",
+        "image"
+      ],
+      "title": "A IMAGEM EDITADA — saída de qualquer workflow do bundle"
+    },
+    {
+      "id": 5,
+      "type": "ProFaceRestoreBYOK",
+      "pos": [
+        900,
+        80
+      ],
+      "size": [
+        380,
+        300
+      ],
+      "flags": {},
+      "order": 4,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "image",
+          "type": "IMAGE",
+          "link": 1
+        }
+      ],
+      "outputs": [
+        {
+          "name": "image",
+          "type": "IMAGE",
+          "links": [
+            2
+          ]
+        },
+        {
+          "name": "image_url",
+          "type": "STRING",
+          "links": null
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "ProFaceRestoreBYOK"
+      },
+      "widgets_values": [
+        0.8,
+        1.0,
+        true,
+        false,
+        0,
+        "randomize"
+      ],
+      "title": "Restaurar rosto (passe final)"
+    },
+    {
+      "id": 6,
+      "type": "SaveImage",
+      "pos": [
+        1400,
+        80
+      ],
+      "size": [
+        360,
+        400
+      ],
+      "flags": {},
+      "order": 5,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "images",
+          "type": "IMAGE",
+          "link": 2
+        }
+      ],
+      "outputs": [],
+      "properties": {
+        "cnr_id": "comfy-core",
+        "ver": "0.25.0",
+        "Node name for S&R": "SaveImage"
+      },
+      "widgets_values": [
+        "edit/pro_rosto-restaurado"
+      ],
+      "title": "Salvar o entregável"
+    }
+  ],
+  "links": [
+    [
+      1,
+      4,
+      0,
+      5,
+      0,
+      "IMAGE"
+    ],
+    [
+      2,
+      5,
+      0,
+      6,
+      0,
+      "IMAGE"
+    ]
+  ],
+  "groups": [
+    {
+      "id": 1,
+      "title": "ENTRADA",
+      "bounding": [
+        -20,
+        20,
+        320,
+        420
+      ],
+      "color": "#3f789e",
+      "font_size": 24,
+      "flags": {}
+    },
+    {
+      "id": 2,
+      "title": "RESTAURAR · fidelity alto = preserva identidade",
+      "bounding": [
+        880,
+        20,
+        420,
+        360
+      ],
+      "color": "#8e5fb0",
+      "font_size": 24,
+      "flags": {}
+    },
+    {
+      "id": 3,
+      "title": "SAÍDA",
+      "bounding": [
+        1380,
+        20,
+        400,
+        460
+      ],
+      "color": "#b06f3f",
+      "font_size": 24,
+      "flags": {}
+    }
+  ],
+  "config": {},
+  "extra": {
+    "ds": {
+      "scale": 0.6,
+      "offset": [
+        80,
+        60
+      ]
+    }
+  },
+  "version": 0.4
+}

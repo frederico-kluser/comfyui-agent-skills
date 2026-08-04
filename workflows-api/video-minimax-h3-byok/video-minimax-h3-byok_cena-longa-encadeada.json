@@ -1,0 +1,538 @@
+{
+  "id": "",
+  "revision": 0,
+  "last_node_id": 11,
+  "last_link_id": 6,
+  "nodes": [
+    {
+      "id": 1,
+      "type": "MarkdownNote",
+      "pos": [
+        -40,
+        -1140
+      ],
+      "size": [
+        760,
+        1020
+      ],
+      "flags": {},
+      "order": 0,
+      "mode": 0,
+      "inputs": [],
+      "outputs": [],
+      "properties": {},
+      "widgets_values": [
+        "# ⚠️ Leia antes de rodar\n\n## O que este workflow FAZ e o que NÃO faz\nO MiniMax H3 reference-to-video **gera uma cena nova** guiada pelas suas referências.\nEle **não edita** o vídeo que você enviou: enquadramento, cortes e fundo do material\nde referência **não** são preservados — servem de inspiração.\n\n> Quer **pegar o seu vídeo e trocar quem aparece nele**, mantendo movimento,\n> enquadramento e cortes? O H3 não faz isso em nenhum modo. Use\n> `../video-seedance25-byok/` (workflow 7, Wan 2.2 Animate) ou `../video-person-replace/`.\n\n## Chave de API (a única credencial)\nNada de login ou crédito comfy.org. Este bundle fala direto com a **API v2 da MiniMax**:\n\n```bash\nprintf 'MINIMAX_API_KEY=%s\\n' \"SUA_CHAVE\" >> ~/ComfyUI/secrets.env\nchmod 600 ~/ComfyUI/secrets.env\n```\nDepois **reinicie o ComfyUI**. O passo a passo para criar a chave está no `README.md`.\nRode o nó **Testar a chave** (grátis) antes de gastar.\n\n## Como citar as referências no prompt\n⚠️ **Aqui NÃO se usa `@Image1`.** A MiniMax usa **linguagem natural**, e a numeração\nsegue a **ordem dos slots**:\n\n| Slot ligado | Como citar no prompt |\n|---|---|\n| `image_1` | *\"reference image 1\"* |\n| `image_2` | *\"reference image 2\"* |\n| `video_1` | *\"reference video 1\"* |\n| `audio_1` | *\"reference audio 1\"* |\n\nExemplo da própria documentação: *\"Voice timbre follows reference audio 1.\"*\n**Mudou as ligações? Renumere o prompt.**\n\n## Rascunhe barato\nPrimeira passada: `resolution = 768P`, `duration = 4`. Só depois suba para `2K`.\n\n## ⚖️ Pessoa real\nSó use foto, vídeo ou voz de alguém **com autorização dessa pessoa** — inclusive você.\nVer \"Uso responsável\" no `README.md`.\n"
+      ],
+      "color": "#533",
+      "bgcolor": "#653"
+    },
+    {
+      "id": 2,
+      "type": "MarkdownNote",
+      "pos": [
+        760,
+        -1140
+      ],
+      "size": [
+        560,
+        1020
+      ],
+      "flags": {},
+      "order": 1,
+      "mode": 0,
+      "inputs": [],
+      "outputs": [],
+      "properties": {},
+      "widgets_values": [
+        "# O nó `MiniMax H3 BYOK · Reference to Video`\n\n**Rota:** `POST https://api.minimax.io/v2/video_generation`, direto com a sua\n`MINIMAX_API_KEY`. Assíncrono: o nó cria a tarefa, faz polling e baixa o MP4.\n**Saída:** `VIDEO` nativo → vai **direto** no `SaveVideo`, com o áudio preservado.\n\n## Widgets\n| Widget | O que fazer |\n|---|---|\n| `prompt` | **Obrigatório sempre** — a API recusa `content` sem um item de texto não-vazio. Máx. **7000 caracteres** |\n| `resolution` | `768P` (rascunho e padrão) ou `2K` (final). São os **dois únicos valores** |\n| `duration` | **4 a 15** segundos |\n| `seed` | ⚠️ **Não vai para a API** — a v2 não aceita seed. Só força re-execução do nó |\n| `callback_url` | Opcional. Se preencher, a MiniMax faz POST do progresso — e **exige** que o seu servidor devolva o `challenge` em 3 s. Deixe vazio se não tiver isso montado |\n\n> Não há widget de `ratio` aqui de propósito: em reference-to-video e image-to-video\n> o formato é **`adaptive`**, herdado das referências. Só o nó **Text to Video** pede\n> formato explícito — e lá ele é **obrigatório**.\n\n## Limites da API (o nó valida antes de gastar)\n| Tipo | Máximo | Detalhe |\n|---|---|---|\n| Imagens de referência | **9** | ≤30 MB · lado entre **256 e 5760 px** · proporção entre **0,4 e 2,5** |\n| Vídeos de referência | **3** | ≤50 MB cada · **2–15 s cada, somados ≤15 s** · 23,976–60 fps · MP4/MOV, H.264/H.265 |\n| Áudios de referência | **3** | ≤15 MB · 2–15 s cada, somados ≤15 s · WAV/MP3 · **não pode vir sozinho** |\n\n⚠️ **Image-to-video e reference-to-video são mutuamente exclusivos.** Se houver\nqualquer `reference_*`, não pode haver `first_frame`/`last_frame` — e vice-versa.\nPor isso são nós separados.\n\n## Como os arquivos chegam lá\nO nó **sobe cada arquivo** (`POST /v1/files/upload`, `purpose=video_generation_input`)\ne referencia por `mm_file://<id>`, que vale **7 dias**.\nNão usamos base64 embutido: o corpo do POST tem teto de **64 MB** e base64 infla ~33%,\nentão um vídeo de referência estouraria.\n\n## A URL do resultado expira\n`task.content.url` é temporária — o nó já baixa na hora. A saída `video_url` serve\npara baixar fora do ComfyUI **no mesmo dia**.\n"
+      ],
+      "color": "#233",
+      "bgcolor": "#653"
+    },
+    {
+      "id": 3,
+      "type": "MiniMaxH3BYOKCheckKey",
+      "pos": [
+        1380,
+        -1140
+      ],
+      "size": [
+        340,
+        130
+      ],
+      "flags": {},
+      "order": 2,
+      "mode": 0,
+      "inputs": [],
+      "outputs": [
+        {
+          "name": "status",
+          "type": "STRING",
+          "links": null
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "MiniMaxH3BYOKCheckKey"
+      },
+      "widgets_values": [],
+      "title": "Testar a chave (grátis — rode primeiro)"
+    },
+    {
+      "id": 4,
+      "type": "LoadImage",
+      "pos": [
+        0,
+        80
+      ],
+      "size": [
+        280,
+        340
+      ],
+      "flags": {},
+      "order": 3,
+      "mode": 0,
+      "inputs": [],
+      "outputs": [
+        {
+          "name": "IMAGE",
+          "type": "IMAGE",
+          "links": [
+            1
+          ]
+        },
+        {
+          "name": "MASK",
+          "type": "MASK",
+          "links": null
+        }
+      ],
+      "properties": {
+        "cnr_id": "comfy-core",
+        "ver": "0.25.0",
+        "Node name for S&R": "LoadImage"
+      },
+      "widgets_values": [
+        "example.png",
+        "image"
+      ],
+      "title": "MINHA FOTO"
+    },
+    {
+      "id": 5,
+      "type": "LoadImage",
+      "pos": [
+        0,
+        470
+      ],
+      "size": [
+        280,
+        340
+      ],
+      "flags": {},
+      "order": 4,
+      "mode": 0,
+      "inputs": [],
+      "outputs": [
+        {
+          "name": "IMAGE",
+          "type": "IMAGE",
+          "links": [
+            2
+          ]
+        },
+        {
+          "name": "MASK",
+          "type": "MASK",
+          "links": null
+        }
+      ],
+      "properties": {
+        "cnr_id": "comfy-core",
+        "ver": "0.25.0",
+        "Node name for S&R": "LoadImage"
+      },
+      "widgets_values": [
+        "example.png",
+        "image"
+      ],
+      "title": "O LUGAR"
+    },
+    {
+      "id": 6,
+      "type": "MiniMaxH3BYOKReferenceToVideo",
+      "pos": [
+        900,
+        80
+      ],
+      "size": [
+        560,
+        640
+      ],
+      "flags": {},
+      "order": 5,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "image_1",
+          "type": "IMAGE",
+          "link": 1
+        },
+        {
+          "name": "image_2",
+          "type": "IMAGE",
+          "link": 2
+        },
+        {
+          "name": "image_3",
+          "type": "IMAGE",
+          "link": null
+        },
+        {
+          "name": "image_4",
+          "type": "IMAGE",
+          "link": null
+        },
+        {
+          "name": "video_1",
+          "type": "VIDEO",
+          "link": null
+        },
+        {
+          "name": "video_2",
+          "type": "VIDEO",
+          "link": null
+        },
+        {
+          "name": "audio_1",
+          "type": "AUDIO",
+          "link": null
+        }
+      ],
+      "outputs": [
+        {
+          "name": "video",
+          "type": "VIDEO",
+          "links": [
+            3,
+            4
+          ]
+        },
+        {
+          "name": "video_url",
+          "type": "STRING",
+          "links": null
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "MiniMaxH3BYOKReferenceToVideo"
+      },
+      "widgets_values": [
+        "The person in reference image 1 walks into the location shown in reference image 2 and stops in the middle of the frame, looking off-screen to the right.\n\nIDENTITY: reproduce the face, bone structure, skin tone and texture, hair, apparent age and body build of the person in reference image 1 with maximum fidelity. Keep the identity stable across every frame — no drifting or morphing.\n\nLOCATION: keep reference image 2 exactly as shown.\n\nWARDROBE: keep the exact clothing worn in reference image 1.\n\nCAMERA: static wide shot, 35mm, eye level.\n\nREALISM: photographic, 35mm lens, natural skin texture, real motion blur, no plastic skin, no beauty filter, no CGI look.",
+        "768P",
+        "8",
+        0,
+        "randomize",
+        ""
+      ],
+      "title": "CLIPE 1 — a entrada"
+    },
+    {
+      "id": 7,
+      "type": "SaveVideo",
+      "pos": [
+        1540,
+        80
+      ],
+      "size": [
+        340,
+        300
+      ],
+      "flags": {},
+      "order": 6,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "video",
+          "type": "VIDEO",
+          "link": 3
+        }
+      ],
+      "outputs": [],
+      "properties": {
+        "cnr_id": "comfy-core",
+        "ver": "0.25.0",
+        "Node name for S&R": "SaveVideo"
+      },
+      "widgets_values": [
+        "video/cena-longa-mm_clipe1",
+        "auto",
+        "auto"
+      ],
+      "title": "Salvar o CLIPE 1"
+    },
+    {
+      "id": 8,
+      "type": "MiniMaxH3BYOKLastFrame",
+      "pos": [
+        1540,
+        420
+      ],
+      "size": [
+        300,
+        110
+      ],
+      "flags": {},
+      "order": 7,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "video",
+          "type": "VIDEO",
+          "link": 4
+        }
+      ],
+      "outputs": [
+        {
+          "name": "IMAGE",
+          "type": "IMAGE",
+          "links": [
+            5
+          ]
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "MiniMaxH3BYOKLastFrame"
+      },
+      "widgets_values": [
+        0
+      ],
+      "title": "Último frame → emenda"
+    },
+    {
+      "id": 9,
+      "type": "MiniMaxH3BYOKImageToVideo",
+      "pos": [
+        1920,
+        420
+      ],
+      "size": [
+        520,
+        560
+      ],
+      "flags": {},
+      "order": 8,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "first_frame",
+          "type": "IMAGE",
+          "link": 5
+        },
+        {
+          "name": "last_frame",
+          "type": "IMAGE",
+          "link": null
+        }
+      ],
+      "outputs": [
+        {
+          "name": "video",
+          "type": "VIDEO",
+          "links": [
+            6
+          ]
+        },
+        {
+          "name": "video_url",
+          "type": "STRING",
+          "links": null
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "MiniMaxH3BYOKImageToVideo"
+      },
+      "widgets_values": [
+        "Continue the shot from this exact frame: the person turns back toward the camera and starts walking forward, and the camera pushes in to a medium shot.\n\nKeep the same person, the same clothing, the same location and the same lighting as in the starting frame — this is a continuation of one continuous scene, not a new scene.\n\nREALISM: photographic, 35mm lens, natural skin texture, real motion blur, no plastic skin, no beauty filter, no CGI look.",
+        "768P",
+        "8",
+        0,
+        "randomize",
+        ""
+      ],
+      "title": "CLIPE 2 — continua do último frame"
+    },
+    {
+      "id": 10,
+      "type": "SaveVideo",
+      "pos": [
+        2500,
+        420
+      ],
+      "size": [
+        340,
+        300
+      ],
+      "flags": {},
+      "order": 9,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "video",
+          "type": "VIDEO",
+          "link": 6
+        }
+      ],
+      "outputs": [],
+      "properties": {
+        "cnr_id": "comfy-core",
+        "ver": "0.25.0",
+        "Node name for S&R": "SaveVideo"
+      },
+      "widgets_values": [
+        "video/cena-longa-mm_clipe2",
+        "auto",
+        "auto"
+      ],
+      "title": "Salvar o CLIPE 2"
+    },
+    {
+      "id": 11,
+      "type": "MarkdownNote",
+      "pos": [
+        1920,
+        1060
+      ],
+      "size": [
+        620,
+        580
+      ],
+      "flags": {},
+      "order": 10,
+      "mode": 0,
+      "inputs": [],
+      "outputs": [],
+      "properties": {},
+      "widgets_values": [
+        "# Passando dos 15 segundos\n\nO H3 gera no máximo **15 s por chamada**. Para cenas mais longas, **encadeie**: o\núltimo frame de um clipe vira o **primeiro frame** do próximo.\n\n```\nReference-to-video → CLIPE 1 → Último Frame → Image-to-Video → CLIPE 2 → …\n```\n\n⚠️ **Por que dois nós diferentes:** a API trata `reference_*` e `first_frame`/\n`last_frame` como **modos mutuamente exclusivos**. Não dá para continuar a cena\nmandando as referências de novo — o segundo elo **tem** que ser image-to-video.\n\n## As três regras da continuidade\n1. **Diga que é continuação no prompt** — *\"continue the shot from this exact frame\"*,\n   *\"same person, same clothing, same location, same lighting\"*.\n2. **Último frame borrado?** Suba o `offset_from_end` para 1–3.\n3. **Mesma `resolution`** em todos os elos.\n\n## Áudio na cena longa\nCada chamada gera uma trilha **independente** — a emenda soa cortada. Para cena\nlonga, monte o áudio na edição.\n\n## Juntar\n```bash\ncd ~/ComfyUI/output/video\nprintf \"file '%s'\\n\" cena-longa-mm_clipe1*.mp4 cena-longa-mm_clipe2*.mp4 > lista.txt\nffmpeg -f concat -safe 0 -i lista.txt -c copy cena-longa.mp4\n```\n"
+      ],
+      "color": "#533",
+      "bgcolor": "#653"
+    }
+  ],
+  "links": [
+    [
+      1,
+      4,
+      0,
+      6,
+      0,
+      "IMAGE"
+    ],
+    [
+      2,
+      5,
+      0,
+      6,
+      1,
+      "IMAGE"
+    ],
+    [
+      3,
+      6,
+      0,
+      7,
+      0,
+      "VIDEO"
+    ],
+    [
+      4,
+      6,
+      0,
+      8,
+      0,
+      "VIDEO"
+    ],
+    [
+      5,
+      8,
+      0,
+      9,
+      0,
+      "IMAGE"
+    ],
+    [
+      6,
+      9,
+      0,
+      10,
+      0,
+      "VIDEO"
+    ]
+  ],
+  "groups": [
+    {
+      "id": 1,
+      "title": "ENTRADAS",
+      "bounding": [
+        -20,
+        20,
+        320,
+        800
+      ],
+      "color": "#3f789e",
+      "font_size": 24,
+      "flags": {}
+    },
+    {
+      "id": 2,
+      "title": "CLIPE 1 · reference-to-video",
+      "bounding": [
+        880,
+        20,
+        600,
+        740
+      ],
+      "color": "#3f9e6f",
+      "font_size": 24,
+      "flags": {}
+    },
+    {
+      "id": 3,
+      "title": "EMENDA",
+      "bounding": [
+        1520,
+        20,
+        360,
+        620
+      ],
+      "color": "#b06f3f",
+      "font_size": 24,
+      "flags": {}
+    },
+    {
+      "id": 4,
+      "title": "CLIPE 2 · image-to-video (repita à vontade)",
+      "bounding": [
+        1900,
+        340,
+        940,
+        700
+      ],
+      "color": "#8e5fb0",
+      "font_size": 24,
+      "flags": {}
+    }
+  ],
+  "config": {},
+  "extra": {
+    "ds": {
+      "scale": 0.6,
+      "offset": [
+        80,
+        60
+      ]
+    }
+  },
+  "version": 0.4
+}

@@ -56,7 +56,10 @@
 | "criar comercial SEM GPU / por API / Veo-Kling-Seedance" | `task-create-commercial-api` → `knowledge-comfyui-api-nodes` (bundle removido em 2026-08-03; ver git) |
 | "rodar workflow por API / qual provedor / custo em créditos / fal vs Comfy / nó fal travou" | `knowledge-comfyui-api-nodes` |
 | "editar foto por API: trocar roupa · objeto · pessoa · local (+ match de luz)" | `task-edit-image` → `knowledge-comfyui-api-nodes` + `knowledge-image-editing` (bundles `workflows-api/image-edit-nano-banana-2/` · `image-edit-seedream/`) |
+| "**o modelo erra o meu rosto** / identidade não bate / qual o melhor editor de foto / quero comparar modelos" | `knowledge-comfyui-api-nodes` (bundle `workflows-api/image-edit-pro-byok/`) — **BYOK (`FAL_KEY`)**, 4 motores em dropdown + workflow de teste de identidade. ⚠️ checar **resolução da saída** e **passe de degradação** antes de culpar o modelo |
 | "me colocar numa FOTO no lugar de uma pessoa (mesma roupa/pose, **ou** com a minha)" | `knowledge-comfyui-api-nodes` (blocos 4 e 5 dos bundles `image-edit-*`) |
 | "me colocar num VÍDEO no lugar de uma pessoa (Seedance 2.0)" | `knowledge-comfyui-api-nodes` (bundle `workflows-api/video-person-swap-seedance-2/`) — ⚠️ humano real exige **asset verificado** |
+| "me colocar num vídeo **sem login comfy.org** / só com chave de API / Seedance 2.5 / foto + vídeo meu + lugar" | `knowledge-comfyui-api-nodes` (bundle `workflows-api/video-seedance25-byok/`) — **BYOK puro (`FAL_KEY`)**, 7 combinações, traz os próprios nós |
+| "MiniMax / Hailuo / H3 por API / vídeo **com a minha voz** / clonar timbre / text-to-video barato" | `knowledge-comfyui-api-nodes` (bundle `workflows-api/video-minimax-h3-byok/`) — **BYOK puro (`MINIMAX_API_KEY`)**, API v2, 8 combinações. ⚠️ o tutorial do comfy.org sobre H3 é o modelo **local em GPU**, outra coisa |
 | "upscale / outpaint / relight / tirar fundo" | `knowledge-image-enhance` |
 | nenhuma skill cobre | `meta-evolution` (propor skill nova) |

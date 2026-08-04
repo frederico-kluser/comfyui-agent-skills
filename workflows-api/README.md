@@ -1,30 +1,66 @@
 # workflows-api — bundles que rodam por API online (sem GPU)
 
-Cinco bundles. **Nenhum precisa de GPU.** A maioria paga com **créditos do comfy.org**
-(só login, sem chave); um usa **fal.ai** (precisa de `FAL_KEY`); e um roda **de graça, local**.
+Oito bundles. **Nenhum precisa de GPU.** Alguns pagam com **créditos do comfy.org**
+(só login, sem chave); quatro são **BYOK** (chave própria: `FAL_KEY` ou `MINIMAX_API_KEY`);
+e um roda **de graça, local**.
 
 | Bundle | O que faz | Nó principal | Billing |
 |---|---|---|---|
+| [**`image-edit-pro-byok`**](image-edit-pro-byok/) | As mesmas 6 edições nos **4 melhores motores**, trocáveis em dropdown — **2K/4K, sem degradação** | `ProImageEditBYOK` (nós próprios) | **fal.ai (`FAL_KEY`)** |
 | [`image-edit-nano-banana-2`](image-edit-nano-banana-2/) | 6 edições de foto, um arquivo por processo | `GeminiNanoBanana2` | crédito comfy.org |
 | [`image-edit-seedream`](image-edit-seedream/) | As **mesmas** 6 edições, no outro melhor editor | `ByteDanceSeedreamNode` | crédito comfy.org |
 | [`video-person-replace`](video-person-replace/) | **Trocar a pessoa de um vídeo que eu forneço** | `Wan2214b_animate_replace_character_fal` | **fal.ai (`FAL_KEY`)** |
 | [`video-person-swap-seedance-2`](video-person-swap-seedance-2/) | Gerar um vídeo novo comigo, a partir de referências | `ByteDance2ReferenceNode` | crédito comfy.org |
+| [**`video-seedance25-byok`**](video-seedance25-byok/) | **7 combinações** de foto/vídeo/lugar para me colocar num vídeo — **sem login** | `SeedanceBYOKReferenceToVideo` (nós próprios) | **fal.ai (`FAL_KEY`)** |
+| [**`video-minimax-h3-byok`**](video-minimax-h3-byok/) | **8 combinações**, incluindo **falar com a minha voz clonada** — **sem login** | `MiniMaxH3BYOKReferenceToVideo` (nós próprios) | **MiniMax (`MINIMAX_API_KEY`)** |
 | [`foto-realismo-celular`](foto-realismo-celular/) | Deixar **qualquer** foto com cara de foto de celular | WAS Suite + KJNodes | **grátis (CPU local)** |
 
-## Vídeo: qual dos dois
+## Vídeo: qual dos três
 
-Os dois nomes parecem a mesma coisa e **não são**:
+Os nomes parecem a mesma coisa e **não são**. A pergunta que decide: você quer **inventar**
+uma cena ou **consertar** uma cena que já gravou?
 
-| | `video-person-replace` | `video-person-swap-seedance-2` |
+| | `video-person-replace` | `video-person-swap-seedance-2` | **`video-seedance25-byok`** |
+|---|---|---|---|
+| Recebe o **seu** vídeo e edita ele | ✅ | ⚠️ só como referência | ✅ **e** ⚠️ — tem os dois caminhos |
+| Mantém movimento, enquadramento e cortes | ✅ | ❌ recria a cena | ✅ no workflow 7, ❌ nos 1–6 |
+| Escolhe o cenário | ❌ | ✅ | ✅ |
+| Precisa de prompt | ❌ | ✅ | ✅ (exceto workflow 7) |
+| Credencial | `FAL_KEY` | **login comfy.org** + verificação facial | **`FAL_KEY` e nada mais** |
+| Nº de combinações prontas | 2 | 1 | **7** |
+
+👉 **"Quero me colocar num vídeo que eu gravei"** → `video-person-replace`, ou o workflow 7 de
+`video-seedance25-byok`. **Nenhum modo do MiniMax H3 faz isso** — ele sempre recria a cena.
+👉 **"Quero me colocar numa cena nova, sem criar conta no comfy.org"** → `video-seedance25-byok`
+(fal) ou `video-minimax-h3-byok` (MiniMax).
+
+### E entre os dois BYOK de cena nova?
+
+| | `video-seedance25-byok` | `video-minimax-h3-byok` |
 |---|---|---|
-| Recebe o **seu** vídeo e edita ele | ✅ | ⚠️ usa só como referência |
-| Mantém movimento, enquadramento e cortes originais | ✅ | ❌ recria a cena |
-| Precisa de prompt | ❌ | ✅ |
-| Chave de API | `FAL_KEY` | nenhuma (login) |
+| Chave | `FAL_KEY` | `MINIMAX_API_KEY` |
+| Resolução máxima | **4k** | 2K |
+| **Editar o plano original** | ✅ workflow 7 (Wan Animate) | ❌ não faz |
+| **Clonar o timbre da voz** | ❌ | ✅ workflow 6 |
+| Text-to-video dedicado | ❌ | ✅ workflow 8 |
+| Sintaxe da referência no prompt | `@Image1` | *"reference image 1"* (linguagem natural) |
+| Preço publicado | ✅ (tabela da fal) | ❌ (só no console) |
 
-👉 **"Quero me colocar num vídeo que eu gravei"** → `video-person-replace`.
+## Imagem: qual dos três
 
-## Os 6 processos de imagem (iguais nos dois bundles de imagem)
+| | `image-edit-pro-byok` | `image-edit-nano-banana-2` | `image-edit-seedream` |
+|---|---|---|---|
+| Credencial | **`FAL_KEY`** | login comfy.org | login comfy.org |
+| Modelo | **4 em dropdown** (Seedream 5 Pro · FLUX.2 Pro · Nano Banana Pro · GPT Image 2) | Gemini 3.1 **Flash**, fixo | Seedream 5.0 lite, fixo |
+| Resolução da saída | **2K** (4K no Nano Banana Pro) | 1K | 1K |
+| Passe de "look de celular" | ❌ separado e opcional | ✅ embutido | ✅ embutido |
+| Comparar identidade entre modelos | ✅ workflow `00` | ❌ | ❌ |
+
+👉 **"O modelo erra o meu rosto"** → `image-edit-pro-byok`, e rode o `00_teste-de-identidade`
+primeiro. O README dele abre com o diagnóstico das quatro causas (resolução 1K, passe de
+degradação, prompt sobrecarregado, referência com rosto pequeno).
+
+## Os 6 processos de imagem (iguais nos três bundles de imagem)
 
 | # | Processo | BASE (Image 1) | REF 1 (Image 2) | REF 2 (Image 3) |
 |---|---|---|---|---|
